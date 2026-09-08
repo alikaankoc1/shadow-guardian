@@ -68,6 +68,13 @@ void main() {
     expect(find.text('Kalfalık'), findsOneWidget);
 
     await tester.scrollUntilVisible(
+      find.text('Uzay'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('Uzay'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
       find.text('Ustalık'),
       200,
       scrollable: find.byType(Scrollable).first,

@@ -68,3 +68,15 @@ Icons in `assets/game/ocean/` (resized for this project):
 - `fish.png`, `blue_fish.png`, `pink_fish.png`
   - Pack: Fish Pack
   - Source: https://kenney.nl/assets/fish-pack
+
+## Space (Kenney CC0)
+
+Icons in `assets/game/space/` (cropped/resized for this project):
+
+- `rocket.png` (craft_racer), `astronaut.png`, `alien.png`,
+  `meteor.png`, `satellite.png` (satellite dish)
+  - Pack: Space Kit
+  - Source: https://kenney.nl/assets/space-kit
+- `planet.png`
+  - Pack: Planets
+  - Source: https://kenney.nl/assets/planets

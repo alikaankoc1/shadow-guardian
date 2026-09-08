@@ -42,9 +42,9 @@ class WorldSelectOverlay extends StatelessWidget {
                         ),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: columnCount,
-                          mainAxisExtent: 248,
-                          mainAxisSpacing: 20,
-                          crossAxisSpacing: 20,
+                          mainAxisExtent: 236,
+                          mainAxisSpacing: 18,
+                          crossAxisSpacing: 18,
                         ),
                         itemCount: worlds.length,
                         itemBuilder: (context, index) {
@@ -60,11 +60,7 @@ class WorldSelectOverlay extends StatelessWidget {
                               )
                               .animate(delay: (70 * index).ms)
                               .fadeIn(duration: 360.ms)
-                              .slideY(begin: 0.08, curve: Curves.easeOutCubic)
-                              .scale(
-                                begin: const Offset(0.96, 0.96),
-                                curve: Curves.easeOutBack,
-                              );
+                              .slideY(begin: 0.08, curve: Curves.easeOutCubic);
                         },
                       );
                     },
@@ -130,18 +126,17 @@ class _WorldCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final enabled = onTap != null;
-    final accent = enabled ? world.color : AppColors.locked;
     final statusIcon = completed
         ? Icons.check_circle_rounded
         : enabled
-        ? Icons.play_arrow_rounded
+        ? Icons.play_circle_fill_rounded
         : Icons.lock_rounded;
     final statusLabel = completed
         ? 'Tamamlandı'
         : enabled
         ? (world.isExam ? 'Sınav' : 'Oyna')
         : 'Kilitli';
-    final statusFill = completed
+    final statusColor = completed
         ? AppColors.mint
         : enabled
         ? AppColors.coral
@@ -151,176 +146,101 @@ class _WorldCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(30),
-        splashColor: accent.withValues(alpha: 0.18),
-        highlightColor: accent.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(28),
         child: Ink(
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: enabled
-                  ? [
-                      Color.lerp(accent, AppColors.white, 0.72)!,
-                      AppColors.white,
-                      Color.lerp(accent, AppColors.white, 0.88)!,
-                    ]
-                  : [
-                      AppColors.white.withValues(alpha: 0.72),
-                      AppColors.white.withValues(alpha: 0.58),
-                    ],
-            ),
+            color: enabled
+                ? AppColors.white.withValues(alpha: 0.94)
+                : AppColors.white.withValues(alpha: 0.68),
+            borderRadius: BorderRadius.circular(28),
             border: Border.all(
-              color: accent.withValues(alpha: enabled ? 0.7 : 0.28),
-              width: world.isExam && enabled ? 3.5 : 2.5,
+              color: enabled
+                  ? world.color.withValues(alpha: world.isExam ? 0.75 : 0.55)
+                  : AppColors.locked.withValues(alpha: 0.35),
+              width: world.isExam ? 3 : 2,
             ),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
-                color: accent.withValues(alpha: enabled ? 0.28 : 0.08),
-                blurRadius: enabled ? 22 : 12,
-                offset: const Offset(0, 10),
-              ),
-              BoxShadow(
-                color: AppColors.navy.withValues(alpha: 0.06),
-                blurRadius: 8,
-                offset: const Offset(0, 3),
+                color: Color(0x17294C60),
+                blurRadius: 18,
+                offset: Offset(0, 8),
               ),
             ],
           ),
-          child: Stack(
+          child: Row(
             children: [
-              Positioned(
-                right: -18,
-                top: -22,
-                child: IgnorePointer(
-                  child: Container(
-                    width: 86,
-                    height: 86,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: accent.withValues(alpha: enabled ? 0.14 : 0.05),
-                    ),
-                  ),
+              Container(
+                width: 74,
+                height: 74,
+                decoration: BoxDecoration(
+                  color: world.color.withValues(alpha: enabled ? 0.2 : 0.09),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  world.icon,
+                  size: 39,
+                  color: enabled ? world.color : AppColors.locked,
                 ),
               ),
-              Positioned(
-                left: -10,
-                bottom: -24,
-                child: IgnorePointer(
-                  child: Container(
-                    width: 64,
-                    height: 64,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: accent.withValues(alpha: enabled ? 0.1 : 0.04),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
-                child: Row(
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _WorldIconBadge(icon: world.icon, accent: accent, enabled: enabled),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (world.isExam) ...[
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 9,
-                                vertical: 3,
-                              ),
-                              decoration: BoxDecoration(
-                                color: accent.withValues(
-                                  alpha: enabled ? 0.18 : 0.1,
-                                ),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                'SINAV',
-                                style: TextStyle(
-                                  decoration: TextDecoration.none,
-                                  color: enabled ? accent : AppColors.locked,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: 1.05,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                          ],
-                          Text(
-                            world.title,
-                            style: Theme.of(context).textTheme.titleLarge
-                                ?.copyWith(
-                                  decoration: TextDecoration.none,
-                                  color: enabled
-                                      ? AppColors.navy
-                                      : AppColors.slate,
-                                  fontSize: 20,
-                                ),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            world.subtitle,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  decoration: TextDecoration.none,
-                                  color: AppColors.slate,
-                                  fontWeight: FontWeight.w700,
-                                  height: 1.25,
-                                ),
-                          ),
-                          const SizedBox(height: 12),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 11,
-                                vertical: 7,
-                              ),
-                              decoration: BoxDecoration(
-                                color: statusFill,
-                                borderRadius: BorderRadius.circular(14),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: statusFill.withValues(alpha: 0.35),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 3),
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    statusIcon,
-                                    color: AppColors.white,
-                                    size: 18,
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    statusLabel,
-                                    style: const TextStyle(
-                                      decoration: TextDecoration.none,
-                                      color: AppColors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w900,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                    if (world.isExam) ...[
+                      Text(
+                        'SINAV',
+                        style: TextStyle(
+                          decoration: TextDecoration.none,
+                          color: enabled ? world.color : AppColors.locked,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1.1,
+                        ),
                       ),
+                      const SizedBox(height: 1),
+                    ],
+                    Text(
+                      world.title,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        decoration: TextDecoration.none,
+                        color: enabled ? AppColors.navy : AppColors.slate,
+                        fontSize: 20,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      world.subtitle,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        decoration: TextDecoration.none,
+                        color: AppColors.slate,
+                        fontWeight: FontWeight.w700,
+                        height: 1.25,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Icon(statusIcon, color: statusColor, size: 22),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            statusLabel,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              decoration: TextDecoration.none,
+                              color: statusColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -328,51 +248,6 @@ class _WorldCard extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _WorldIconBadge extends StatelessWidget {
-  const _WorldIconBadge({
-    required this.icon,
-    required this.accent,
-    required this.enabled,
-  });
-
-  final IconData icon;
-  final Color accent;
-  final bool enabled;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 82,
-      height: 82,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: RadialGradient(
-          colors: [
-            Color.lerp(accent, AppColors.white, enabled ? 0.18 : 0.45)!,
-            accent.withValues(alpha: enabled ? 0.9 : 0.35),
-          ],
-        ),
-        border: Border.all(
-          color: AppColors.white.withValues(alpha: enabled ? 0.95 : 0.55),
-          width: 3,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: accent.withValues(alpha: enabled ? 0.35 : 0.12),
-            blurRadius: 14,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Icon(
-        icon,
-        size: 40,
-        color: enabled ? AppColors.white : AppColors.white.withValues(alpha: 0.75),
       ),
     );
   }

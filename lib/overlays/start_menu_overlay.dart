@@ -56,7 +56,7 @@ class _StartContent extends StatelessWidget {
     final illustration = const _NatureIllustration()
         .animate()
         .fadeIn(duration: 550.ms)
-        .scale(begin: const Offset(0.88, 0.88), curve: Curves.easeOutBack);
+        .scale(begin: const Offset(0.9, 0.9), curve: Curves.easeOutBack);
     final panel = _WelcomePanel(onPlay: onPlay);
 
     if (direction == Axis.vertical) {
@@ -86,68 +86,133 @@ class _WelcomePanel extends StatelessWidget {
     return Container(
           padding: const EdgeInsets.fromLTRB(34, 32, 34, 30),
           decoration: BoxDecoration(
-            color: AppColors.white.withValues(alpha: 0.92),
             borderRadius: BorderRadius.circular(34),
-            border: Border.all(color: AppColors.white, width: 2),
-            boxShadow: const [
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color.lerp(AppColors.coral, AppColors.white, 0.88)!,
+                AppColors.white,
+                Color.lerp(AppColors.mint, AppColors.white, 0.9)!,
+              ],
+            ),
+            border: Border.all(
+              color: AppColors.coral.withValues(alpha: 0.28),
+              width: 2.5,
+            ),
+            boxShadow: [
               BoxShadow(
-                color: Color(0x1F294C60),
-                blurRadius: 28,
-                offset: Offset(0, 12),
+                color: AppColors.coral.withValues(alpha: 0.16),
+                blurRadius: 26,
+                offset: const Offset(0, 12),
+              ),
+              BoxShadow(
+                color: AppColors.navy.withValues(alpha: 0.06),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Stack(
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 7,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.sunshine.withValues(alpha: 0.24),
-                  borderRadius: BorderRadius.circular(99),
-                ),
-                child: const Text(
-                  'GÖLGELERİN KORUYUCUSU',
-                  style: TextStyle(
-                    decoration: TextDecoration.none,
-                    color: AppColors.coralDark,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1,
+              Positioned(
+                right: -20,
+                top: -28,
+                child: IgnorePointer(
+                  child: Container(
+                    width: 96,
+                    height: 96,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.sunshine.withValues(alpha: 0.18),
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(height: 18),
-              Text(
-                'Shadow\nGuardian',
-                style: Theme.of(context).textTheme.displayLarge,
-              ),
-              const SizedBox(height: 14),
-              Text(
-                'Şekilleri keşfet, doğru gölgeyi bul ve doğanın '
-                'neşeli dünyasını tamamla!',
-                style: Theme.of(context).textTheme.bodyLarge
-                    ?.copyWith(decoration: TextDecoration.none, height: 1.45),
-              ),
-              const SizedBox(height: 28),
-              FilledButton.icon(
-                onPressed: onPlay,
-                icon: const Icon(Icons.play_arrow_rounded, size: 29),
-                label: const Text(
-                  'Oyuna Başla',
-                  style: TextStyle(decoration: TextDecoration.none),
+              Positioned(
+                left: -16,
+                bottom: -30,
+                child: IgnorePointer(
+                  child: Container(
+                    width: 72,
+                    height: 72,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.mint.withValues(alpha: 0.14),
+                    ),
+                  ),
                 ),
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 7,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.sunshine.withValues(alpha: 0.34),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: AppColors.sunshine.withValues(alpha: 0.55),
+                      ),
+                    ),
+                    child: const Text(
+                      'GÖLGELERİN KORUYUCUSU',
+                      style: TextStyle(
+                        decoration: TextDecoration.none,
+                        color: AppColors.coralDark,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  Text(
+                    'Shadow\nGuardian',
+                    style: Theme.of(context).textTheme.displayLarge,
+                  ),
+                  const SizedBox(height: 14),
+                  Text(
+                    'Şekilleri keşfet, doğru gölgeyi bul ve doğanın '
+                    'neşeli dünyasını tamamla!',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      decoration: TextDecoration.none,
+                      height: 1.45,
+                    ),
+                  ),
+                  const SizedBox(height: 28),
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(22),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.coral.withValues(alpha: 0.32),
+                          blurRadius: 14,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                    child: FilledButton.icon(
+                      onPressed: onPlay,
+                      icon: const Icon(Icons.play_arrow_rounded, size: 29),
+                      label: const Text(
+                        'Oyuna Başla',
+                        style: TextStyle(decoration: TextDecoration.none),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
         )
         .animate(delay: 120.ms)
         .fadeIn(duration: 500.ms)
-        .slideX(begin: 0.08, curve: Curves.easeOutCubic);
+        .slideX(begin: 0.06, curve: Curves.easeOutCubic);
   }
 }
 
@@ -195,21 +260,27 @@ class _NatureIllustration extends StatelessWidget {
             bottom: 15,
             child: Container(
               padding: const EdgeInsets.all(16),
-              decoration: const BoxDecoration(
-                color: AppColors.white,
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    Color.lerp(AppColors.coral, AppColors.white, 0.2)!,
+                    AppColors.coral,
+                  ],
+                ),
+                border: Border.all(color: AppColors.white, width: 3),
                 boxShadow: [
                   BoxShadow(
-                    color: Color(0x24294C60),
-                    blurRadius: 20,
-                    offset: Offset(0, 8),
+                    color: AppColors.coral.withValues(alpha: 0.28),
+                    blurRadius: 16,
+                    offset: const Offset(0, 7),
                   ),
                 ],
               ),
               child: const Icon(
                 Icons.touch_app_rounded,
                 size: 42,
-                color: AppColors.coral,
+                color: AppColors.white,
               ),
             ),
           ),

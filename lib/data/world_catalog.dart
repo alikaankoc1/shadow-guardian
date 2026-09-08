@@ -8,6 +8,7 @@ import 'journeyman_exam.dart';
 import 'nature_world.dart';
 import 'ocean_world.dart';
 import 'professions_world.dart';
+import 'space_world.dart';
 import 'vehicles_world.dart';
 
 /// Theme worlds that must be finished before Çıraklık.
@@ -39,17 +40,8 @@ List<GameWorld> get playableWorlds => [
   professionsWorld,
   oceanWorld,
   journeymanExam,
+  spaceWorld,
 ];
-
-const spaceWorldPreview = GameWorld(
-  id: 'space',
-  title: 'Uzay',
-  subtitle: 'Roketler ve gezegenleri gölgeleriyle buluştur.',
-  icon: Icons.rocket_launch_rounded,
-  color: Color(0xFF8D7BE8),
-  stages: [],
-  lockedHint: 'Önceki dünyaları bitir',
-);
 
 const fairyTaleWorldPreview = GameWorld(
   id: 'fairy_tale',
@@ -92,7 +84,7 @@ List<GameWorld> get allWorlds => [
   professionsWorld,
   oceanWorld,
   journeymanExam,
-  spaceWorldPreview,
+  spaceWorld,
   fairyTaleWorldPreview,
   surpriseWorldPreview,
   masterExam,
