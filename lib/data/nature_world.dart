@@ -25,7 +25,6 @@ const natureItems = <MatchItem>[
     id: 'mountain',
     name: 'Dağ',
     assetPath: 'nature/mountain.png',
-    tintColor: Color(0xFF5E8CA8),
   ),
 ];
 

@@ -12,7 +12,7 @@ licensed under Creative Commons Zero (CC0 1.0).
 - `leaf.png`
   - Pack: Foliage Sprites
   - Source: https://kenney.nl/assets/foliage-sprites
-- `sun.png`, `mountain.png`
+- `sun.png`
   - Pack: Background Elements
   - Source: https://kenney.nl/assets/background-elements
 
@@ -20,3 +20,9 @@ License: https://creativecommons.org/publicdomain/zero/1.0/
 
 These assets may be used and modified in personal and commercial projects.
 Attribution is not required, but credit to Kenney is appreciated.
+
+## Project Original Art
+
+- `mountain.png`
+  - Created for Shadow Guardian as a simple cartoon mountain icon
+  - Released under Creative Commons Zero (CC0 1.0) for this project
