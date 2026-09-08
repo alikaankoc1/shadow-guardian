@@ -57,3 +57,14 @@ Shadow Guardian and released under Creative Commons Zero (CC0 1.0):
 - `police.png` — polis üniforması
 - `teacher.png` — öğretmen / kitap
 - `builder.png` — inşaatçı / baret + yelek
+
+## Ocean (Kenney CC0)
+
+Icons in `assets/game/ocean/` (resized for this project):
+
+- `whale.png`, `penguin.png`, `narwhal.png`
+  - Pack: Animal Pack Remastered
+  - Source: https://kenney.nl/assets/animal-pack-remastered
+- `fish.png`, `blue_fish.png`, `pink_fish.png`
+  - Pack: Fish Pack
+  - Source: https://kenney.nl/assets/fish-pack

@@ -4,7 +4,9 @@ import '../models/game_world.dart';
 import 'animals_world.dart';
 import 'apprentice_exam.dart';
 import 'fruits_world.dart';
+import 'journeyman_exam.dart';
 import 'nature_world.dart';
+import 'ocean_world.dart';
 import 'professions_world.dart';
 import 'vehicles_world.dart';
 
@@ -35,17 +37,9 @@ List<GameWorld> get playableWorlds => [
   apprenticeExam,
   animalsWorld,
   professionsWorld,
+  oceanWorld,
+  journeymanExam,
 ];
-
-const oceanWorldPreview = GameWorld(
-  id: 'ocean',
-  title: 'Deniz Dünyası',
-  subtitle: 'Denizin neşeli sakinleri',
-  icon: Icons.water_rounded,
-  color: Color(0xFF4DB6E8),
-  stages: [],
-  lockedHint: 'Yakında',
-);
 
 const spaceWorldPreview = GameWorld(
   id: 'space',
@@ -77,17 +71,6 @@ const surpriseWorldPreview = GameWorld(
   lockedHint: 'Yakında',
 );
 
-const journeymanExam = GameWorld(
-  id: 'exam_journeyman',
-  title: 'Kalfalık',
-  subtitle: '6 dünyanın karışık eşleşmesi',
-  icon: Icons.military_tech_rounded,
-  color: Color(0xFFFFB74D),
-  stages: [],
-  kind: WorldKind.exam,
-  lockedHint: '6 dünyayı bitir',
-);
-
 const masterExam = GameWorld(
   id: 'exam_master',
   title: 'Ustalık',
@@ -107,7 +90,7 @@ List<GameWorld> get allWorlds => [
   apprenticeExam,
   animalsWorld,
   professionsWorld,
-  oceanWorldPreview,
+  oceanWorld,
   journeymanExam,
   spaceWorldPreview,
   fairyTaleWorldPreview,

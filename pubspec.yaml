@@ -40,6 +40,7 @@ flutter:
     - assets/game/fruits/
     - assets/game/animals/
     - assets/game/professions/
+    - assets/game/ocean/
 
   fonts:
     - family: Nunito

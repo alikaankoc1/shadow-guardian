@@ -54,6 +54,13 @@ void main() {
     expect(game.natureTapped, isTrue);
 
     await tester.scrollUntilVisible(
+      find.text('Deniz Dünyası'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('Deniz Dünyası'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
       find.text('Kalfalık'),
       200,
       scrollable: find.byType(Scrollable).first,

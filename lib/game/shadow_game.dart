@@ -12,6 +12,7 @@ import '../components/stage_backdrop_component.dart';
 import '../data/animals_world.dart';
 import '../data/fruits_world.dart';
 import '../data/nature_world.dart';
+import '../data/ocean_world.dart';
 import '../data/professions_world.dart';
 import '../data/vehicles_world.dart';
 import '../models/game_world.dart';
@@ -73,6 +74,7 @@ class ShadowGame extends FlameGame {
       ...fruitItems.map((item) => item.assetPath),
       ...animalItems.map((item) => item.assetPath),
       ...professionItems.map((item) => item.assetPath),
+      ...oceanItems.map((item) => item.assetPath),
     }.toList(growable: false);
     await images.loadAll(assetPaths);
 
@@ -169,11 +171,18 @@ class ShadowGame extends FlameGame {
 
   Future<void> _buildStage(StageConfig stage) async {
     final count = stage.matchCount;
-    final horizontalPadding = max(count >= 9 ? 18.0 : 34.0, size.x * 0.03);
+    final horizontalPadding = max(
+      count >= 12
+          ? 12.0
+          : count >= 9
+          ? 18.0
+          : 34.0,
+      size.x * 0.02,
+    );
     final availableWidth = size.x - (horizontalPadding * 2);
     final cellWidth = availableWidth / count;
-    final targetY = max(150.0, size.y * 0.35);
-    final objectY = min(size.y - 90, size.y * 0.74);
+    final targetY = max(140.0, size.y * 0.34);
+    final objectY = min(size.y - 80, size.y * 0.74);
 
     final backdrop = StageBackdropComponent(stage: stage)..size = size.clone();
     _stageComponents.add(backdrop);
@@ -223,9 +232,25 @@ class ShadowGame extends FlameGame {
       sprite.image.width.toDouble(),
       sprite.image.height.toDouble(),
     );
-    final dense = (currentStage?.matchCount ?? 0) >= 9;
-    final maxWidth = min(dense ? 86.0 : 116.0, cellWidth * 0.72);
-    final maxHeight = min(dense ? 84.0 : 112.0, size.y * (dense ? 0.18 : 0.21));
+    final count = currentStage?.matchCount ?? 0;
+    final dense = count >= 9;
+    final veryDense = count >= 12;
+    final maxWidth = min(
+      veryDense
+          ? 68.0
+          : dense
+          ? 86.0
+          : 116.0,
+      cellWidth * 0.78,
+    );
+    final maxHeight = min(
+      veryDense
+          ? 68.0
+          : dense
+          ? 84.0
+          : 112.0,
+      size.y * (veryDense ? 0.16 : dense ? 0.18 : 0.21),
+    );
     final scale = min(maxWidth / imageSize.x, maxHeight / imageSize.y);
     return imageSize * scale;
   }
