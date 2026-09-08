@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import '../components/match_object_component.dart';
 import '../components/shadow_target_component.dart';
 import '../data/nature_world.dart';
-import '../models/match_item.dart';
 import '../models/stage_config.dart';
 import '../services/progress_service.dart';
 import '../theme/app_theme.dart';

@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
+
 @immutable
 class MatchItem {
   const MatchItem({
