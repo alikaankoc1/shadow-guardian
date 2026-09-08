@@ -28,7 +28,7 @@ class ShadowComponent extends PositionComponent
 
   @override
   void onDragUpdate(DragUpdateEvent event) {
-    if (isLocked) {
+    if (isLocked || !game.isPlaying) {
       return;
     }
 
@@ -39,7 +39,7 @@ class ShadowComponent extends PositionComponent
   @override
   void onDragEnd(DragEndEvent event) {
     super.onDragEnd(event);
-    if (!isLocked) {
+    if (!isLocked && game.isPlaying) {
       _trySnapToCloud();
     }
   }

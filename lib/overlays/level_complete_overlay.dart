@@ -18,9 +18,10 @@ class LevelCompleteOverlay extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(top: 36),
               child: Text(
-                'Tebrikler! Bölüm Tamamlandı',
+                'Tebrikler! Bölüm ${game.currentLevel} Tamamlandı',
                 textAlign: TextAlign.center,
                 style: TextStyle(
+                  decoration: TextDecoration.none,
                   fontSize: 26,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0.2,
@@ -45,6 +46,7 @@ class LevelCompleteOverlay extends StatelessWidget {
                 style: FilledButton.styleFrom(
                   backgroundColor: const Color(0xFF4FC3F7),
                   foregroundColor: Colors.white,
+                  elevation: 0,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 32,
                     vertical: 16,
@@ -53,11 +55,17 @@ class LevelCompleteOverlay extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   textStyle: const TextStyle(
+                    decoration: TextDecoration.none,
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                child: const Text('Sonraki Seviye'),
+                child: const Text(
+                  'Sonraki Seviye',
+                  style: TextStyle(
+                    decoration: TextDecoration.none,
+                  ),
+                ),
               ),
             ),
           ),
