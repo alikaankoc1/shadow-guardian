@@ -126,7 +126,12 @@ class _WorldCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final enabled = onTap != null;
-    final lockedLabel = world.isAvailable ? 'Doğayı bitir' : 'Yakında';
+    final lockedLabel = world.lockedHint ?? 'Yakında';
+    final statusLabel = completed
+        ? 'Tamamlandı'
+        : enabled
+        ? (world.isExam ? 'Sınav' : '3 seviye')
+        : 'Kilitli';
 
     return Material(
       color: Colors.transparent,
@@ -142,9 +147,9 @@ class _WorldCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(28),
             border: Border.all(
               color: enabled
-                  ? world.color.withValues(alpha: 0.55)
+                  ? world.color.withValues(alpha: world.isExam ? 0.75 : 0.55)
                   : AppColors.locked.withValues(alpha: 0.35),
-              width: 2,
+              width: world.isExam ? 3 : 2,
             ),
             boxShadow: const [
               BoxShadow(
@@ -175,6 +180,19 @@ class _WorldCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    if (world.isExam) ...[
+                      Text(
+                        'SINAV',
+                        style: TextStyle(
+                          decoration: TextDecoration.none,
+                          color: enabled ? world.color : AppColors.locked,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1.1,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                    ],
                     Text(
                       world.title,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -211,11 +229,7 @@ class _WorldCard extends StatelessWidget {
                         const SizedBox(width: 6),
                         Flexible(
                           child: Text(
-                            completed
-                                ? 'Tamamlandı'
-                                : enabled
-                                ? '3 seviye'
-                                : 'Kilitli',
+                            statusLabel,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(

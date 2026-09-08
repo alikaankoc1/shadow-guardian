@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shadow_guardian/data/world_catalog.dart';
 import 'package:shadow_guardian/services/progress_service.dart';
 
 void main() {
@@ -17,6 +18,7 @@ void main() {
     expect(progress.isWorldCompleted('nature'), isFalse);
     expect(progress.isWorldUnlocked('nature'), isTrue);
     expect(progress.isWorldUnlocked('vehicles'), isFalse);
+    expect(progress.isWorldUnlocked('exam_apprentice'), isFalse);
   });
 
   test('completing nature stages unlocks the next stage', () async {
@@ -38,8 +40,16 @@ void main() {
   });
 
   test('completing nature unlocks vehicles', () async {
-    await service.completeStage(worldId: 'nature', stageNumber: 1, totalStages: 3);
-    await service.completeStage(worldId: 'nature', stageNumber: 2, totalStages: 3);
+    await service.completeStage(
+      worldId: 'nature',
+      stageNumber: 1,
+      totalStages: 3,
+    );
+    await service.completeStage(
+      worldId: 'nature',
+      stageNumber: 2,
+      totalStages: 3,
+    );
     final progress = await service.completeStage(
       worldId: 'nature',
       stageNumber: 3,
@@ -55,7 +65,11 @@ void main() {
   });
 
   test('vehicles progress is tracked separately', () async {
-    await service.completeStage(worldId: 'nature', stageNumber: 3, totalStages: 3);
+    await service.completeStage(
+      worldId: 'nature',
+      stageNumber: 3,
+      totalStages: 3,
+    );
     final afterVehicles = await service.completeStage(
       worldId: 'vehicles',
       stageNumber: 1,
@@ -65,5 +79,33 @@ void main() {
     expect(afterVehicles.forWorld('vehicles').highestUnlockedStage, 2);
     expect(afterVehicles.isWorldCompleted('nature'), isTrue);
     expect(afterVehicles.isWorldCompleted('vehicles'), isFalse);
+  });
+
+  test('exam cards unlock after their world blocks', () async {
+    expect((await service.load()).isWorldUnlocked('exam_apprentice'), isFalse);
+
+    for (final worldId in apprenticeWorldIds) {
+      await service.completeStage(
+        worldId: worldId,
+        stageNumber: 3,
+        totalStages: 3,
+      );
+    }
+
+    final afterBlock1 = await service.load();
+    expect(afterBlock1.isWorldUnlocked('exam_apprentice'), isTrue);
+    expect(afterBlock1.isWorldUnlocked('exam_journeyman'), isFalse);
+
+    for (final worldId in ['animals', 'professions', 'ocean']) {
+      await service.completeStage(
+        worldId: worldId,
+        stageNumber: 3,
+        totalStages: 3,
+      );
+    }
+
+    final afterBlock2Themes = await service.load();
+    expect(afterBlock2Themes.isWorldUnlocked('exam_journeyman'), isTrue);
+    expect(afterBlock2Themes.isWorldUnlocked('exam_master'), isFalse);
   });
 }

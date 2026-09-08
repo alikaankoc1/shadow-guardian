@@ -45,9 +45,18 @@ void main() {
     expect(find.text('Bir dünya seç'), findsOneWidget);
     expect(find.text('Doğa Dünyası'), findsOneWidget);
     expect(find.text('Araçlar'), findsOneWidget);
+    expect(find.text('Çıraklık Sınavı'), findsOneWidget);
+    expect(find.text('Kalfalık'), findsOneWidget);
 
     await tester.tap(find.text('Doğa Dünyası'));
     expect(game.natureTapped, isTrue);
+
+    await tester.scrollUntilVisible(
+      find.text('Ustalık'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('Ustalık'), findsOneWidget);
 
     await tester.pumpWidget(
       MaterialApp(

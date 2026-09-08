@@ -1,5 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../data/world_catalog.dart';
+
 class WorldProgress {
   const WorldProgress({
     required this.highestUnlockedStage,
@@ -22,13 +24,36 @@ class GameProgress {
 
   bool isWorldCompleted(String worldId) => forWorld(worldId).isCompleted;
 
-  /// Worlds unlock in sequence: Nature → Vehicles → …
+  bool areAllCompleted(List<String> worldIds) =>
+      worldIds.every(isWorldCompleted);
+
+  /// Theme worlds unlock in sequence; exams unlock after their block.
   bool isWorldUnlocked(String worldId) {
     switch (worldId) {
       case 'nature':
         return true;
       case 'vehicles':
         return isWorldCompleted('nature');
+      case 'fruits':
+        return isWorldCompleted('vehicles');
+      case 'exam_apprentice':
+        return areAllCompleted(apprenticeWorldIds);
+      case 'animals':
+        return isWorldCompleted('exam_apprentice');
+      case 'professions':
+        return isWorldCompleted('animals');
+      case 'ocean':
+        return isWorldCompleted('professions');
+      case 'exam_journeyman':
+        return areAllCompleted(journeymanWorldIds);
+      case 'space':
+        return isWorldCompleted('exam_journeyman');
+      case 'fairy_tale':
+        return isWorldCompleted('space');
+      case 'surprise':
+        return isWorldCompleted('fairy_tale');
+      case 'exam_master':
+        return areAllCompleted(masterWorldIds);
       default:
         return false;
     }
@@ -79,7 +104,12 @@ class ProgressService {
   }
 
   GameProgress _readProgress(SharedPreferences preferences) {
-    const trackedWorlds = ['nature', 'vehicles'];
+    const trackedWorlds = [
+      ...masterWorldIds,
+      'exam_apprentice',
+      'exam_journeyman',
+      'exam_master',
+    ];
     final byWorldId = <String, WorldProgress>{};
 
     for (final worldId in trackedWorlds) {

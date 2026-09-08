@@ -20,6 +20,7 @@ final vehiclesWorld = GameWorld(
   icon: Icons.directions_car_filled_rounded,
   color: Color(0xFFFFA45B),
   isAvailable: true,
+  lockedHint: 'Doğayı bitir',
   stages: [
     StageConfig(
       number: 1,

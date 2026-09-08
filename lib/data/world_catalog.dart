@@ -4,46 +4,146 @@ import '../models/game_world.dart';
 import 'nature_world.dart';
 import 'vehicles_world.dart';
 
-/// Playable worlds in unlock order.
-List<GameWorld> get playableWorlds => [natureWorld, vehiclesWorld];
+/// Theme worlds that must be finished before Çıraklık.
+const apprenticeWorldIds = ['nature', 'vehicles', 'fruits'];
 
-/// Worlds still shown as locked placeholders.
-const upcomingWorlds = <GameWorld>[
-  GameWorld(
-    id: 'ocean',
-    title: 'Deniz Dünyası',
-    subtitle: 'Denizin neşeli sakinleri',
-    icon: Icons.water_rounded,
-    color: Color(0xFF4DB6E8),
-    stages: [],
-  ),
-  GameWorld(
-    id: 'space',
-    title: 'Uzay',
-    subtitle: 'Roketler ve gezegenler',
-    icon: Icons.rocket_launch_rounded,
-    color: Color(0xFF8D7BE8),
-    stages: [],
-  ),
-  GameWorld(
-    id: 'fairy_tale',
-    title: 'Masal Dünyası',
-    subtitle: 'Kaleler ve ejderhalar',
-    icon: Icons.castle_rounded,
-    color: Color(0xFFE77EB4),
-    stages: [],
-  ),
-  GameWorld(
-    id: 'master',
-    title: 'Usta Dünyası',
-    subtitle: 'Tüm dünyalar bir arada',
-    icon: Icons.workspace_premium_rounded,
-    color: Color(0xFFFFC857),
-    stages: [],
-  ),
+/// Theme worlds that must be finished before Kalfalık (includes block 1).
+const journeymanWorldIds = [
+  ...apprenticeWorldIds,
+  'animals',
+  'professions',
+  'ocean',
 ];
 
-List<GameWorld> get allWorlds => [...playableWorlds, ...upcomingWorlds];
+/// All theme worlds before Ustalık.
+const masterWorldIds = [
+  ...journeymanWorldIds,
+  'space',
+  'fairy_tale',
+  'surprise',
+];
+
+/// Playable theme worlds so far.
+List<GameWorld> get playableWorlds => [natureWorld, vehiclesWorld];
+
+const fruitsWorldPreview = GameWorld(
+  id: 'fruits',
+  title: 'Meyve & Sebze',
+  subtitle: 'Lezzetli besinleri tanı',
+  icon: Icons.eco_rounded,
+  color: Color(0xFF7BC67E),
+  stages: [],
+  lockedHint: 'Yakında',
+);
+
+const animalsWorldPreview = GameWorld(
+  id: 'animals',
+  title: 'Sevimli Dostlar',
+  subtitle: 'Kedi, köpek, aslan, fil',
+  icon: Icons.pets_rounded,
+  color: Color(0xFFFFB74D),
+  stages: [],
+  lockedHint: 'Yakında',
+);
+
+const professionsWorldPreview = GameWorld(
+  id: 'professions',
+  title: 'Meslekler',
+  subtitle: 'Meslekleri tanıyalım',
+  icon: Icons.work_rounded,
+  color: Color(0xFF64B5F6),
+  stages: [],
+  lockedHint: 'Yakında',
+);
+
+const oceanWorldPreview = GameWorld(
+  id: 'ocean',
+  title: 'Deniz Dünyası',
+  subtitle: 'Denizin neşeli sakinleri',
+  icon: Icons.water_rounded,
+  color: Color(0xFF4DB6E8),
+  stages: [],
+  lockedHint: 'Yakında',
+);
+
+const spaceWorldPreview = GameWorld(
+  id: 'space',
+  title: 'Uzay',
+  subtitle: 'Roketler ve gezegenler',
+  icon: Icons.rocket_launch_rounded,
+  color: Color(0xFF8D7BE8),
+  stages: [],
+  lockedHint: 'Yakında',
+);
+
+const fairyTaleWorldPreview = GameWorld(
+  id: 'fairy_tale',
+  title: 'Masal Dünyası',
+  subtitle: 'Kaleler ve ejderhalar',
+  icon: Icons.castle_rounded,
+  color: Color(0xFFE77EB4),
+  stages: [],
+  lockedHint: 'Yakında',
+);
+
+const surpriseWorldPreview = GameWorld(
+  id: 'surprise',
+  title: 'Sürpriz Dünya',
+  subtitle: 'Son tema yakında seçilecek',
+  icon: Icons.auto_awesome_rounded,
+  color: Color(0xFF90A4AE),
+  stages: [],
+  lockedHint: 'Yakında',
+);
+
+const apprenticeExam = GameWorld(
+  id: 'exam_apprentice',
+  title: 'Çıraklık Sınavı',
+  subtitle: 'İlk 3 dünyanın karışık eşleşmesi',
+  icon: Icons.school_rounded,
+  color: Color(0xFF81C784),
+  stages: [],
+  kind: WorldKind.exam,
+  lockedHint: 'İlk 3 dünyayı bitir',
+);
+
+const journeymanExam = GameWorld(
+  id: 'exam_journeyman',
+  title: 'Kalfalık',
+  subtitle: '6 dünyanın karışık eşleşmesi',
+  icon: Icons.military_tech_rounded,
+  color: Color(0xFFFFB74D),
+  stages: [],
+  kind: WorldKind.exam,
+  lockedHint: '6 dünyayı bitir',
+);
+
+const masterExam = GameWorld(
+  id: 'exam_master',
+  title: 'Ustalık',
+  subtitle: 'Tüm dünyaların karışık eşleşmesi',
+  icon: Icons.workspace_premium_rounded,
+  color: Color(0xFFFFC857),
+  stages: [],
+  kind: WorldKind.exam,
+  lockedHint: 'Tüm dünyaları bitir',
+);
+
+/// Menu order: 3 themes → exam → 3 themes → exam → 3 themes → exam.
+List<GameWorld> get allWorlds => [
+  natureWorld,
+  vehiclesWorld,
+  fruitsWorldPreview,
+  apprenticeExam,
+  animalsWorldPreview,
+  professionsWorldPreview,
+  oceanWorldPreview,
+  journeymanExam,
+  spaceWorldPreview,
+  fairyTaleWorldPreview,
+  surpriseWorldPreview,
+  masterExam,
+];
 
 GameWorld? worldById(String id) {
   for (final world in allWorlds) {
