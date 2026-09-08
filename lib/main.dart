@@ -10,23 +10,16 @@ void main() {
   runApp(const ShadowGuardianApp());
 }
 
-class ShadowGuardianApp extends StatefulWidget {
+class ShadowGuardianApp extends StatelessWidget {
   const ShadowGuardianApp({super.key});
-
-  @override
-  State<ShadowGuardianApp> createState() => _ShadowGuardianAppState();
-}
-
-class _ShadowGuardianAppState extends State<ShadowGuardianApp> {
-  late final ShadowGame _game = ShadowGame();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Shadow Guardian',
       debugShowCheckedModeBanner: false,
-      home: GameWidget(
-        game: _game,
+      home: GameWidget.controlled(
+        gameFactory: ShadowGame.new,
         overlayBuilderMap: {
           ShadowGame.startMenuOverlay: (context, game) {
             return StartMenuOverlay(game: game as ShadowGame);

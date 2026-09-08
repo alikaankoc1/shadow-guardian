@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flame/components.dart';
@@ -5,98 +6,259 @@ import 'package:flame/game.dart';
 import 'package:flame/particles.dart';
 import 'package:flutter/material.dart';
 
-import '../components/cloud_component.dart';
-import '../components/shadow_component.dart';
+import '../components/match_object_component.dart';
+import '../components/shadow_target_component.dart';
+import '../data/nature_world.dart';
+import '../models/match_item.dart';
+import '../models/stage_config.dart';
+import '../services/progress_service.dart';
+import '../theme/app_theme.dart';
 
-/// Root Flame game for Shadow Guardian.
 class ShadowGame extends FlameGame {
-  static const Color skyBlue = Color(0xFFE3F2FD);
-  static const String startMenuOverlay = 'startMenu';
-  static const String levelCompleteOverlay = 'levelComplete';
+  ShadowGame({ProgressService? progressService})
+    : _progressService = progressService ?? ProgressService();
+
+  static const startMenuOverlay = 'startMenu';
+  static const worldSelectOverlay = 'worldSelect';
+  static const stageSelectOverlay = 'stageSelect';
+  static const gameHudOverlay = 'gameHud';
+  static const levelCompleteOverlay = 'levelComplete';
 
   static const List<Color> _confettiColors = [
-    Color(0xFFFF8A80), // soft coral
-    Color(0xFFFFD54F), // warm yellow
-    Color(0xFF81C784), // mint green
-    Color(0xFF64B5F6), // sky blue
-    Color(0xFFFFAB91), // peach
-    Color(0xFFCE93D8), // soft lilac
+    Color(0xFFFF7A68),
+    Color(0xFFFFC857),
+    Color(0xFF66CDAA),
+    Color(0xFF45A9E6),
+    Color(0xFFCE93D8),
   ];
 
-  late final CloudComponent cloud;
-  late final ShadowComponent shadow;
-  late Vector2 _shadowStartPosition;
-
+  final ProgressService _progressService;
   final Random _random = Random();
+  final List<Component> _stageComponents = [];
 
-  /// `0` means the start menu is active; gameplay levels begin at `1`.
-  int currentLevel = 0;
+  StageConfig? currentStage;
+  int highestUnlockedStage = 1;
+  bool isNatureWorldCompleted = false;
+  int matchedCount = 0;
 
-  /// True while a level is playable (menu closed, not celebrating).
-  bool get isPlaying =>
-      currentLevel > 0 && !overlays.isActive(levelCompleteOverlay);
+  bool _isCompleting = false;
+  bool _isStageActive = false;
+
+  bool get isPlaying => _isStageActive && !_isCompleting;
+  bool get isLastStage =>
+      currentStage?.number == natureWorld.stages.length;
 
   @override
-  Color backgroundColor() => skyBlue;
+  Color backgroundColor() => AppColors.sky;
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
 
-    final center = size / 2;
-    _shadowStartPosition = Vector2(center.x, center.y + 100);
+    images.prefix = 'assets/game/';
+    await images.loadAll(
+      natureItems.map((item) => item.assetPath).toList(growable: false),
+    );
 
-    cloud = CloudComponent(position: center);
-    shadow = ShadowComponent(position: _shadowStartPosition.clone());
+    final progress = await _progressService.load();
+    _applyProgress(progress);
 
-    await addAll([cloud, shadow]);
-
-    // Freeze the scene until the player taps "Oyuna Başla".
     pauseEngine();
   }
 
-  /// Closes the start menu and begins level 1.
-  void startGame() {
-    overlays.remove(startMenuOverlay);
-    currentLevel = 1;
-    shadow.resetTo(_shadowStartPosition);
-    resumeEngine();
+  bool isStageUnlocked(int stageNumber) =>
+      stageNumber <= highestUnlockedStage;
+
+  bool isStageCompleted(int stageNumber) =>
+      isNatureWorldCompleted || stageNumber < highestUnlockedStage;
+
+  void startGame() => showWorldSelect();
+
+  void showStartMenu() {
+    _leaveStage();
+    overlays.clear();
+    overlays.add(startMenuOverlay);
   }
 
-  /// Called by [ShadowComponent] when it snaps onto the cloud.
-  void onShadowMatched() {
-    if (!isPlaying) {
+  void showWorldSelect() {
+    _leaveStage();
+    overlays.clear();
+    overlays.add(worldSelectOverlay);
+  }
+
+  void showStageSelect() {
+    _leaveStage();
+    overlays.clear();
+    overlays.add(stageSelectOverlay);
+  }
+
+  Future<void> startStage(StageConfig stage) async {
+    if (!isStageUnlocked(stage.number)) {
       return;
     }
 
-    _spawnConfetti(cloud.position);
+    _removeStageComponents();
+    currentStage = stage;
+    matchedCount = 0;
+    _isCompleting = false;
+    _isStageActive = true;
+
+    overlays.clear();
+    overlays.add(gameHudOverlay);
+    await _buildStage(stage);
+    resumeEngine();
+  }
+
+  void matchObject(MatchObjectComponent object) {
+    if (!isPlaying || object.isLocked) {
+      return;
+    }
+
+    object.lockToTarget();
+    matchedCount += 1;
+    _spawnConfetti(object.position, count: 14, power: 120);
+    overlays.remove(gameHudOverlay);
+    overlays.add(gameHudOverlay);
+
+    if (matchedCount == currentStage?.matchCount) {
+      unawaited(_completeCurrentStage());
+    }
+  }
+
+  Future<void> goToNextLevel() async {
+    final stage = currentStage;
+    if (stage == null) {
+      showStageSelect();
+      return;
+    }
+
+    if (stage.number < natureWorld.stages.length) {
+      await startStage(natureWorld.stages[stage.number]);
+    } else {
+      showStageSelect();
+    }
+  }
+
+  Future<void> _buildStage(StageConfig stage) async {
+    final count = stage.matchCount;
+    final horizontalPadding = max(34.0, size.x * 0.055);
+    final availableWidth = size.x - (horizontalPadding * 2);
+    final cellWidth = availableWidth / count;
+    final targetY = max(150.0, size.y * 0.35);
+    final objectY = min(size.y - 90, size.y * 0.74);
+
+    final targets = <ShadowTargetComponent>[];
+
+    for (var index = 0; index < count; index++) {
+      final item = stage.items[index];
+      final sprite = Sprite(images.fromCache(item.assetPath));
+      final displaySize = _fitSprite(sprite, cellWidth);
+      final target = ShadowTargetComponent(
+        itemId: item.id,
+        sprite: sprite,
+        position: Vector2(
+          horizontalPadding + cellWidth * (index + 0.5),
+          targetY,
+        ),
+        size: displaySize,
+      );
+      targets.add(target);
+      _stageComponents.add(target);
+    }
+
+    for (var index = 0; index < count; index++) {
+      final item = stage.items[index];
+      final sprite = Sprite(images.fromCache(item.assetPath));
+      final displaySize = _fitSprite(sprite, cellWidth);
+      final shuffledSlot = (index + max(1, count ~/ 2)) % count;
+      final object = MatchObjectComponent(
+        item: item,
+        sprite: sprite,
+        size: displaySize,
+        target: targets[index],
+        startPosition: Vector2(
+          horizontalPadding + cellWidth * (shuffledSlot + 0.5),
+          objectY,
+        ),
+      );
+      _stageComponents.add(object);
+    }
+
+    await addAll(_stageComponents);
+  }
+
+  Vector2 _fitSprite(Sprite sprite, double cellWidth) {
+    final imageSize = Vector2(
+      sprite.image.width.toDouble(),
+      sprite.image.height.toDouble(),
+    );
+    final maxWidth = min(116.0, cellWidth * 0.7);
+    final maxHeight = min(112.0, size.y * 0.21);
+    final scale = min(maxWidth / imageSize.x, maxHeight / imageSize.y);
+    return imageSize * scale;
+  }
+
+  Future<void> _completeCurrentStage() async {
+    final stage = currentStage;
+    if (stage == null || _isCompleting) {
+      return;
+    }
+
+    _isCompleting = true;
+    _spawnConfetti(size / 2, count: 54, power: 240);
+
+    final progress = await _progressService.completeStage(
+      stageNumber: stage.number,
+      totalStages: natureWorld.stages.length,
+    );
+    _applyProgress(progress);
     overlays.add(levelCompleteOverlay);
   }
 
-  /// Advances to the next level and resets the shadow.
-  void goToNextLevel() {
-    overlays.remove(levelCompleteOverlay);
-    currentLevel += 1;
-    shadow.resetTo(_shadowStartPosition);
+  void _applyProgress(GameProgress progress) {
+    highestUnlockedStage = progress.highestUnlockedStage;
+    isNatureWorldCompleted = progress.isNatureWorldCompleted;
   }
 
-  void _spawnConfetti(Vector2 origin) {
+  void _leaveStage() {
+    pauseEngine();
+    _isStageActive = false;
+    _isCompleting = false;
+    matchedCount = 0;
+    currentStage = null;
+    _removeStageComponents();
+  }
+
+  void _removeStageComponents() {
+    for (final component in _stageComponents) {
+      component.removeFromParent();
+    }
+    _stageComponents.clear();
+  }
+
+  void _spawnConfetti(
+    Vector2 origin, {
+    required int count,
+    required double power,
+  }) {
     add(
       ParticleSystemComponent(
         position: origin.clone(),
+        priority: 100,
         particle: Particle.generate(
-          count: 48,
-          lifespan: 1.8,
-          generator: (i) {
+          count: count,
+          lifespan: 1.25,
+          generator: (index) {
             final angle = _random.nextDouble() * 2 * pi;
-            final speed = 120 + _random.nextDouble() * 220;
-            final color = _confettiColors[i % _confettiColors.length];
+            final speed = power * (0.55 + _random.nextDouble() * 0.65);
+            final color =
+                _confettiColors[index % _confettiColors.length];
 
             return AcceleratedParticle(
-              acceleration: Vector2(0, 280),
+              acceleration: Vector2(0, 210),
               speed: Vector2(cos(angle), sin(angle)) * speed,
               child: CircleParticle(
-                radius: 3 + _random.nextDouble() * 4,
+                radius: 2.5 + _random.nextDouble() * 3.5,
                 paint: Paint()..color = color,
               ),
             );
