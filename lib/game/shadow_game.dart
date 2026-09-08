@@ -12,6 +12,7 @@ import '../components/stage_backdrop_component.dart';
 import '../data/animals_world.dart';
 import '../data/fruits_world.dart';
 import '../data/nature_world.dart';
+import '../data/professions_world.dart';
 import '../data/vehicles_world.dart';
 import '../models/game_world.dart';
 import '../models/stage_config.dart';
@@ -71,6 +72,7 @@ class ShadowGame extends FlameGame {
       ...vehicleItems.map((item) => item.assetPath),
       ...fruitItems.map((item) => item.assetPath),
       ...animalItems.map((item) => item.assetPath),
+      ...professionItems.map((item) => item.assetPath),
     }.toList(growable: false);
     await images.loadAll(assetPaths);
 

@@ -5,6 +5,7 @@ import 'animals_world.dart';
 import 'apprentice_exam.dart';
 import 'fruits_world.dart';
 import 'nature_world.dart';
+import 'professions_world.dart';
 import 'vehicles_world.dart';
 
 /// Theme worlds that must be finished before Çıraklık.
@@ -33,17 +34,8 @@ List<GameWorld> get playableWorlds => [
   fruitsWorld,
   apprenticeExam,
   animalsWorld,
+  professionsWorld,
 ];
-
-const professionsWorldPreview = GameWorld(
-  id: 'professions',
-  title: 'Meslekler',
-  subtitle: 'Meslekleri tanıyalım',
-  icon: Icons.work_rounded,
-  color: Color(0xFF64B5F6),
-  stages: [],
-  lockedHint: 'Yakında',
-);
 
 const oceanWorldPreview = GameWorld(
   id: 'ocean',
@@ -114,7 +106,7 @@ List<GameWorld> get allWorlds => [
   fruitsWorld,
   apprenticeExam,
   animalsWorld,
-  professionsWorldPreview,
+  professionsWorld,
   oceanWorldPreview,
   journeymanExam,
   spaceWorldPreview,

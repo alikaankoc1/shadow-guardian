@@ -45,3 +45,15 @@ Creative Commons Zero (CC0 1.0) for this project:
 - `assets/game/animals/elephant.png`
 - `assets/game/animals/rabbit.png`
 - `assets/game/animals/bird.png`
+
+## Professions (project original characters)
+
+Cartoon profession characters in `assets/game/professions/` were created for
+Shadow Guardian and released under Creative Commons Zero (CC0 1.0):
+
+- `firefighter.png` — itfaiyeci üniforması
+- `doctor.png` — doktor / önlük + stetoskop
+- `chef.png` — aşçı / şapka + önlük
+- `police.png` — polis üniforması
+- `teacher.png` — öğretmen / kitap
+- `builder.png` — inşaatçı / baret + yelek
