@@ -17,7 +17,7 @@ void main() {
     await tester.pumpWidget(const ShadowGuardianApp());
     await tester.pump(const Duration(seconds: 1));
 
-    expect(find.text('Shadow Guardian'), findsOneWidget);
+    expect(find.text('Shadow\nGuardian'), findsOneWidget);
     expect(find.text('Oyuna Başla'), findsOneWidget);
 
     await tester.tap(find.text('Oyuna Başla'));

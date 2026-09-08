@@ -6,27 +6,15 @@ import '../models/stage_config.dart';
 import '../theme/app_theme.dart';
 
 const natureItems = <MatchItem>[
-  MatchItem(
-    id: 'cloud',
-    name: 'Bulut',
-    assetPath: 'nature/cloud.png',
-  ),
+  MatchItem(id: 'cloud', name: 'Bulut', assetPath: 'nature/cloud.png'),
   MatchItem(
     id: 'sun',
     name: 'Güneş',
     assetPath: 'nature/sun.png',
     tintColor: AppColors.sunshine,
   ),
-  MatchItem(
-    id: 'tree',
-    name: 'Ağaç',
-    assetPath: 'nature/tree.png',
-  ),
-  MatchItem(
-    id: 'flower',
-    name: 'Çiçek',
-    assetPath: 'nature/flower.png',
-  ),
+  MatchItem(id: 'tree', name: 'Ağaç', assetPath: 'nature/tree.png'),
+  MatchItem(id: 'flower', name: 'Çiçek', assetPath: 'nature/flower.png'),
   MatchItem(
     id: 'leaf',
     name: 'Yaprak',

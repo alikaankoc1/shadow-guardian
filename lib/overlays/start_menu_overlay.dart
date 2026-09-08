@@ -46,10 +46,7 @@ class StartMenuOverlay extends StatelessWidget {
 }
 
 class _StartContent extends StatelessWidget {
-  const _StartContent({
-    required this.direction,
-    required this.onPlay,
-  });
+  const _StartContent({required this.direction, required this.onPlay});
 
   final Axis direction;
   final VoidCallback onPlay;
@@ -59,20 +56,13 @@ class _StartContent extends StatelessWidget {
     final illustration = const _NatureIllustration()
         .animate()
         .fadeIn(duration: 550.ms)
-        .scale(
-          begin: const Offset(0.88, 0.88),
-          curve: Curves.easeOutBack,
-        );
+        .scale(begin: const Offset(0.88, 0.88), curve: Curves.easeOutBack);
     final panel = _WelcomePanel(onPlay: onPlay);
 
     if (direction == Axis.vertical) {
       return Column(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          illustration,
-          const SizedBox(height: 16),
-          panel,
-        ],
+        children: [illustration, const SizedBox(height: 16), panel],
       );
     }
 
@@ -140,10 +130,8 @@ class _WelcomePanel extends StatelessWidget {
               Text(
                 'Şekilleri keşfet, doğru gölgeyi bul ve doğanın '
                 'neşeli dünyasını tamamla!',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  decoration: TextDecoration.none,
-                  height: 1.45,
-                ),
+                style: Theme.of(context).textTheme.bodyLarge
+                    ?.copyWith(decoration: TextDecoration.none, height: 1.45),
               ),
               const SizedBox(height: 28),
               FilledButton.icon(

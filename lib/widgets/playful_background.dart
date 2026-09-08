@@ -24,11 +24,7 @@ class PlayfulBackground extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFFEAF8FF),
-                  AppColors.sky,
-                  Color(0xFFD7F2EE),
-                ],
+                colors: [Color(0xFFEAF8FF), AppColors.sky, Color(0xFFD7F2EE)],
               ),
             ),
           ),
@@ -81,10 +77,7 @@ class _SoftCircle extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
     );
   }
 }

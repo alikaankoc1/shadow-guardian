@@ -11,10 +11,9 @@ class GameProgress {
 }
 
 class ProgressService {
-  ProgressService({
-    Future<SharedPreferences> Function()? preferencesProvider,
-  }) : _preferencesProvider =
-           preferencesProvider ?? SharedPreferences.getInstance;
+  ProgressService({Future<SharedPreferences> Function()? preferencesProvider})
+    : _preferencesProvider =
+          preferencesProvider ?? SharedPreferences.getInstance;
 
   static const _highestStageKey = 'nature_highest_unlocked_stage';
   static const _natureCompletedKey = 'nature_world_completed';
@@ -27,8 +26,7 @@ class ProgressService {
 
     return GameProgress(
       highestUnlockedStage: highestStage.clamp(1, 3),
-      isNatureWorldCompleted:
-          preferences.getBool(_natureCompletedKey) ?? false,
+      isNatureWorldCompleted: preferences.getBool(_natureCompletedKey) ?? false,
     );
   }
 
@@ -54,8 +52,7 @@ class ProgressService {
     return GameProgress(
       highestUnlockedStage: highestUnlocked,
       isNatureWorldCompleted:
-          worldCompleted ||
-          (preferences.getBool(_natureCompletedKey) ?? false),
+          worldCompleted || (preferences.getBool(_natureCompletedKey) ?? false),
     );
   }
 }

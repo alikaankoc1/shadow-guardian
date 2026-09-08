@@ -42,10 +42,7 @@ class StageSelectOverlay extends StatelessWidget {
                             )
                             .animate(delay: (stage.number * 90).ms)
                             .fadeIn(duration: 400.ms)
-                            .slideY(
-                              begin: 0.1,
-                              curve: Curves.easeOutCubic,
-                            ),
+                            .slideY(begin: 0.1, curve: Curves.easeOutCubic),
                     ],
                   ),
                 ),
@@ -59,10 +56,7 @@ class StageSelectOverlay extends StatelessWidget {
 }
 
 class _StageHeader extends StatelessWidget {
-  const _StageHeader({
-    required this.onBack,
-    required this.completed,
-  });
+  const _StageHeader({required this.onBack, required this.completed});
 
   final VoidCallback onBack;
   final bool completed;
@@ -109,9 +103,7 @@ class _StageHeader extends StatelessWidget {
           ),
         ),
         if (completed)
-          const _CompletionBadge()
-              .animate()
-              .scale(curve: Curves.easeOutBack),
+          const _CompletionBadge().animate().scale(curve: Curves.easeOutBack),
       ],
     );
   }
@@ -131,10 +123,7 @@ class _CompletionBadge extends StatelessWidget {
       child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.workspace_premium_rounded,
-            color: AppColors.coralDark,
-          ),
+          Icon(Icons.workspace_premium_rounded, color: AppColors.coralDark),
           SizedBox(width: 6),
           Text(
             'TAMAMLANDI',
@@ -178,9 +167,7 @@ class _StageCard extends StatelessWidget {
           child: Ink(
             padding: const EdgeInsets.all(22),
             decoration: BoxDecoration(
-              color: AppColors.white.withValues(
-                alpha: unlocked ? 0.95 : 0.68,
-              ),
+              color: AppColors.white.withValues(alpha: unlocked ? 0.95 : 0.68),
               borderRadius: BorderRadius.circular(32),
               border: Border.all(
                 color: unlocked
@@ -207,9 +194,7 @@ class _StageCard extends StatelessWidget {
                         vertical: 7,
                       ),
                       decoration: BoxDecoration(
-                        color: (unlocked
-                                ? AppColors.mint
-                                : AppColors.locked)
+                        color: (unlocked ? AppColors.mint : AppColors.locked)
                             .withValues(alpha: 0.18),
                         borderRadius: BorderRadius.circular(99),
                       ),
@@ -217,9 +202,7 @@ class _StageCard extends StatelessWidget {
                         'SEVİYE ${stage.number}',
                         style: TextStyle(
                           decoration: TextDecoration.none,
-                          color: unlocked
-                              ? AppColors.navy
-                              : AppColors.slate,
+                          color: unlocked ? AppColors.navy : AppColors.slate,
                           fontSize: 12,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 0.7,
@@ -246,9 +229,7 @@ class _StageCard extends StatelessWidget {
                   width: 92,
                   height: 92,
                   decoration: BoxDecoration(
-                    color: (unlocked
-                            ? AppColors.sunshine
-                            : AppColors.locked)
+                    color: (unlocked ? AppColors.sunshine : AppColors.locked)
                         .withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                   ),
@@ -294,9 +275,7 @@ class _StageCard extends StatelessWidget {
                       completed
                           ? Icons.star_rounded
                           : Icons.star_outline_rounded,
-                      color: completed
-                          ? AppColors.sunshine
-                          : AppColors.locked,
+                      color: completed ? AppColors.sunshine : AppColors.locked,
                       size: 25,
                     ),
                   ),

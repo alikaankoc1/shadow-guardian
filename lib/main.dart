@@ -56,9 +56,7 @@ class ShadowGuardianApp extends StatelessWidget {
             return LevelCompleteOverlay(game: game as ShadowGame);
           },
         },
-        initialActiveOverlays: const [
-          ShadowGame.startMenuOverlay,
-        ],
+        initialActiveOverlays: const [ShadowGame.startMenuOverlay],
       ),
     );
   }

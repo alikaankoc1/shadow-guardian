@@ -44,8 +44,7 @@ class ShadowGame extends FlameGame {
   bool _isStageActive = false;
 
   bool get isPlaying => _isStageActive && !_isCompleting;
-  bool get isLastStage =>
-      currentStage?.number == natureWorld.stages.length;
+  bool get isLastStage => currentStage?.number == natureWorld.stages.length;
 
   @override
   Color backgroundColor() => AppColors.sky;
@@ -65,8 +64,7 @@ class ShadowGame extends FlameGame {
     pauseEngine();
   }
 
-  bool isStageUnlocked(int stageNumber) =>
-      stageNumber <= highestUnlockedStage;
+  bool isStageUnlocked(int stageNumber) => stageNumber <= highestUnlockedStage;
 
   bool isStageCompleted(int stageNumber) =>
       isNatureWorldCompleted || stageNumber < highestUnlockedStage;
@@ -250,8 +248,7 @@ class ShadowGame extends FlameGame {
           generator: (index) {
             final angle = _random.nextDouble() * 2 * pi;
             final speed = power * (0.55 + _random.nextDouble() * 0.65);
-            final color =
-                _confettiColors[index % _confettiColors.length];
+            final color = _confettiColors[index % _confettiColors.length];
 
             return AcceleratedParticle(
               acceleration: Vector2(0, 210),
