@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import '../components/match_object_component.dart';
 import '../components/shadow_target_component.dart';
+import '../components/stage_backdrop_component.dart';
 import '../data/nature_world.dart';
 import '../models/stage_config.dart';
 import '../services/progress_service.dart';
@@ -47,7 +48,7 @@ class ShadowGame extends FlameGame {
   bool get isLastStage => currentStage?.number == natureWorld.stages.length;
 
   @override
-  Color backgroundColor() => AppColors.sky;
+  Color backgroundColor() => currentStage?.skyTop ?? AppColors.sky;
 
   @override
   Future<void> onLoad() async {
@@ -143,6 +144,9 @@ class ShadowGame extends FlameGame {
     final cellWidth = availableWidth / count;
     final targetY = max(150.0, size.y * 0.35);
     final objectY = min(size.y - 90, size.y * 0.74);
+
+    final backdrop = StageBackdropComponent(stage: stage)..size = size.clone();
+    _stageComponents.add(backdrop);
 
     final targets = <ShadowTargetComponent>[];
 

@@ -27,33 +27,42 @@ class WorldSelectOverlay extends StatelessWidget {
               child: Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 1050),
-                  child: GridView.builder(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 8,
-                    ),
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 320,
-                          mainAxisExtent: 188,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final columnCount = constraints.maxWidth >= 880
+                          ? 3
+                          : constraints.maxWidth >= 560
+                          ? 2
+                          : 1;
+
+                      return GridView.builder(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 8,
+                        ),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: columnCount,
+                          mainAxisExtent: 224,
                           mainAxisSpacing: 18,
                           crossAxisSpacing: 18,
                         ),
-                    itemCount: worlds.length,
-                    itemBuilder: (context, index) {
-                      final world = worlds[index];
-                      return _WorldCard(
-                            world: world,
-                            completed:
-                                world.id == natureWorld.id &&
-                                game.isNatureWorldCompleted,
-                            onTap: world.isAvailable
-                                ? game.showStageSelect
-                                : null,
-                          )
-                          .animate(delay: (70 * index).ms)
-                          .fadeIn(duration: 360.ms)
-                          .slideY(begin: 0.08, curve: Curves.easeOutCubic);
+                        itemCount: worlds.length,
+                        itemBuilder: (context, index) {
+                          final world = worlds[index];
+                          return _WorldCard(
+                                world: world,
+                                completed:
+                                    world.id == natureWorld.id &&
+                                    game.isNatureWorldCompleted,
+                                onTap: world.isAvailable
+                                    ? game.showStageSelect
+                                    : null,
+                              )
+                              .animate(delay: (70 * index).ms)
+                              .fadeIn(duration: 360.ms)
+                              .slideY(begin: 0.08, curve: Curves.easeOutCubic);
+                        },
+                      );
                     },
                   ),
                 ),
@@ -165,18 +174,15 @@ class _WorldCard extends StatelessWidget {
                   children: [
                     Text(
                       world.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         decoration: TextDecoration.none,
                         color: enabled ? AppColors.navy : AppColors.slate,
+                        fontSize: 20,
                       ),
                     ),
                     const SizedBox(height: 5),
                     Text(
                       enabled ? world.subtitle : 'Yakında',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         decoration: TextDecoration.none,
                         color: AppColors.slate,
