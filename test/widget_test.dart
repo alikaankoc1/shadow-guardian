@@ -47,6 +47,7 @@ void main() {
     expect(find.text('Araçlar'), findsOneWidget);
     expect(find.text('Meyve & Sebze'), findsOneWidget);
     expect(find.text('Çıraklık Sınavı'), findsOneWidget);
+    expect(find.text('Sevimli Dostlar'), findsOneWidget);
 
     await tester.tap(find.text('Doğa Dünyası'));
     expect(game.natureTapped, isTrue);

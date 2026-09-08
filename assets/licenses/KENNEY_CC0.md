@@ -39,3 +39,9 @@ Creative Commons Zero (CC0 1.0) for this project:
 - `assets/game/fruits/strawberry.png`
 - `assets/game/fruits/grape.png`
 - `assets/game/fruits/tomato.png`
+- `assets/game/animals/cat.png`
+- `assets/game/animals/dog.png`
+- `assets/game/animals/lion.png`
+- `assets/game/animals/elephant.png`
+- `assets/game/animals/rabbit.png`
+- `assets/game/animals/bird.png`

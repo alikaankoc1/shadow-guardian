@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/game_world.dart';
+import 'animals_world.dart';
 import 'apprentice_exam.dart';
 import 'fruits_world.dart';
 import 'nature_world.dart';
@@ -25,23 +26,14 @@ const masterWorldIds = [
   'surprise',
 ];
 
-/// Playable content so far (themes + Çıraklık).
+/// Playable content so far.
 List<GameWorld> get playableWorlds => [
   natureWorld,
   vehiclesWorld,
   fruitsWorld,
   apprenticeExam,
+  animalsWorld,
 ];
-
-const animalsWorldPreview = GameWorld(
-  id: 'animals',
-  title: 'Sevimli Dostlar',
-  subtitle: 'Kedi, köpek, aslan, fil',
-  icon: Icons.pets_rounded,
-  color: Color(0xFFFFB74D),
-  stages: [],
-  lockedHint: 'Yakında',
-);
 
 const professionsWorldPreview = GameWorld(
   id: 'professions',
@@ -121,7 +113,7 @@ List<GameWorld> get allWorlds => [
   vehiclesWorld,
   fruitsWorld,
   apprenticeExam,
-  animalsWorldPreview,
+  animalsWorld,
   professionsWorldPreview,
   oceanWorldPreview,
   journeymanExam,

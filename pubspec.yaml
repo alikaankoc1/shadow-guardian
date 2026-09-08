@@ -38,6 +38,7 @@ flutter:
     - assets/game/nature/
     - assets/game/vehicles/
     - assets/game/fruits/
+    - assets/game/animals/
 
   fonts:
     - family: Nunito
