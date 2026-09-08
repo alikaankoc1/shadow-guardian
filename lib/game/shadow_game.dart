@@ -76,17 +76,14 @@ class ShadowGame extends FlameGame {
     pauseEngine();
   }
 
-  bool isWorldUnlocked(GameWorld world) {
-    if (!world.isAvailable) {
-      return false;
-    }
-    return progress.isWorldUnlocked(world.id);
-  }
+  // TODO(locks): Re-enable progression locks before release.
+  // For now every playable world/stage stays open so testing is easy.
+  bool isWorldUnlocked(GameWorld world) => world.isAvailable;
 
   bool isWorldCompleted(GameWorld world) =>
       progress.isWorldCompleted(world.id);
 
-  bool isStageUnlocked(int stageNumber) => stageNumber <= highestUnlockedStage;
+  bool isStageUnlocked(int stageNumber) => true;
 
   bool isStageCompleted(int stageNumber) =>
       isCurrentWorldCompleted || stageNumber < highestUnlockedStage;
