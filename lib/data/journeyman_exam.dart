@@ -32,7 +32,7 @@ final journeymanExamItems = <MatchItem>[
 final journeymanExam = GameWorld(
   id: 'exam_journeyman',
   title: 'Kalfalık',
-  subtitle: '6 dünyanın karışık eşleşmesi',
+  subtitle: 'Altı dünyanın dostlarını karışık buluştur.',
   icon: Icons.military_tech_rounded,
   color: Color(0xFFFFB74D),
   isAvailable: true,

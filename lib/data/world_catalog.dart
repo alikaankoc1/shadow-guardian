@@ -44,37 +44,37 @@ List<GameWorld> get playableWorlds => [
 const spaceWorldPreview = GameWorld(
   id: 'space',
   title: 'Uzay',
-  subtitle: 'Roketler ve gezegenler',
+  subtitle: 'Roketler ve gezegenleri gölgeleriyle buluştur.',
   icon: Icons.rocket_launch_rounded,
   color: Color(0xFF8D7BE8),
   stages: [],
-  lockedHint: 'Yakında',
+  lockedHint: 'Önceki dünyaları bitir',
 );
 
 const fairyTaleWorldPreview = GameWorld(
   id: 'fairy_tale',
   title: 'Masal Dünyası',
-  subtitle: 'Kaleler ve ejderhalar',
+  subtitle: 'Masal kahramanlarını gölgeleriyle buluştur.',
   icon: Icons.castle_rounded,
   color: Color(0xFFE77EB4),
   stages: [],
-  lockedHint: 'Yakında',
+  lockedHint: 'Önceki dünyaları bitir',
 );
 
 const surpriseWorldPreview = GameWorld(
   id: 'surprise',
   title: 'Sürpriz Dünya',
-  subtitle: 'Son tema yakında seçilecek',
+  subtitle: 'Gizemli dostları gölgeleriyle buluştur.',
   icon: Icons.auto_awesome_rounded,
   color: Color(0xFF90A4AE),
   stages: [],
-  lockedHint: 'Yakında',
+  lockedHint: 'Önceki dünyaları bitir',
 );
 
 const masterExam = GameWorld(
   id: 'exam_master',
   title: 'Ustalık',
-  subtitle: 'Tüm dünyaların karışık eşleşmesi',
+  subtitle: 'Tüm dünyaların dostlarını karışık buluştur.',
   icon: Icons.workspace_premium_rounded,
   color: Color(0xFFFFC857),
   stages: [],

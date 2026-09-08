@@ -26,7 +26,7 @@ final apprenticeExamItems = <MatchItem>[
 final apprenticeExam = GameWorld(
   id: 'exam_apprentice',
   title: 'Çıraklık Sınavı',
-  subtitle: 'İlk 3 dünyanın karışık eşleşmesi',
+  subtitle: 'İlk üç dünyanın dostlarını karışık buluştur.',
   icon: Icons.school_rounded,
   color: Color(0xFF81C784),
   isAvailable: true,

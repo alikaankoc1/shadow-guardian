@@ -32,7 +32,7 @@ const professionItems = <MatchItem>[
 final professionsWorld = GameWorld(
   id: 'professions',
   title: 'Meslekler',
-  subtitle: 'Meslekleri tanıyalım',
+  subtitle: 'Meslek kahramanlarını gölgeleriyle buluştur.',
   icon: Icons.work_rounded,
   color: Color(0xFF64B5F6),
   isAvailable: true,

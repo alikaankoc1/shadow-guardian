@@ -16,7 +16,7 @@ const vehicleItems = <MatchItem>[
 final vehiclesWorld = GameWorld(
   id: 'vehicles',
   title: 'Araçlar',
-  subtitle: 'Araba, tren ve uçaklar',
+  subtitle: 'En sevilen araçları gölgeleriyle buluştur.',
   icon: Icons.directions_car_filled_rounded,
   color: Color(0xFFFFA45B),
   isAvailable: true,

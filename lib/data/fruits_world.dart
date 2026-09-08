@@ -20,7 +20,7 @@ const fruitItems = <MatchItem>[
 final fruitsWorld = GameWorld(
   id: 'fruits',
   title: 'Meyve & Sebze',
-  subtitle: 'Lezzetli besinleri tanı',
+  subtitle: 'Lezzetli meyve ve sebzeleri gölgeleriyle buluştur.',
   icon: Icons.eco_rounded,
   color: Color(0xFF7BC67E),
   isAvailable: true,

@@ -24,7 +24,7 @@ const oceanItems = <MatchItem>[
 final oceanWorld = GameWorld(
   id: 'ocean',
   title: 'Deniz Dünyası',
-  subtitle: 'Denizin neşeli sakinleri',
+  subtitle: 'Denizin neşeli sakinlerini gölgeleriyle buluştur.',
   icon: Icons.water_rounded,
   color: Color(0xFF4DB6E8),
   isAvailable: true,

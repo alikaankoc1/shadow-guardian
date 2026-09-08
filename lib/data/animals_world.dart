@@ -16,7 +16,7 @@ const animalItems = <MatchItem>[
 final animalsWorld = GameWorld(
   id: 'animals',
   title: 'Sevimli Dostlar',
-  subtitle: 'Kedi, köpek, aslan, fil',
+  subtitle: 'Sevimli dostları gölgeleriyle buluştur.',
   icon: Icons.pets_rounded,
   color: Color(0xFFFFB74D),
   isAvailable: true,
