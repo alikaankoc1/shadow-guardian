@@ -1,4 +1,8 @@
+import 'dart:math';
+
+import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+import 'package:flame/particles.dart';
 import 'package:flutter/material.dart';
 
 import '../components/cloud_component.dart';
@@ -7,6 +11,22 @@ import '../components/shadow_component.dart';
 /// Root Flame game for Shadow Guardian.
 class ShadowGame extends FlameGame {
   static const Color skyBlue = Color(0xFFE3F2FD);
+  static const String levelCompleteOverlay = 'levelComplete';
+
+  static const List<Color> _confettiColors = [
+    Color(0xFFFF8A80), // soft coral
+    Color(0xFFFFD54F), // warm yellow
+    Color(0xFF81C784), // mint green
+    Color(0xFF64B5F6), // sky blue
+    Color(0xFFFFAB91), // peach
+    Color(0xFFCE93D8), // soft lilac
+  ];
+
+  late final CloudComponent cloud;
+  late final ShadowComponent shadow;
+  late Vector2 _shadowStartPosition;
+
+  final Random _random = Random();
 
   @override
   Color backgroundColor() => skyBlue;
@@ -16,16 +36,48 @@ class ShadowGame extends FlameGame {
     await super.onLoad();
 
     final center = size / 2;
+    _shadowStartPosition = Vector2(center.x, center.y + 100);
 
-    // Cloud stays fixed in the middle of the screen.
-    add(
-      CloudComponent(position: center),
-    );
+    cloud = CloudComponent(position: center);
+    shadow = ShadowComponent(position: _shadowStartPosition.clone());
 
-    // Shadow starts just below the cloud and can be dragged freely.
+    await addAll([cloud, shadow]);
+  }
+
+  /// Called by [ShadowComponent] when it snaps onto the cloud.
+  void onShadowMatched() {
+    _spawnConfetti(cloud.position);
+    overlays.add(levelCompleteOverlay);
+  }
+
+  /// Hides the celebration UI and resets the shadow for the next level.
+  void goToNextLevel() {
+    overlays.remove(levelCompleteOverlay);
+    shadow.resetTo(_shadowStartPosition);
+  }
+
+  void _spawnConfetti(Vector2 origin) {
     add(
-      ShadowComponent(
-        position: Vector2(center.x, center.y + 100),
+      ParticleSystemComponent(
+        position: origin.clone(),
+        particle: Particle.generate(
+          count: 48,
+          lifespan: 1.8,
+          generator: (i) {
+            final angle = _random.nextDouble() * 2 * pi;
+            final speed = 120 + _random.nextDouble() * 220;
+            final color = _confettiColors[i % _confettiColors.length];
+
+            return AcceleratedParticle(
+              acceleration: Vector2(0, 280),
+              speed: Vector2(cos(angle), sin(angle)) * speed,
+              child: CircleParticle(
+                radius: 3 + _random.nextDouble() * 4,
+                paint: Paint()..color = color,
+              ),
+            );
+          },
+        ),
       ),
     );
   }

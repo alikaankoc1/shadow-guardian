@@ -2,21 +2,36 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
 import 'game/shadow_game.dart';
+import 'overlays/level_complete_overlay.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const ShadowGuardianApp());
 }
 
-class ShadowGuardianApp extends StatelessWidget {
+class ShadowGuardianApp extends StatefulWidget {
   const ShadowGuardianApp({super.key});
+
+  @override
+  State<ShadowGuardianApp> createState() => _ShadowGuardianAppState();
+}
+
+class _ShadowGuardianAppState extends State<ShadowGuardianApp> {
+  late final ShadowGame _game = ShadowGame();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Shadow Guardian',
       debugShowCheckedModeBanner: false,
-      home: GameWidget(game: ShadowGame()),
+      home: GameWidget(
+        game: _game,
+        overlayBuilderMap: {
+          ShadowGame.levelCompleteOverlay: (context, game) {
+            return LevelCompleteOverlay(game: game as ShadowGame);
+          },
+        },
+      ),
     );
   }
 }
