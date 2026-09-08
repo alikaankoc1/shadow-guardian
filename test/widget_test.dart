@@ -47,10 +47,16 @@ void main() {
     expect(find.text('Araçlar'), findsOneWidget);
     expect(find.text('Meyve & Sebze'), findsOneWidget);
     expect(find.text('Çıraklık Sınavı'), findsOneWidget);
-    expect(find.text('Kalfalık'), findsOneWidget);
 
     await tester.tap(find.text('Doğa Dünyası'));
     expect(game.natureTapped, isTrue);
+
+    await tester.scrollUntilVisible(
+      find.text('Kalfalık'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('Kalfalık'), findsOneWidget);
 
     await tester.scrollUntilVisible(
       find.text('Ustalık'),

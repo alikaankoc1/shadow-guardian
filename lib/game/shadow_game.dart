@@ -165,7 +165,7 @@ class ShadowGame extends FlameGame {
 
   Future<void> _buildStage(StageConfig stage) async {
     final count = stage.matchCount;
-    final horizontalPadding = max(34.0, size.x * 0.055);
+    final horizontalPadding = max(count >= 9 ? 18.0 : 34.0, size.x * 0.03);
     final availableWidth = size.x - (horizontalPadding * 2);
     final cellWidth = availableWidth / count;
     final targetY = max(150.0, size.y * 0.35);
@@ -219,8 +219,9 @@ class ShadowGame extends FlameGame {
       sprite.image.width.toDouble(),
       sprite.image.height.toDouble(),
     );
-    final maxWidth = min(116.0, cellWidth * 0.7);
-    final maxHeight = min(112.0, size.y * 0.21);
+    final dense = (currentStage?.matchCount ?? 0) >= 9;
+    final maxWidth = min(dense ? 86.0 : 116.0, cellWidth * 0.72);
+    final maxHeight = min(dense ? 84.0 : 112.0, size.y * (dense ? 0.18 : 0.21));
     final scale = min(maxWidth / imageSize.x, maxHeight / imageSize.y);
     return imageSize * scale;
   }

@@ -42,7 +42,7 @@ class WorldSelectOverlay extends StatelessWidget {
                         ),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: columnCount,
-                          mainAxisExtent: 224,
+                          mainAxisExtent: 236,
                           mainAxisSpacing: 18,
                           crossAxisSpacing: 18,
                         ),
@@ -191,7 +191,7 @@ class _WorldCard extends StatelessWidget {
                           letterSpacing: 1.1,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: 1),
                     ],
                     Text(
                       world.title,

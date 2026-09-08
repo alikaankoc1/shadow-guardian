@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/game_world.dart';
+import 'apprentice_exam.dart';
 import 'fruits_world.dart';
 import 'nature_world.dart';
 import 'vehicles_world.dart';
@@ -24,11 +25,12 @@ const masterWorldIds = [
   'surprise',
 ];
 
-/// Playable theme worlds so far.
+/// Playable content so far (themes + Çıraklık).
 List<GameWorld> get playableWorlds => [
   natureWorld,
   vehiclesWorld,
   fruitsWorld,
+  apprenticeExam,
 ];
 
 const animalsWorldPreview = GameWorld(
@@ -89,17 +91,6 @@ const surpriseWorldPreview = GameWorld(
   color: Color(0xFF90A4AE),
   stages: [],
   lockedHint: 'Yakında',
-);
-
-const apprenticeExam = GameWorld(
-  id: 'exam_apprentice',
-  title: 'Çıraklık Sınavı',
-  subtitle: 'İlk 3 dünyanın karışık eşleşmesi',
-  icon: Icons.school_rounded,
-  color: Color(0xFF81C784),
-  stages: [],
-  kind: WorldKind.exam,
-  lockedHint: 'İlk 3 dünyayı bitir',
 );
 
 const journeymanExam = GameWorld(
