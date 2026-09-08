@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../data/nature_world.dart';
 import '../game/shadow_game.dart';
 import '../models/stage_config.dart';
 import '../theme/app_theme.dart';
@@ -14,6 +13,8 @@ class StageSelectOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final world = game.currentWorld;
+
     return PlayfulBackground(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(22, 12, 22, 18),
@@ -21,7 +22,10 @@ class StageSelectOverlay extends StatelessWidget {
           children: [
             _StageHeader(
               onBack: game.showWorldSelect,
-              completed: game.isNatureWorldCompleted,
+              title: world.title,
+              icon: world.icon,
+              accent: world.color,
+              completed: game.isCurrentWorldCompleted,
             ),
             const SizedBox(height: 18),
             Expanded(
@@ -33,9 +37,10 @@ class StageSelectOverlay extends StatelessWidget {
                     spacing: 20,
                     runSpacing: 20,
                     children: [
-                      for (final stage in natureWorld.stages)
+                      for (final stage in world.stages)
                         _StageCard(
                               stage: stage,
+                              accent: world.color,
                               unlocked: game.isStageUnlocked(stage.number),
                               completed: game.isStageCompleted(stage.number),
                               onTap: () => game.startStage(stage),
@@ -56,9 +61,18 @@ class StageSelectOverlay extends StatelessWidget {
 }
 
 class _StageHeader extends StatelessWidget {
-  const _StageHeader({required this.onBack, required this.completed});
+  const _StageHeader({
+    required this.onBack,
+    required this.title,
+    required this.icon,
+    required this.accent,
+    required this.completed,
+  });
 
   final VoidCallback onBack;
+  final String title;
+  final IconData icon;
+  final Color accent;
   final bool completed;
 
   @override
@@ -75,24 +89,17 @@ class _StageHeader extends StatelessWidget {
           width: 54,
           height: 54,
           decoration: BoxDecoration(
-            color: AppColors.mint.withValues(alpha: 0.22),
+            color: accent.withValues(alpha: 0.22),
             shape: BoxShape.circle,
           ),
-          child: const Icon(
-            Icons.park_rounded,
-            color: AppColors.mint,
-            size: 30,
-          ),
+          child: Icon(icon, color: accent, size: 30),
         ),
         const SizedBox(width: 13),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Doğa Dünyası',
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
+              Text(title, style: Theme.of(context).textTheme.headlineLarge),
               Text(
                 completed
                     ? 'Harika! Bu dünyayı tamamladın.'
@@ -144,12 +151,14 @@ class _CompletionBadge extends StatelessWidget {
 class _StageCard extends StatelessWidget {
   const _StageCard({
     required this.stage,
+    required this.accent,
     required this.unlocked,
     required this.completed,
     required this.onTap,
   });
 
   final StageConfig stage;
+  final Color accent;
   final bool unlocked;
   final bool completed;
   final VoidCallback onTap;
@@ -171,7 +180,7 @@ class _StageCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(32),
               border: Border.all(
                 color: unlocked
-                    ? AppColors.mint.withValues(alpha: 0.6)
+                    ? accent.withValues(alpha: 0.6)
                     : AppColors.locked.withValues(alpha: 0.35),
                 width: 2,
               ),
@@ -194,7 +203,7 @@ class _StageCard extends StatelessWidget {
                         vertical: 7,
                       ),
                       decoration: BoxDecoration(
-                        color: (unlocked ? AppColors.mint : AppColors.locked)
+                        color: (unlocked ? accent : AppColors.locked)
                             .withValues(alpha: 0.18),
                         borderRadius: BorderRadius.circular(99),
                       ),
@@ -216,7 +225,7 @@ class _StageCard extends StatelessWidget {
                           ? Icons.play_circle_fill_rounded
                           : Icons.lock_rounded,
                       color: completed
-                          ? AppColors.mint
+                          ? accent
                           : unlocked
                           ? AppColors.coral
                           : AppColors.locked,

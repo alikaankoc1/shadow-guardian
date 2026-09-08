@@ -23,6 +23,13 @@ Attribution is not required, but credit to Kenney is appreciated.
 
 ## Project Original Art
 
-- `mountain.png`
-  - Created for Shadow Guardian as a simple cartoon mountain icon
-  - Released under Creative Commons Zero (CC0 1.0) for this project
+The following icons were created for Shadow Guardian and are released under
+Creative Commons Zero (CC0 1.0) for this project:
+
+- `assets/game/nature/mountain.png`
+- `assets/game/vehicles/car.png`
+- `assets/game/vehicles/bus.png`
+- `assets/game/vehicles/train.png`
+- `assets/game/vehicles/plane.png`
+- `assets/game/vehicles/bike.png`
+- `assets/game/vehicles/truck.png`

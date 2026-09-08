@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../data/nature_world.dart';
+import '../data/world_catalog.dart';
 import '../game/shadow_game.dart';
 import '../models/game_world.dart';
 import '../theme/app_theme.dart';
@@ -14,7 +14,7 @@ class WorldSelectOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final worlds = [natureWorld, ...comingSoonWorlds];
+    final worlds = allWorlds;
 
     return PlayfulBackground(
       child: Padding(
@@ -49,13 +49,13 @@ class WorldSelectOverlay extends StatelessWidget {
                         itemCount: worlds.length,
                         itemBuilder: (context, index) {
                           final world = worlds[index];
+                          final unlocked = game.isWorldUnlocked(world);
                           return _WorldCard(
                                 world: world,
-                                completed:
-                                    world.id == natureWorld.id &&
-                                    game.isNatureWorldCompleted,
-                                onTap: world.isAvailable
-                                    ? game.showStageSelect
+                                unlocked: unlocked,
+                                completed: game.isWorldCompleted(world),
+                                onTap: unlocked
+                                    ? () => game.openWorld(world)
                                     : null,
                               )
                               .animate(delay: (70 * index).ms)
@@ -113,17 +113,20 @@ class _Header extends StatelessWidget {
 class _WorldCard extends StatelessWidget {
   const _WorldCard({
     required this.world,
+    required this.unlocked,
     required this.completed,
     required this.onTap,
   });
 
   final GameWorld world;
+  final bool unlocked;
   final bool completed;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final enabled = onTap != null;
+    final lockedLabel = world.isAvailable ? 'Doğayı bitir' : 'Yakında';
 
     return Material(
       color: Colors.transparent,
@@ -182,7 +185,7 @@ class _WorldCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      enabled ? world.subtitle : 'Yakında',
+                      enabled ? world.subtitle : lockedLabel,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         decoration: TextDecoration.none,
                         color: AppColors.slate,

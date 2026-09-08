@@ -10,6 +10,8 @@ import '../components/match_object_component.dart';
 import '../components/shadow_target_component.dart';
 import '../components/stage_backdrop_component.dart';
 import '../data/nature_world.dart';
+import '../data/vehicles_world.dart';
+import '../models/game_world.dart';
 import '../models/stage_config.dart';
 import '../services/progress_service.dart';
 import '../theme/app_theme.dart';
@@ -36,16 +38,23 @@ class ShadowGame extends FlameGame {
   final Random _random = Random();
   final List<Component> _stageComponents = [];
 
+  GameProgress progress = const GameProgress(byWorldId: {});
+  GameWorld currentWorld = natureWorld;
   StageConfig? currentStage;
-  int highestUnlockedStage = 1;
-  bool isNatureWorldCompleted = false;
   int matchedCount = 0;
 
   bool _isCompleting = false;
   bool _isStageActive = false;
 
   bool get isPlaying => _isStageActive && !_isCompleting;
-  bool get isLastStage => currentStage?.number == natureWorld.stages.length;
+  bool get isLastStage =>
+      currentStage?.number == currentWorld.stages.length;
+
+  int get highestUnlockedStage =>
+      progress.forWorld(currentWorld.id).highestUnlockedStage;
+
+  bool get isCurrentWorldCompleted =>
+      progress.isWorldCompleted(currentWorld.id);
 
   @override
   Color backgroundColor() => currentStage?.skyTop ?? AppColors.sky;
@@ -55,20 +64,30 @@ class ShadowGame extends FlameGame {
     await super.onLoad();
 
     images.prefix = 'assets/game/';
-    await images.loadAll(
-      natureItems.map((item) => item.assetPath).toList(growable: false),
-    );
+    final assetPaths = <String>{
+      ...natureItems.map((item) => item.assetPath),
+      ...vehicleItems.map((item) => item.assetPath),
+    }.toList(growable: false);
+    await images.loadAll(assetPaths);
 
-    final progress = await _progressService.load();
-    _applyProgress(progress);
-
+    progress = await _progressService.load();
     pauseEngine();
   }
+
+  bool isWorldUnlocked(GameWorld world) {
+    if (!world.isAvailable) {
+      return false;
+    }
+    return progress.isWorldUnlocked(world.id);
+  }
+
+  bool isWorldCompleted(GameWorld world) =>
+      progress.isWorldCompleted(world.id);
 
   bool isStageUnlocked(int stageNumber) => stageNumber <= highestUnlockedStage;
 
   bool isStageCompleted(int stageNumber) =>
-      isNatureWorldCompleted || stageNumber < highestUnlockedStage;
+      isCurrentWorldCompleted || stageNumber < highestUnlockedStage;
 
   void startGame() => showWorldSelect();
 
@@ -82,6 +101,14 @@ class ShadowGame extends FlameGame {
     _leaveStage();
     overlays.clear();
     overlays.add(worldSelectOverlay);
+  }
+
+  void openWorld(GameWorld world) {
+    if (!isWorldUnlocked(world)) {
+      return;
+    }
+    currentWorld = world;
+    showStageSelect();
   }
 
   void showStageSelect() {
@@ -130,8 +157,8 @@ class ShadowGame extends FlameGame {
       return;
     }
 
-    if (stage.number < natureWorld.stages.length) {
-      await startStage(natureWorld.stages[stage.number]);
+    if (stage.number < currentWorld.stages.length) {
+      await startStage(currentWorld.stages[stage.number]);
     } else {
       showStageSelect();
     }
@@ -208,17 +235,12 @@ class ShadowGame extends FlameGame {
     _isCompleting = true;
     _spawnConfetti(size / 2, count: 54, power: 240);
 
-    final progress = await _progressService.completeStage(
+    progress = await _progressService.completeStage(
+      worldId: currentWorld.id,
       stageNumber: stage.number,
-      totalStages: natureWorld.stages.length,
+      totalStages: currentWorld.stages.length,
     );
-    _applyProgress(progress);
     overlays.add(levelCompleteOverlay);
-  }
-
-  void _applyProgress(GameProgress progress) {
-    highestUnlockedStage = progress.highestUnlockedStage;
-    isNatureWorldCompleted = progress.isNatureWorldCompleted;
   }
 
   void _leaveStage() {

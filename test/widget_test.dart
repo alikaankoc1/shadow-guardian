@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shadow_guardian/game/shadow_game.dart';
+import 'package:shadow_guardian/models/game_world.dart';
 import 'package:shadow_guardian/models/stage_config.dart';
 import 'package:shadow_guardian/overlays/stage_select_overlay.dart';
 import 'package:shadow_guardian/overlays/start_menu_overlay.dart';
@@ -82,8 +83,9 @@ class _MenuTestGame extends ShadowGame {
   }
 
   @override
-  void showStageSelect() {
+  void openWorld(GameWorld world) {
     natureTapped = true;
+    currentWorld = world;
   }
 
   @override
