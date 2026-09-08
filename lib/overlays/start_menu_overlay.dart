@@ -15,7 +15,7 @@ class StartMenuOverlay extends StatelessWidget {
     return PlayfulBackground(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final compact = constraints.maxWidth < 720;
+          final compact = constraints.maxWidth < 620;
 
           return SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 20),

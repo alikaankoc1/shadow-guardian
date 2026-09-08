@@ -158,7 +158,7 @@ class _StageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 270,
-      height: 310,
+      height: 325,
       child: Material(
         color: Colors.transparent,
         child: InkWell(

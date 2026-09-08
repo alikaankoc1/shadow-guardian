@@ -200,17 +200,21 @@ class _WorldCard extends StatelessWidget {
                           size: 22,
                         ),
                         const SizedBox(width: 6),
-                        Text(
-                          completed
-                              ? 'Tamamlandı'
-                              : enabled
-                              ? '3 seviye'
-                              : 'Kilitli',
-                          style: const TextStyle(
-                            decoration: TextDecoration.none,
-                            color: AppColors.slate,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w900,
+                        Flexible(
+                          child: Text(
+                            completed
+                                ? 'Tamamlandı'
+                                : enabled
+                                ? '3 seviye'
+                                : 'Kilitli',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              decoration: TextDecoration.none,
+                              color: AppColors.slate,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w900,
+                            ),
                           ),
                         ),
                       ],
