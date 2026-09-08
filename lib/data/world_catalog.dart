@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/game_world.dart';
+import 'fruits_world.dart';
 import 'nature_world.dart';
 import 'vehicles_world.dart';
 
@@ -24,17 +25,11 @@ const masterWorldIds = [
 ];
 
 /// Playable theme worlds so far.
-List<GameWorld> get playableWorlds => [natureWorld, vehiclesWorld];
-
-const fruitsWorldPreview = GameWorld(
-  id: 'fruits',
-  title: 'Meyve & Sebze',
-  subtitle: 'Lezzetli besinleri tanı',
-  icon: Icons.eco_rounded,
-  color: Color(0xFF7BC67E),
-  stages: [],
-  lockedHint: 'Yakında',
-);
+List<GameWorld> get playableWorlds => [
+  natureWorld,
+  vehiclesWorld,
+  fruitsWorld,
+];
 
 const animalsWorldPreview = GameWorld(
   id: 'animals',
@@ -133,7 +128,7 @@ const masterExam = GameWorld(
 List<GameWorld> get allWorlds => [
   natureWorld,
   vehiclesWorld,
-  fruitsWorldPreview,
+  fruitsWorld,
   apprenticeExam,
   animalsWorldPreview,
   professionsWorldPreview,

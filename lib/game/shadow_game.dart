@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import '../components/match_object_component.dart';
 import '../components/shadow_target_component.dart';
 import '../components/stage_backdrop_component.dart';
+import '../data/fruits_world.dart';
 import '../data/nature_world.dart';
 import '../data/vehicles_world.dart';
 import '../models/game_world.dart';
@@ -67,6 +68,7 @@ class ShadowGame extends FlameGame {
     final assetPaths = <String>{
       ...natureItems.map((item) => item.assetPath),
       ...vehicleItems.map((item) => item.assetPath),
+      ...fruitItems.map((item) => item.assetPath),
     }.toList(growable: false);
     await images.loadAll(assetPaths);
 

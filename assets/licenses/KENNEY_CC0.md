@@ -33,3 +33,9 @@ Creative Commons Zero (CC0 1.0) for this project:
 - `assets/game/vehicles/plane.png`
 - `assets/game/vehicles/bike.png`
 - `assets/game/vehicles/truck.png`
+- `assets/game/fruits/apple.png`
+- `assets/game/fruits/banana.png`
+- `assets/game/fruits/carrot.png`
+- `assets/game/fruits/strawberry.png`
+- `assets/game/fruits/grape.png`
+- `assets/game/fruits/tomato.png`

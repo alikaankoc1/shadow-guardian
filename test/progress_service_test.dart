@@ -81,6 +81,25 @@ void main() {
     expect(afterVehicles.isWorldCompleted('vehicles'), isFalse);
   });
 
+  test('completing vehicles unlocks fruits', () async {
+    await service.completeStage(
+      worldId: 'nature',
+      stageNumber: 3,
+      totalStages: 3,
+    );
+    expect((await service.load()).isWorldUnlocked('fruits'), isFalse);
+
+    await service.completeStage(
+      worldId: 'vehicles',
+      stageNumber: 3,
+      totalStages: 3,
+    );
+    final progress = await service.load();
+
+    expect(progress.isWorldUnlocked('fruits'), isTrue);
+    expect(progress.isWorldUnlocked('exam_apprentice'), isFalse);
+  });
+
   test('exam cards unlock after their world blocks', () async {
     expect((await service.load()).isWorldUnlocked('exam_apprentice'), isFalse);
 

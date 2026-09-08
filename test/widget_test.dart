@@ -45,6 +45,7 @@ void main() {
     expect(find.text('Bir dünya seç'), findsOneWidget);
     expect(find.text('Doğa Dünyası'), findsOneWidget);
     expect(find.text('Araçlar'), findsOneWidget);
+    expect(find.text('Meyve & Sebze'), findsOneWidget);
     expect(find.text('Çıraklık Sınavı'), findsOneWidget);
     expect(find.text('Kalfalık'), findsOneWidget);
 
