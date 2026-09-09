@@ -8,6 +8,7 @@ import 'overlays/level_complete_overlay.dart';
 import 'overlays/stage_select_overlay.dart';
 import 'overlays/start_menu_overlay.dart';
 import 'overlays/world_select_overlay.dart';
+import 'services/sound_settings.dart';
 import 'theme/app_theme.dart';
 import 'widgets/playful_background.dart';
 
@@ -19,6 +20,7 @@ Future<void> main() async {
     DeviceOrientation.landscapeRight,
   ]);
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  await SoundSettings.instance.load();
 
   runApp(const ShadowGuardianApp());
 }
@@ -29,7 +31,7 @@ class ShadowGuardianApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Shadow Guardian',
+      title: 'Sevimli Gölgeler',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       home: GameWidget.controlled(

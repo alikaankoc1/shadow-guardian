@@ -6,6 +6,16 @@ import '../services/sound_settings.dart';
 import '../theme/app_theme.dart';
 import '../widgets/playful_background.dart';
 
+/// Landscape phone (~360–420h) → tablet (~600–800h) scale.
+double _landscapeUiScale(BoxConstraints c) {
+  final h = c.maxHeight;
+  if (h <= 360) return 0.72;
+  if (h <= 420) return 0.82;
+  if (h <= 520) return 0.92;
+  if (h >= 700) return 1.08;
+  return 1.0;
+}
+
 class StartMenuOverlay extends StatefulWidget {
   const StartMenuOverlay({super.key, required this.game});
 
@@ -45,32 +55,27 @@ class _StartMenuOverlayState extends State<StartMenuOverlay> {
     return PlayfulBackground(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final compact = constraints.maxWidth < 700 || constraints.maxHeight < 420;
+          final scale = _landscapeUiScale(constraints);
 
-          return Stack(
-            fit: StackFit.expand,
-            children: [
-              // Tap anywhere (except controls) to start
-              Positioned.fill(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: _start,
-                  child: const SizedBox.expand(),
+          return GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: _start,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // Always landscape row — phone & tablet play sideways.
+                _LandscapeStart(onPlay: _start, scale: scale),
+                Positioned(
+                  top: 6 * scale,
+                  right: 10 * scale,
+                  child: _SoundToggle(
+                    enabled: SoundSettings.instance.enabled,
+                    onToggle: () => SoundSettings.instance.toggle(),
+                    scale: scale,
+                  ),
                 ),
-              ),
-              if (compact)
-                _CompactStart(onPlay: _start)
-              else
-                _WideStart(onPlay: _start),
-              Positioned(
-                top: 8,
-                right: 12,
-                child: _SoundToggle(
-                  enabled: SoundSettings.instance.enabled,
-                  onToggle: () => SoundSettings.instance.toggle(),
-                ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),
@@ -78,47 +83,35 @@ class _StartMenuOverlayState extends State<StartMenuOverlay> {
   }
 }
 
-class _WideStart extends StatelessWidget {
-  const _WideStart({required this.onPlay});
+class _LandscapeStart extends StatelessWidget {
+  const _LandscapeStart({required this.onPlay, required this.scale});
 
   final VoidCallback onPlay;
+  final double scale;
 
   @override
   Widget build(BuildContext context) {
+    final padH = 20.0 * scale;
+    final padV = 10.0 * scale;
+    final gap = 16.0 * scale;
+
     return Padding(
-      padding: const EdgeInsets.fromLTRB(28, 16, 28, 18),
+      padding: EdgeInsets.fromLTRB(padH, padV, padH, padV),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Expanded(flex: 6, child: _LivingScene()),
-          const SizedBox(width: 28),
+          Expanded(flex: 55, child: _LivingScene(scale: scale)),
+          SizedBox(width: gap),
           Expanded(
-            flex: 5,
+            flex: 45,
             child: Align(
               alignment: Alignment.center,
-              child: _BrandAndPlay(onPlay: onPlay),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: _BrandAndPlay(onPlay: onPlay, scale: scale),
+              ),
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class _CompactStart extends StatelessWidget {
-  const _CompactStart({required this.onPlay});
-
-  final VoidCallback onPlay;
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
-      child: Column(
-        children: [
-          const SizedBox(height: 220, child: _LivingScene()),
-          const SizedBox(height: 12),
-          _BrandAndPlay(onPlay: onPlay),
         ],
       ),
     );
@@ -126,12 +119,19 @@ class _CompactStart extends StatelessWidget {
 }
 
 class _BrandAndPlay extends StatelessWidget {
-  const _BrandAndPlay({required this.onPlay});
+  const _BrandAndPlay({required this.onPlay, required this.scale});
 
   final VoidCallback onPlay;
+  final double scale;
 
   @override
   Widget build(BuildContext context) {
+    final titleSize = 36.0 * scale;
+    final bodySize = 14.5 * scale;
+    final gapSm = 6.0 * scale;
+    final gapMd = 12.0 * scale;
+    final gapLg = 16.0 * scale;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -139,42 +139,42 @@ class _BrandAndPlay extends StatelessWidget {
           'Sevimli Gölgeler',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.displayLarge?.copyWith(
-            fontSize: 40,
-            height: 1.08,
+            fontSize: titleSize,
+            height: 1.06,
           ),
         )
             .animate()
             .fadeIn(duration: 450.ms)
             .slideY(begin: 0.12, curve: Curves.easeOutCubic),
-        const SizedBox(height: 10),
+        SizedBox(height: gapSm),
         Text(
           'Doğru gölgeyi bul, dünyaları tamamla!',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
             decoration: TextDecoration.none,
-            fontSize: 16,
-            height: 1.35,
+            fontSize: bodySize,
+            height: 1.3,
           ),
         ).animate().fadeIn(delay: 80.ms, duration: 400.ms),
-        const SizedBox(height: 18),
-        const _HowToPlayDemo()
+        SizedBox(height: gapMd),
+        _HowToPlayDemo(scale: scale)
             .animate()
             .fadeIn(delay: 140.ms, duration: 450.ms),
-        const SizedBox(height: 22),
-        _PlayButton(onPlay: onPlay)
+        SizedBox(height: gapLg),
+        _PlayButton(onPlay: onPlay, scale: scale)
             .animate(onPlay: (c) => c.repeat(reverse: true))
             .scale(
               begin: const Offset(1, 1),
-              end: const Offset(1.045, 1.045),
+              end: const Offset(1.04, 1.04),
               duration: 900.ms,
               curve: Curves.easeInOut,
             ),
-        const SizedBox(height: 10),
+        SizedBox(height: gapSm),
         Text(
           'veya ekrana dokun',
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
             decoration: TextDecoration.none,
-            fontSize: 13,
+            fontSize: 12 * scale,
             color: AppColors.slate.withValues(alpha: 0.75),
           ),
         ),
@@ -184,39 +184,49 @@ class _BrandAndPlay extends StatelessWidget {
 }
 
 class _PlayButton extends StatelessWidget {
-  const _PlayButton({required this.onPlay});
+  const _PlayButton({required this.onPlay, required this.scale});
 
   final VoidCallback onPlay;
+  final double scale;
 
   @override
   Widget build(BuildContext context) {
+    final h = 62.0 * scale;
+    final w = 240.0 * scale;
+    final icon = 30.0 * scale;
+    final font = 20.0 * scale;
+    final radius = 26.0 * scale;
+
     return DecoratedBox(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(radius),
         boxShadow: [
           BoxShadow(
             color: AppColors.coral.withValues(alpha: 0.38),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
+            blurRadius: 16 * scale,
+            offset: Offset(0, 7 * scale),
           ),
         ],
       ),
       child: FilledButton.icon(
         onPressed: onPlay,
         style: FilledButton.styleFrom(
-          minimumSize: const Size(260, 68),
-          padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 18),
-          textStyle: const TextStyle(
+          minimumSize: Size(w, h),
+          padding: EdgeInsets.symmetric(
+            horizontal: 28 * scale,
+            vertical: 14 * scale,
+          ),
+          textStyle: TextStyle(
             decoration: TextDecoration.none,
             fontFamily: 'Nunito',
-            fontSize: 22,
+            fontSize: font,
             fontWeight: FontWeight.w900,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(28),
+            borderRadius: BorderRadius.circular(radius),
           ),
         ),
-        icon: const Icon(Icons.play_arrow_rounded, size: 34),
+        icon: Icon(Icons.play_arrow_rounded, size: icon),
         label: const Text(
           'Oyuna Başla',
           style: TextStyle(decoration: TextDecoration.none),
@@ -227,13 +237,21 @@ class _PlayButton extends StatelessWidget {
 }
 
 class _SoundToggle extends StatelessWidget {
-  const _SoundToggle({required this.enabled, required this.onToggle});
+  const _SoundToggle({
+    required this.enabled,
+    required this.onToggle,
+    required this.scale,
+  });
 
   final bool enabled;
   final VoidCallback onToggle;
+  final double scale;
 
   @override
   Widget build(BuildContext context) {
+    final pad = 10.0 * scale;
+    final icon = 26.0 * scale;
+
     return Material(
       color: AppColors.white.withValues(alpha: 0.92),
       shape: const CircleBorder(),
@@ -243,10 +261,10 @@ class _SoundToggle extends StatelessWidget {
         customBorder: const CircleBorder(),
         onTap: onToggle,
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: EdgeInsets.all(pad),
           child: Icon(
             enabled ? Icons.volume_up_rounded : Icons.volume_off_rounded,
-            size: 28,
+            size: icon,
             color: enabled ? AppColors.coral : AppColors.locked,
           ),
         ),
@@ -255,103 +273,128 @@ class _SoundToggle extends StatelessWidget {
   }
 }
 
-/// Animated nature scene + mascot + silent match tease.
 class _LivingScene extends StatelessWidget {
-  const _LivingScene();
+  const _LivingScene({required this.scale});
+
+  final double scale;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      alignment: Alignment.center,
-      children: [
-        // Soft ground hill
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            height: 70,
-            margin: const EdgeInsets.symmetric(horizontal: 8),
-            decoration: BoxDecoration(
-              color: AppColors.mint.withValues(alpha: 0.35),
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.elliptical(280, 80),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final h = constraints.maxHeight;
+        final treeH = (h * 0.72).clamp(120.0, 240.0);
+        final mascotH = (h * 0.42).clamp(72.0, 140.0);
+        final sun = (56.0 * scale).clamp(44.0, 92.0);
+        final cloudBig = (120.0 * scale).clamp(80.0, 160.0);
+        final cloudSm = (88.0 * scale).clamp(60.0, 120.0);
+
+        return Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.center,
+          children: [
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: (h * 0.2).clamp(36.0, 72.0),
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                decoration: BoxDecoration(
+                  color: AppColors.mint.withValues(alpha: 0.35),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.elliptical(280, 80),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-        Positioned(
-          top: 8,
-          right: 36,
-          child: Image.asset(
-            'assets/game/nature/sun.png',
-            width: 88,
-            height: 88,
-            color: AppColors.sunshine,
-            colorBlendMode: BlendMode.srcIn,
-          )
-              .animate(onPlay: (c) => c.repeat())
-              .rotate(duration: 14.seconds, begin: -0.04, end: 0.04)
-              .then()
-              .rotate(duration: 14.seconds, begin: 0.04, end: -0.04),
-        ),
-        Positioned(
-          top: 70,
-          left: 20,
-          child: Image.asset(
-            'assets/game/nature/cloud.png',
-            width: 150,
-            filterQuality: FilterQuality.high,
-          )
-              .animate(onPlay: (c) => c.repeat(reverse: true))
-              .moveX(begin: -8, end: 18, duration: 3.2.seconds, curve: Curves.easeInOut),
-        ),
-        Positioned(
-          top: 100,
-          right: 10,
-          child: Image.asset(
-            'assets/game/nature/cloud.png',
-            width: 110,
-            filterQuality: FilterQuality.high,
-          )
-              .animate(onPlay: (c) => c.repeat(reverse: true))
-              .moveX(begin: 10, end: -14, duration: 4.seconds, curve: Curves.easeInOut),
-        ),
-        Positioned(
-          left: 18,
-          bottom: 8,
-          child: Image.asset(
-            'assets/game/nature/tree.png',
-            height: 210,
-            filterQuality: FilterQuality.high,
-          )
-              .animate(onPlay: (c) => c.repeat(reverse: true))
-              .rotate(
-                begin: -0.02,
-                end: 0.02,
-                duration: 2.4.seconds,
-                curve: Curves.easeInOut,
-                alignment: Alignment.bottomCenter,
-              ),
-        ),
-        // Mascot waves
-        Positioned(
-          right: 28,
-          bottom: 12,
-          child: const _WavingMascot(),
-        ),
-      ],
+            Positioned(
+              top: 4,
+              right: 24 * scale,
+              child: Image.asset(
+                'assets/game/nature/sun.png',
+                width: sun,
+                height: sun,
+                color: AppColors.sunshine,
+                colorBlendMode: BlendMode.srcIn,
+              )
+                  .animate(onPlay: (c) => c.repeat(reverse: true))
+                  .rotate(
+                    begin: -0.05,
+                    end: 0.05,
+                    duration: 8.seconds,
+                    curve: Curves.easeInOut,
+                  ),
+            ),
+            Positioned(
+              top: h * 0.18,
+              left: 12,
+              child: Image.asset(
+                'assets/game/nature/cloud.png',
+                width: cloudBig,
+                filterQuality: FilterQuality.high,
+              )
+                  .animate(onPlay: (c) => c.repeat(reverse: true))
+                  .moveX(
+                    begin: -6,
+                    end: 14,
+                    duration: 3.2.seconds,
+                    curve: Curves.easeInOut,
+                  ),
+            ),
+            Positioned(
+              top: h * 0.28,
+              right: 4,
+              child: Image.asset(
+                'assets/game/nature/cloud.png',
+                width: cloudSm,
+                filterQuality: FilterQuality.high,
+              )
+                  .animate(onPlay: (c) => c.repeat(reverse: true))
+                  .moveX(
+                    begin: 8,
+                    end: -12,
+                    duration: 4.seconds,
+                    curve: Curves.easeInOut,
+                  ),
+            ),
+            Positioned(
+              left: 8,
+              bottom: 4,
+              child: Image.asset(
+                'assets/game/nature/tree.png',
+                height: treeH,
+                filterQuality: FilterQuality.high,
+              )
+                  .animate(onPlay: (c) => c.repeat(reverse: true))
+                  .rotate(
+                    begin: -0.02,
+                    end: 0.02,
+                    duration: 2.4.seconds,
+                    curve: Curves.easeInOut,
+                    alignment: Alignment.bottomCenter,
+                  ),
+            ),
+            Positioned(
+              right: 16 * scale,
+              bottom: 4,
+              child: _WavingMascot(height: mascotH),
+            ),
+          ],
+        );
+      },
     );
   }
 }
 
 class _WavingMascot extends StatelessWidget {
-  const _WavingMascot();
+  const _WavingMascot({required this.height});
+
+  final double height;
 
   @override
   Widget build(BuildContext context) {
     return Image.asset(
       'assets/game/ocean/penguin.png',
-      height: 128,
+      height: height,
       filterQuality: FilterQuality.high,
     )
         .animate(onPlay: (c) => c.repeat(reverse: true))
@@ -368,9 +411,10 @@ class _WavingMascot extends StatelessWidget {
   }
 }
 
-/// Mini loop: colored apple slides onto its shadow.
 class _HowToPlayDemo extends StatefulWidget {
-  const _HowToPlayDemo();
+  const _HowToPlayDemo({required this.scale});
+
+  final double scale;
 
   @override
   State<_HowToPlayDemo> createState() => _HowToPlayDemoState();
@@ -389,12 +433,14 @@ class _HowToPlayDemoState extends State<_HowToPlayDemo>
       duration: const Duration(milliseconds: 2200),
     )..repeat();
     _slide = TweenSequence<double>([
-      TweenSequenceItem(tween: ConstantTween(0), weight: 28),
+      TweenSequenceItem(tween: ConstantTween<double>(0), weight: 28),
       TweenSequenceItem(
-        tween: Tween(begin: 0, end: 1).chain(CurveTween(curve: Curves.easeInOutCubic)),
+        tween: Tween(begin: 0.0, end: 1.0).chain(
+          CurveTween(curve: Curves.easeInOutCubic),
+        ),
         weight: 44,
       ),
-      TweenSequenceItem(tween: ConstantTween(1), weight: 28),
+      TweenSequenceItem(tween: ConstantTween<double>(1), weight: 28),
     ]).animate(_controller);
   }
 
@@ -406,16 +452,22 @@ class _HowToPlayDemoState extends State<_HowToPlayDemo>
 
   @override
   Widget build(BuildContext context) {
-    const size = 56.0;
+    final s = widget.scale;
+    final size = 48.0 * s;
+    final boxW = 170.0 * s;
+
     return AnimatedBuilder(
       animation: _slide,
       builder: (context, _) {
         final t = _slide.value;
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+          padding: EdgeInsets.symmetric(
+            horizontal: 14 * s,
+            vertical: 10 * s,
+          ),
           decoration: BoxDecoration(
             color: AppColors.white.withValues(alpha: 0.78),
-            borderRadius: BorderRadius.circular(22),
+            borderRadius: BorderRadius.circular(18 * s),
             border: Border.all(
               color: AppColors.coral.withValues(alpha: 0.22),
               width: 2,
@@ -425,14 +477,13 @@ class _HowToPlayDemoState extends State<_HowToPlayDemo>
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(
-                width: 200,
-                height: size + 8,
+                width: boxW,
+                height: size + 6,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    // Shadow target on the right
                     Positioned(
-                      right: 12,
+                      right: 8,
                       child: ColorFiltered(
                         colorFilter: const ColorFilter.mode(
                           AppColors.shadow,
@@ -445,9 +496,8 @@ class _HowToPlayDemoState extends State<_HowToPlayDemo>
                         ),
                       ),
                     ),
-                    // Moving colored apple
                     Positioned(
-                      left: 12 + (200 - size - 36) * t,
+                      left: 8 + (boxW - size - 28) * t,
                       child: Opacity(
                         opacity: t > 0.92 ? 0.0 : 1.0,
                         child: Image.asset(
@@ -457,10 +507,9 @@ class _HowToPlayDemoState extends State<_HowToPlayDemo>
                         ),
                       ),
                     ),
-                    // Settled colored apple on shadow
                     if (t > 0.92)
                       Positioned(
-                        right: 12,
+                        right: 8,
                         child: Image.asset(
                           'assets/game/fruits/apple.png',
                           width: size,
@@ -470,17 +519,17 @@ class _HowToPlayDemoState extends State<_HowToPlayDemo>
                   ],
                 ),
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: 4 * s),
               Text(
                 t < 0.35
                     ? 'Gölgeyi bul'
                     : t < 0.92
                         ? 'Sürükle…'
                         : 'Tamam!',
-                style: const TextStyle(
+                style: TextStyle(
                   decoration: TextDecoration.none,
                   color: AppColors.navy,
-                  fontSize: 14,
+                  fontSize: 12.5 * s,
                   fontWeight: FontWeight.w800,
                 ),
               ),

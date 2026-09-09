@@ -29,7 +29,7 @@ void main() {
     );
     await _pumpFrames(tester);
 
-    expect(find.text('Shadow\nGuardian'), findsOneWidget);
+    expect(find.text('Sevimli Gölgeler'), findsOneWidget);
     expect(find.text('Oyuna Başla'), findsOneWidget);
 
     await tester.tap(find.text('Oyuna Başla'));

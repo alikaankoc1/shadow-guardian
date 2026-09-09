@@ -42,8 +42,13 @@ class WorldSelectOverlay extends StatelessWidget {
                         ),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: columnCount,
-                          mainAxisExtent: 236,
-                          mainAxisSpacing: 18,
+                          // Short landscape phones need shorter cards
+                          mainAxisExtent: constraints.maxHeight < 380
+                              ? 168
+                              : constraints.maxHeight < 480
+                              ? 196
+                              : 236,
+                          mainAxisSpacing: constraints.maxHeight < 420 ? 12 : 18,
                           crossAxisSpacing: 18,
                         ),
                         itemCount: worlds.length,
