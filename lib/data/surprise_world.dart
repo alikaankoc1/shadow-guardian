@@ -24,6 +24,11 @@ final surpriseWorld = GameWorld(
   subtitle: 'Duyguları gölgeleriyle buluştur.',
   icon: Icons.emoji_emotions_rounded,
   color: Color(0xFFFFB74D),
+  previewAssets: [
+    'surprise/happy.png',
+    'surprise/surprised.png',
+    'surprise/sleepy.png',
+  ],
   isAvailable: true,
   lockedHint: 'Masalı bitir',
   stages: [

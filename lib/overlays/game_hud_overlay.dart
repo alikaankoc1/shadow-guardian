@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../game/shadow_game.dart';
 import '../theme/app_theme.dart';
 import '../theme/landscape_ui.dart';
+import '../theme/play_ui.dart';
 
 class GameHudOverlay extends StatelessWidget {
   const GameHudOverlay({super.key, required this.game});
@@ -53,15 +54,13 @@ class GameHudOverlay extends StatelessWidget {
                     8 * scale,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.white.withValues(alpha: 0.94),
-                    borderRadius: BorderRadius.circular(18 * scale),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x18294C60),
-                        blurRadius: 12,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
+                    color: AppColors.white.withValues(alpha: 0.96),
+                    borderRadius: PlayUi.cardRadius(scale),
+                    border: Border.all(
+                      color: AppColors.mint.withValues(alpha: 0.25),
+                      width: 1.5,
+                    ),
+                    boxShadow: const [PlayUi.cardShadow],
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,

@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import '../models/game_world.dart';
 import 'animals_world.dart';
 import 'apprentice_exam.dart';

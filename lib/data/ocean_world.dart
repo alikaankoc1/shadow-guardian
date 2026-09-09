@@ -19,6 +19,7 @@ final oceanWorld = GameWorld(
   subtitle: 'Denizin neşeli sakinlerini gölgeleriyle buluştur.',
   icon: Icons.water_rounded,
   color: Color(0xFF4DB6E8),
+  previewAssets: ['ocean/fish.png', 'ocean/octopus.png', 'ocean/penguin.png'],
   isAvailable: true,
   lockedHint: 'Meslekleri bitir',
   stages: [

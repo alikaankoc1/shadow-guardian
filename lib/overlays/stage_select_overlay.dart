@@ -5,7 +5,10 @@ import '../game/shadow_game.dart';
 import '../models/stage_config.dart';
 import '../theme/app_theme.dart';
 import '../theme/landscape_ui.dart';
+import '../widgets/play_card.dart';
+import '../widgets/play_screen_header.dart';
 import '../widgets/playful_background.dart';
+import '../widgets/world_thumbnail.dart';
 
 class StageSelectOverlay extends StatelessWidget {
   const StageSelectOverlay({super.key, required this.game});
@@ -25,13 +28,23 @@ class StageSelectOverlay extends StatelessWidget {
         padding: EdgeInsets.fromLTRB(padH, padV, padH, padV + 4),
         child: Column(
           children: [
-            _StageHeader(
+            PlayScreenHeader(
               onBack: game.showWorldSelect,
               title: world.title,
-              icon: world.icon,
-              accent: world.color,
-              completed: game.isCurrentWorldCompleted,
+              subtitle: game.isCurrentWorldCompleted
+                  ? 'Harika! Bu dünyayı tamamladın.'
+                  : 'Sıradaki seviyeyi tamamla ve yenisini aç.',
               scale: scale,
+              leading: WorldThumbnail(
+                assetPaths: world.previewAssets,
+                size: 46 * scale,
+                accent: world.color,
+              ),
+              trailing: game.isCurrentWorldCompleted
+                  ? const _CompletionBadge()
+                      .animate()
+                      .scale(curve: Curves.easeOutBack)
+                  : null,
             ),
             SizedBox(height: 10 * scale),
             Expanded(
@@ -81,73 +94,6 @@ class StageSelectOverlay extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _StageHeader extends StatelessWidget {
-  const _StageHeader({
-    required this.onBack,
-    required this.title,
-    required this.icon,
-    required this.accent,
-    required this.completed,
-    required this.scale,
-  });
-
-  final VoidCallback onBack;
-  final String title;
-  final IconData icon;
-  final Color accent;
-  final bool completed;
-  final double scale;
-
-  @override
-  Widget build(BuildContext context) {
-    final iconBox = 46.0 * scale;
-
-    return Row(
-      children: [
-        IconButton.filledTonal(
-          onPressed: onBack,
-          tooltip: 'Dünyalara dön',
-          icon: Icon(Icons.arrow_back_rounded, size: 22 * scale),
-        ),
-        SizedBox(width: 10 * scale),
-        Container(
-          width: iconBox,
-          height: iconBox,
-          decoration: BoxDecoration(
-            color: accent.withValues(alpha: 0.22),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(icon, color: accent, size: 26 * scale),
-        ),
-        SizedBox(width: 10 * scale),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                  fontSize: 24 * scale,
-                ),
-              ),
-              Text(
-                completed
-                    ? 'Harika! Bu dünyayı tamamladın.'
-                    : 'Sıradaki seviyeyi tamamla ve yenisini aç.',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontSize: 14 * scale,
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (completed)
-          const _CompletionBadge().animate().scale(curve: Curves.easeOutBack),
-      ],
     );
   }
 }
@@ -211,31 +157,13 @@ class _StageCard extends StatelessWidget {
     return SizedBox(
       width: width,
       height: height,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: unlocked ? onTap : null,
-          borderRadius: BorderRadius.circular(28 * scale),
-          child: Ink(
-            padding: EdgeInsets.all(16 * scale),
-            decoration: BoxDecoration(
-              color: AppColors.white.withValues(alpha: unlocked ? 0.95 : 0.68),
-              borderRadius: BorderRadius.circular(28 * scale),
-              border: Border.all(
-                color: unlocked
-                    ? accent.withValues(alpha: 0.6)
-                    : AppColors.locked.withValues(alpha: 0.35),
-                width: 2,
-              ),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x1F294C60),
-                  blurRadius: 22,
-                  offset: Offset(0, 10),
-                ),
-              ],
-            ),
-            child: Column(
+      child: PlayCard(
+        scale: scale,
+        onTap: unlocked ? onTap : null,
+        enabled: unlocked,
+        accentColor: accent,
+        padding: EdgeInsets.all(16 * scale),
+        child: Column(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -335,8 +263,6 @@ class _StageCard extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-        ),
       ),
     );
   }

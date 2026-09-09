@@ -19,6 +19,7 @@ final vehiclesWorld = GameWorld(
   subtitle: 'En sevilen araçları gölgeleriyle buluştur.',
   icon: Icons.directions_car_filled_rounded,
   color: Color(0xFFFFA45B),
+  previewAssets: ['vehicles/car.png', 'vehicles/plane.png', 'vehicles/train.png'],
   isAvailable: true,
   lockedHint: 'Doğayı bitir',
   stages: [

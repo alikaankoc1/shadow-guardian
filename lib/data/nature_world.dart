@@ -33,6 +33,7 @@ final natureWorld = GameWorld(
   subtitle: 'Doğadaki dostları gölgeleriyle buluştur.',
   icon: Icons.park_rounded,
   color: AppColors.mint,
+  previewAssets: ['nature/cloud.png', 'nature/tree.png', 'nature/sun.png'],
   isAvailable: true,
   stages: [
     StageConfig(

@@ -7,6 +7,8 @@ import '../game/shadow_game.dart';
 import '../services/sound_settings.dart';
 import '../theme/app_theme.dart';
 import '../theme/landscape_ui.dart';
+import '../theme/play_ui.dart';
+import '../widgets/play_button.dart';
 import '../widgets/playful_background.dart';
 
 class StartMenuOverlay extends StatefulWidget {
@@ -24,6 +26,12 @@ class _StartMenuOverlayState extends State<StartMenuOverlay> {
     super.initState();
     SoundSettings.instance.addListener(_onSoundChanged);
     SoundSettings.instance.load();
+    unawaited(() async {
+      await widget.game.loaded;
+      if (mounted) {
+        setState(() {});
+      }
+    }());
   }
 
   @override
@@ -47,32 +55,44 @@ class _StartMenuOverlayState extends State<StartMenuOverlay> {
     }());
   }
 
+  void _continue() {
+    unawaited(() async {
+      await SoundSettings.instance.unlockAudio();
+      SoundSettings.instance.playTap();
+      await SoundSettings.instance.enterMenus();
+      await widget.game.resumeLastProgress();
+    }());
+  }
+
   @override
   Widget build(BuildContext context) {
+    final canResume = widget.game.canResume;
+    final resumeLabel = widget.game.resumeLabel;
+
     return PlayfulBackground(
       child: LayoutBuilder(
         builder: (context, constraints) {
           final scale = landscapeUiScale(constraints.maxHeight);
 
-          return GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: _start,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                // Always landscape row — phone & tablet play sideways.
-                _LandscapeStart(onPlay: _start, scale: scale),
-                Positioned(
-                  top: 6 * scale,
-                  right: 10 * scale,
-                  child: _SoundToggle(
-                    enabled: SoundSettings.instance.enabled,
-                    onToggle: () => SoundSettings.instance.toggle(),
-                    scale: scale,
-                  ),
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              _LandscapeStart(
+                onPlay: _start,
+                onContinue: canResume ? _continue : null,
+                resumeLabel: resumeLabel,
+                scale: scale,
+              ),
+              Positioned(
+                top: 6 * scale,
+                right: 10 * scale,
+                child: _SoundToggle(
+                  enabled: SoundSettings.instance.enabled,
+                  onToggle: () => SoundSettings.instance.toggle(),
+                  scale: scale,
                 ),
-              ],
-            ),
+              ),
+            ],
           );
         },
       ),
@@ -81,9 +101,16 @@ class _StartMenuOverlayState extends State<StartMenuOverlay> {
 }
 
 class _LandscapeStart extends StatelessWidget {
-  const _LandscapeStart({required this.onPlay, required this.scale});
+  const _LandscapeStart({
+    required this.onPlay,
+    required this.scale,
+    this.onContinue,
+    this.resumeLabel,
+  });
 
   final VoidCallback onPlay;
+  final VoidCallback? onContinue;
+  final String? resumeLabel;
   final double scale;
 
   @override
@@ -92,7 +119,6 @@ class _LandscapeStart extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Keep scene + text as one tight block (not stretched across ultrawide).
         final maxW = (constraints.maxWidth * 0.92).clamp(560.0, 820.0);
 
         return Center(
@@ -113,7 +139,12 @@ class _LandscapeStart extends StatelessWidget {
                     alignment: Alignment.center,
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
-                      child: _BrandAndPlay(onPlay: onPlay, scale: scale),
+                      child: _BrandAndPlay(
+                        onPlay: onPlay,
+                        onContinue: onContinue,
+                        resumeLabel: resumeLabel,
+                        scale: scale,
+                      ),
                     ),
                   ),
                 ),
@@ -127,9 +158,16 @@ class _LandscapeStart extends StatelessWidget {
 }
 
 class _BrandAndPlay extends StatelessWidget {
-  const _BrandAndPlay({required this.onPlay, required this.scale});
+  const _BrandAndPlay({
+    required this.onPlay,
+    required this.scale,
+    this.onContinue,
+    this.resumeLabel,
+  });
 
   final VoidCallback onPlay;
+  final VoidCallback? onContinue;
+  final String? resumeLabel;
   final double scale;
 
   @override
@@ -139,6 +177,7 @@ class _BrandAndPlay extends StatelessWidget {
     final gapSm = 6.0 * scale;
     final gapMd = 12.0 * scale;
     final gapLg = 16.0 * scale;
+    final canResume = onContinue != null;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -169,77 +208,57 @@ class _BrandAndPlay extends StatelessWidget {
             .animate()
             .fadeIn(delay: 140.ms, duration: 450.ms),
         SizedBox(height: gapLg),
-        _PlayButton(onPlay: onPlay, scale: scale)
-            .animate(onPlay: (c) => c.repeat(reverse: true))
-            .scale(
-              begin: const Offset(1, 1),
-              end: const Offset(1.04, 1.04),
-              duration: 900.ms,
-              curve: Curves.easeInOut,
-            ),
-        SizedBox(height: gapSm),
-        Text(
-          'veya ekrana dokun',
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            decoration: TextDecoration.none,
-            fontSize: 12 * scale,
-            color: AppColors.slate.withValues(alpha: 0.75),
+        if (canResume) ...[
+          PlayButton(
+            label: 'Devam Et',
+            onPressed: onContinue!,
+            scale: scale,
+            pulse: true,
+            icon: Icons.play_arrow_rounded,
           ),
-        ),
-      ],
-    );
-  }
-}
-
-class _PlayButton extends StatelessWidget {
-  const _PlayButton({required this.onPlay, required this.scale});
-
-  final VoidCallback onPlay;
-  final double scale;
-
-  @override
-  Widget build(BuildContext context) {
-    final h = 62.0 * scale;
-    final w = 240.0 * scale;
-    final icon = 30.0 * scale;
-    final font = 20.0 * scale;
-    final radius = 26.0 * scale;
-
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(radius),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.coral.withValues(alpha: 0.38),
-            blurRadius: 16 * scale,
-            offset: Offset(0, 7 * scale),
+          if (resumeLabel != null) ...[
+            SizedBox(height: 4 * scale),
+            Text(
+              resumeLabel!,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                decoration: TextDecoration.none,
+                fontSize: 12 * scale,
+                color: AppColors.slate.withValues(alpha: 0.85),
+              ),
+            ),
+          ],
+          SizedBox(height: gapSm),
+          TextButton(
+            onPressed: onPlay,
+            child: Text(
+              'Dünyaları Seç',
+              style: TextStyle(
+                decoration: TextDecoration.none,
+                color: AppColors.navy,
+                fontWeight: FontWeight.w800,
+                fontSize: 14 * scale,
+              ),
+            ),
+          ),
+        ] else ...[
+          PlayButton(
+            label: 'Oyuna Başla',
+            onPressed: onPlay,
+            scale: scale,
+            pulse: true,
+          ),
+          SizedBox(height: gapSm),
+          Text(
+            'veya dünyaları seç',
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              decoration: TextDecoration.none,
+              fontSize: 12 * scale,
+              color: AppColors.slate.withValues(alpha: 0.75),
+            ),
           ),
         ],
-      ),
-      child: FilledButton.icon(
-        onPressed: onPlay,
-        style: FilledButton.styleFrom(
-          minimumSize: Size(w, h),
-          padding: EdgeInsets.symmetric(
-            horizontal: 28 * scale,
-            vertical: 14 * scale,
-          ),
-          textStyle: TextStyle(
-            decoration: TextDecoration.none,
-            fontFamily: 'Nunito',
-            fontSize: font,
-            fontWeight: FontWeight.w900,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radius),
-          ),
-        ),
-        icon: Icon(Icons.play_arrow_rounded, size: icon),
-        label: const Text(
-          'Oyuna Başla',
-          style: TextStyle(decoration: TextDecoration.none),
-        ),
-      ),
+      ],
     );
   }
 }
@@ -381,6 +400,22 @@ class _LivingScene extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                   ),
             ),
+            Positioned(
+              left: treeH * 0.55,
+              bottom: h * 0.08,
+              child: Image.asset(
+                'assets/game/nature/flower.png',
+                height: treeH * 0.22,
+                filterQuality: FilterQuality.high,
+              )
+                  .animate(onPlay: (c) => c.repeat(reverse: true))
+                  .scale(
+                    begin: const Offset(0.95, 0.95),
+                    end: const Offset(1.05, 1.05),
+                    duration: 2.seconds,
+                    curve: Curves.easeInOut,
+                  ),
+            ),
             // Mascot sits near the brand panel (composition bridge)
             Positioned(
               right: -4 * scale,
@@ -475,12 +510,13 @@ class _HowToPlayDemoState extends State<_HowToPlayDemo>
             vertical: 10 * s,
           ),
           decoration: BoxDecoration(
-            color: AppColors.white.withValues(alpha: 0.78),
-            borderRadius: BorderRadius.circular(18 * s),
+            color: AppColors.white.withValues(alpha: 0.88),
+            borderRadius: PlayUi.cardRadius(s),
             border: Border.all(
-              color: AppColors.coral.withValues(alpha: 0.22),
+              color: AppColors.coral.withValues(alpha: 0.28),
               width: 2,
             ),
+            boxShadow: const [PlayUi.cardShadow],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,

@@ -30,12 +30,17 @@ class StageBackdropComponent extends PositionComponent {
 
     // Soft sun glow in the upper corner.
     final glowPaint = Paint()
-      ..color = const Color(0x33FFFFFF)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 40);
+      ..color = const Color(0x44FFFFFF)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 48);
     canvas.drawCircle(
       Offset(size.x * 0.86, size.y * 0.18),
-      size.x * 0.12,
+      size.x * 0.14,
       glowPaint,
+    );
+    canvas.drawCircle(
+      Offset(size.x * 0.86, size.y * 0.18),
+      size.x * 0.05,
+      Paint()..color = const Color(0x55FFFFFF),
     );
 
     // Gentle ground hill for nature atmosphere.

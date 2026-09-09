@@ -32,6 +32,11 @@ final professionsWorld = GameWorld(
   subtitle: 'Meslek kahramanlarını gölgeleriyle buluştur.',
   icon: Icons.work_rounded,
   color: Color(0xFF64B5F6),
+  previewAssets: [
+    'professions/chef.png',
+    'professions/firefighter.png',
+    'professions/doctor.png',
+  ],
   isAvailable: true,
   lockedHint: 'Sevimli Dostları bitir',
   stages: [

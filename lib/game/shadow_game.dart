@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import '../components/match_object_component.dart';
 import '../components/shadow_target_component.dart';
+import '../components/stage_ambience_component.dart';
 import '../components/stage_backdrop_component.dart';
 import '../data/animals_world.dart';
 import '../data/fairy_tale_world.dart';
@@ -18,11 +19,13 @@ import '../data/professions_world.dart';
 import '../data/space_world.dart';
 import '../data/surprise_world.dart';
 import '../data/vehicles_world.dart';
+import '../data/world_catalog.dart';
 import '../models/game_world.dart';
 import '../models/stage_config.dart';
 import '../services/progress_service.dart';
 import '../services/sound_settings.dart';
 import '../theme/app_theme.dart';
+import 'stage_layout.dart';
 
 class ShadowGame extends FlameGame {
   ShadowGame({ProgressService? progressService})
@@ -65,6 +68,20 @@ class ShadowGame extends FlameGame {
   bool get isCurrentWorldCompleted =>
       progress.isWorldCompleted(currentWorld.id);
 
+  bool get canResume => progress.hasResume;
+
+  String? get resumeLabel {
+    final pointer = progress.resume;
+    if (pointer == null || !progress.hasResume) {
+      return null;
+    }
+    final world = worldById(pointer.worldId);
+    if (world == null) {
+      return null;
+    }
+    return '${world.title} · Seviye ${pointer.stageNumber}';
+  }
+
   @override
   Color backgroundColor() => currentStage?.skyTop ?? AppColors.sky;
 
@@ -104,6 +121,30 @@ class ShadowGame extends FlameGame {
 
   void startGame() => showWorldSelect();
 
+  /// Jump back to the last played world/stage (local SharedPreferences).
+  Future<void> resumeLastProgress() async {
+    final pointer = progress.resume;
+    if (pointer == null || !progress.hasResume) {
+      showWorldSelect();
+      return;
+    }
+
+    final world = worldById(pointer.worldId);
+    if (world == null || !isWorldUnlocked(world)) {
+      showWorldSelect();
+      return;
+    }
+
+    currentWorld = world;
+    final stageIndex = (pointer.stageNumber - 1).clamp(0, world.stages.length - 1);
+    final stage = world.stages[stageIndex];
+    if (!isStageUnlocked(stage.number)) {
+      showStageSelect();
+      return;
+    }
+    await startStage(stage);
+  }
+
   void showStartMenu() {
     _leaveStage();
     overlays.clear();
@@ -123,6 +164,12 @@ class ShadowGame extends FlameGame {
       return;
     }
     currentWorld = world;
+    unawaited(
+      _progressService.saveResume(
+        worldId: world.id,
+        stageNumber: highestUnlockedStage.clamp(1, world.stages.length),
+      ).then((value) => progress = value),
+    );
     showStageSelect();
   }
 
@@ -146,6 +193,11 @@ class ShadowGame extends FlameGame {
     matchedCount = 0;
     _isCompleting = false;
     _isStageActive = true;
+
+    progress = await _progressService.saveResume(
+      worldId: currentWorld.id,
+      stageNumber: stage.number,
+    );
 
     overlays.clear();
     overlays.add(gameHudOverlay);
@@ -185,113 +237,69 @@ class ShadowGame extends FlameGame {
 
   Future<void> _buildStage(StageConfig stage) async {
     final count = stage.matchCount;
-    final horizontalPadding = max(
-      count >= 15
-          ? 8.0
-          : count >= 12
-          ? 12.0
-          : count >= 9
-          ? 18.0
-          : 34.0,
-      size.x * 0.015,
-    );
-    final availableWidth = size.x - (horizontalPadding * 2);
-    final cellWidth = availableWidth / count;
-
-    // Phone landscape (~360–400h): use fractions so HUD + rows fit.
-    // Tablet / tall: keep comfortable fixed floors.
-    final shortPhone = size.y < 420;
-    final targetY = shortPhone
-        ? size.y * (count >= 12 ? 0.30 : 0.32)
-        : max(count >= 15 ? 130.0 : 140.0, size.y * 0.33);
-    final objectY = shortPhone
-        ? size.y * (count >= 12 ? 0.78 : 0.76)
-        : min(size.y - (count >= 15 ? 70.0 : 80.0), size.y * 0.74);
+    final layout = StageLayout(viewport: size, itemCount: count);
 
     final backdrop = StageBackdropComponent(stage: stage)..size = size.clone();
     _stageComponents.add(backdrop);
+
+    final ambience = StageAmbienceComponent(worldId: currentWorld.id)
+      ..size = size.clone();
+    _stageComponents.add(ambience);
 
     final targets = <ShadowTargetComponent>[];
 
     for (var index = 0; index < count; index++) {
       final item = stage.items[index];
       final sprite = Sprite(images.fromCache(item.assetPath));
-      final displaySize = _fitSprite(sprite, cellWidth);
+      final displaySize = layout.fitSprite(sprite);
       final target = ShadowTargetComponent(
         itemId: item.id,
         sprite: sprite,
-        position: Vector2(
-          horizontalPadding + cellWidth * (index + 0.5),
-          targetY,
-        ),
+        position: layout.slotPosition(index: index, forTargets: true),
         size: displaySize,
       );
       targets.add(target);
       _stageComponents.add(target);
     }
 
+    // Shuffle start slots so objects don't sit under their own shadows.
+    final startSlots = List<int>.generate(count, (i) => i);
+    for (var i = startSlots.length - 1; i > 0; i--) {
+      final j = _random.nextInt(i + 1);
+      final tmp = startSlots[i];
+      startSlots[i] = startSlots[j];
+      startSlots[j] = tmp;
+    }
+    // Avoid accidental identity mapping for small counts.
+    var identity = true;
+    for (var i = 0; i < count; i++) {
+      if (startSlots[i] != i) {
+        identity = false;
+        break;
+      }
+    }
+    if (identity && count > 1) {
+      startSlots.add(startSlots.removeAt(0));
+    }
+
     for (var index = 0; index < count; index++) {
       final item = stage.items[index];
       final sprite = Sprite(images.fromCache(item.assetPath));
-      final displaySize = _fitSprite(sprite, cellWidth);
-      final shuffledSlot = (index + max(1, count ~/ 2)) % count;
+      final displaySize = layout.fitSprite(sprite);
       final object = MatchObjectComponent(
         item: item,
         sprite: sprite,
         size: displaySize,
         target: targets[index],
-        startPosition: Vector2(
-          horizontalPadding + cellWidth * (shuffledSlot + 0.5),
-          objectY,
+        startPosition: layout.slotPosition(
+          index: startSlots[index],
+          forTargets: false,
         ),
       );
       _stageComponents.add(object);
     }
 
     await addAll(_stageComponents);
-  }
-
-  Vector2 _fitSprite(Sprite sprite, double cellWidth) {
-    final imageSize = Vector2(
-      sprite.image.width.toDouble(),
-      sprite.image.height.toDouble(),
-    );
-    final count = currentStage?.matchCount ?? 0;
-    final dense = count >= 9;
-    final veryDense = count >= 12;
-    final ultraDense = count >= 15;
-    final shortPhone = size.y < 420;
-    final maxWidth = min(
-      ultraDense
-          ? (shortPhone ? 48.0 : 64.0)
-          : veryDense
-          ? (shortPhone ? 60.0 : 80.0)
-          : dense
-          ? (shortPhone ? 78.0 : 100.0)
-          : (shortPhone ? 100.0 : 138.0),
-      cellWidth * 0.90,
-    );
-    final maxHeight = min(
-      ultraDense
-          ? (shortPhone ? 48.0 : 64.0)
-          : veryDense
-          ? (shortPhone ? 60.0 : 80.0)
-          : dense
-          ? (shortPhone ? 74.0 : 98.0)
-          : (shortPhone ? 96.0 : 132.0),
-      size.y *
-          (ultraDense
-              ? 0.14
-              : veryDense
-              ? 0.16
-              : dense
-              ? 0.19
-              : shortPhone
-              ? 0.22
-              : 0.26),
-    );
-    final scale = min(maxWidth / imageSize.x, maxHeight / imageSize.y);
-    return imageSize * scale;
   }
 
   Future<void> _completeCurrentStage() async {

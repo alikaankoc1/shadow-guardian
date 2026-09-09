@@ -6,7 +6,10 @@ import '../game/shadow_game.dart';
 import '../models/game_world.dart';
 import '../theme/app_theme.dart';
 import '../theme/landscape_ui.dart';
+import '../widgets/play_card.dart';
+import '../widgets/play_screen_header.dart';
 import '../widgets/playful_background.dart';
+import '../widgets/world_thumbnail.dart';
 
 class WorldSelectOverlay extends StatelessWidget {
   const WorldSelectOverlay({super.key, required this.game});
@@ -24,7 +27,12 @@ class WorldSelectOverlay extends StatelessWidget {
         padding: EdgeInsets.fromLTRB(16 * scale, 8 * scale, 16 * scale, 12 * scale),
         child: Column(
           children: [
-            _Header(onBack: game.showStartMenu, scale: scale),
+            PlayScreenHeader(
+              onBack: game.showStartMenu,
+              scale: scale,
+              title: 'Bir dünya seç',
+              subtitle: 'Maceran hangi dünyada başlasın?',
+            ),
             SizedBox(height: 8 * scale),
             Expanded(
               child: Center(
@@ -88,46 +96,6 @@ class WorldSelectOverlay extends StatelessWidget {
   }
 }
 
-class _Header extends StatelessWidget {
-  const _Header({required this.onBack, required this.scale});
-
-  final VoidCallback onBack;
-  final double scale;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        IconButton.filledTonal(
-          onPressed: onBack,
-          tooltip: 'Geri',
-          icon: Icon(Icons.arrow_back_rounded, size: 22 * scale),
-        ),
-        SizedBox(width: 10 * scale),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Bir dünya seç',
-                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                  fontSize: 24 * scale,
-                ),
-              ),
-              Text(
-                'Maceran hangi dünyada başlasın?',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontSize: 14 * scale,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class _WorldCard extends StatelessWidget {
   const _WorldCard({
     required this.world,
@@ -163,47 +131,20 @@ class _WorldCard extends StatelessWidget {
         : AppColors.locked;
     final iconBox = 56.0 * scale;
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(22 * scale),
-        child: Ink(
-          padding: EdgeInsets.all(14 * scale),
-          decoration: BoxDecoration(
-            color: enabled
-                ? AppColors.white.withValues(alpha: 1.0)
-                : AppColors.white.withValues(alpha: 0.88),
-            borderRadius: BorderRadius.circular(22 * scale),
-            border: Border.all(
-              color: enabled
-                  ? world.color.withValues(alpha: world.isExam ? 1.0 : 0.92)
-                  : AppColors.locked.withValues(alpha: 0.58),
-              width: world.isExam ? 3.1 : 2.4,
-            ),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x26294C60),
-                blurRadius: 22,
-                offset: Offset(0, 10),
-              ),
-            ],
+    return PlayCard(
+      scale: scale,
+      onTap: onTap,
+      enabled: enabled,
+      accentColor: world.color,
+      borderWidth: world.isExam ? 3.1 : 2.4,
+      child: Row(
+        children: [
+          WorldThumbnail(
+            assetPaths: world.previewAssets,
+            size: iconBox,
+            accent: world.color,
+            enabled: enabled,
           ),
-          child: Row(
-            children: [
-              Container(
-                width: iconBox,
-                height: iconBox,
-                decoration: BoxDecoration(
-                  color: world.color.withValues(alpha: enabled ? 0.35 : 0.20),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  world.icon,
-                  size: iconBox * 0.70,
-                  color: enabled ? world.color : AppColors.locked,
-                ),
-              ),
               SizedBox(width: 10 * scale),
               Expanded(
                 child: Column(
@@ -267,9 +208,7 @@ class _WorldCard extends StatelessWidget {
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }

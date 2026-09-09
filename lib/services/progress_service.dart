@@ -12,10 +12,24 @@ class WorldProgress {
   final bool isCompleted;
 }
 
+class ResumePointer {
+  const ResumePointer({
+    required this.worldId,
+    required this.stageNumber,
+  });
+
+  final String worldId;
+  final int stageNumber;
+}
+
 class GameProgress {
-  const GameProgress({required this.byWorldId});
+  const GameProgress({
+    required this.byWorldId,
+    this.resume,
+  });
 
   final Map<String, WorldProgress> byWorldId;
+  final ResumePointer? resume;
 
   WorldProgress forWorld(String worldId) {
     return byWorldId[worldId] ??
@@ -26,6 +40,21 @@ class GameProgress {
 
   bool areAllCompleted(List<String> worldIds) =>
       worldIds.every(isWorldCompleted);
+
+  bool get hasResume {
+    final pointer = resume;
+    if (pointer == null) {
+      return false;
+    }
+    if (!isWorldUnlocked(pointer.worldId)) {
+      return false;
+    }
+    final worldProgress = forWorld(pointer.worldId);
+    if (worldProgress.isCompleted) {
+      return true;
+    }
+    return pointer.stageNumber <= worldProgress.highestUnlockedStage;
+  }
 
   /// Theme worlds unlock in sequence; exams unlock after their block.
   bool isWorldUnlocked(String worldId) {
@@ -67,6 +96,9 @@ class ProgressService {
 
   final Future<SharedPreferences> Function() _preferencesProvider;
 
+  static const _resumeWorldKey = 'resume_world_id';
+  static const _resumeStageKey = 'resume_stage_number';
+
   static String _highestStageKey(String worldId) =>
       '${worldId}_highest_unlocked_stage';
 
@@ -100,6 +132,24 @@ class ProgressService {
       await preferences.setBool(completedKey, true);
     }
 
+    // Continue from the next unlocked stage, or stay on last if world done.
+    final resumeStage = worldCompleted
+        ? totalStages
+        : highestUnlocked.clamp(1, totalStages);
+    await preferences.setString(_resumeWorldKey, worldId);
+    await preferences.setInt(_resumeStageKey, resumeStage);
+
+    return _readProgress(preferences);
+  }
+
+  /// Remember where the player left off (local only — no backend).
+  Future<GameProgress> saveResume({
+    required String worldId,
+    required int stageNumber,
+  }) async {
+    final preferences = await _preferencesProvider();
+    await preferences.setString(_resumeWorldKey, worldId);
+    await preferences.setInt(_resumeStageKey, stageNumber);
     return _readProgress(preferences);
   }
 
@@ -121,6 +171,16 @@ class ProgressService {
       );
     }
 
-    return GameProgress(byWorldId: byWorldId);
+    final resumeWorld = preferences.getString(_resumeWorldKey);
+    final resumeStage = preferences.getInt(_resumeStageKey);
+    ResumePointer? resume;
+    if (resumeWorld != null && resumeStage != null) {
+      resume = ResumePointer(
+        worldId: resumeWorld,
+        stageNumber: resumeStage.clamp(1, 3),
+      );
+    }
+
+    return GameProgress(byWorldId: byWorldId, resume: resume);
   }
 }

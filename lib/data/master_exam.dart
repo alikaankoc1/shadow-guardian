@@ -41,6 +41,7 @@ final masterExam = GameWorld(
   subtitle: 'Tüm dünyaların dostlarını karışık buluştur.',
   icon: Icons.workspace_premium_rounded,
   color: Color(0xFFFFC857),
+  previewAssets: ['space/rocket.png', 'fairy_tale/princess.png', 'surprise/happy.png'],
   isAvailable: true,
   kind: WorldKind.exam,
   lockedHint: 'Tüm dünyaları bitir',

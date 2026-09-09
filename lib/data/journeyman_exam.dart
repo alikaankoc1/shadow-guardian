@@ -35,6 +35,7 @@ final journeymanExam = GameWorld(
   subtitle: 'Altı dünyanın dostlarını karışık buluştur.',
   icon: Icons.military_tech_rounded,
   color: Color(0xFFFFB74D),
+  previewAssets: ['animals/cat.png', 'professions/doctor.png', 'ocean/whale.png'],
   isAvailable: true,
   kind: WorldKind.exam,
   lockedHint: '6 dünyayı bitir',

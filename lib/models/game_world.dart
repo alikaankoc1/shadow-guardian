@@ -12,6 +12,7 @@ class GameWorld {
     required this.icon,
     required this.color,
     required this.stages,
+    this.previewAssets = const [],
     this.isAvailable = false,
     this.kind = WorldKind.theme,
     this.lockedHint,
@@ -23,6 +24,9 @@ class GameWorld {
   final IconData icon;
   final Color color;
   final List<StageConfig> stages;
+
+  /// Sprite paths relative to assets/game/ for menu thumbnails.
+  final List<String> previewAssets;
   final bool isAvailable;
   final WorldKind kind;
   final String? lockedHint;

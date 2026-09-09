@@ -36,6 +36,11 @@ final fairyTaleWorld = GameWorld(
   subtitle: 'Masal kahramanlarını gölgeleriyle buluştur.',
   icon: Icons.castle_rounded,
   color: Color(0xFFE77EB4),
+  previewAssets: [
+    'fairy_tale/princess.png',
+    'fairy_tale/fairy.png',
+    'fairy_tale/frog_prince.png',
+  ],
   isAvailable: true,
   lockedHint: 'Uzayı bitir',
   stages: [
