@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/game_world.dart';
 import 'animals_world.dart';
 import 'apprentice_exam.dart';
+import 'fairy_tale_world.dart';
 import 'fruits_world.dart';
 import 'journeyman_exam.dart';
 import 'nature_world.dart';
@@ -41,17 +42,8 @@ List<GameWorld> get playableWorlds => [
   oceanWorld,
   journeymanExam,
   spaceWorld,
+  fairyTaleWorld,
 ];
-
-const fairyTaleWorldPreview = GameWorld(
-  id: 'fairy_tale',
-  title: 'Masal Dünyası',
-  subtitle: 'Masal kahramanlarını gölgeleriyle buluştur.',
-  icon: Icons.castle_rounded,
-  color: Color(0xFFE77EB4),
-  stages: [],
-  lockedHint: 'Önceki dünyaları bitir',
-);
 
 const surpriseWorldPreview = GameWorld(
   id: 'surprise',
@@ -85,7 +77,7 @@ List<GameWorld> get allWorlds => [
   oceanWorld,
   journeymanExam,
   spaceWorld,
-  fairyTaleWorldPreview,
+  fairyTaleWorld,
   surpriseWorldPreview,
   masterExam,
 ];

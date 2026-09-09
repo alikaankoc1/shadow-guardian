@@ -42,6 +42,7 @@ flutter:
     - assets/game/professions/
     - assets/game/ocean/
     - assets/game/space/
+    - assets/game/fairy_tale/
 
   fonts:
     - family: Nunito

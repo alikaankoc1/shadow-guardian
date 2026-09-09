@@ -80,3 +80,17 @@ Icons in `assets/game/space/` (cropped/resized for this project):
 - `planet.png`
   - Pack: Planets
   - Source: https://kenney.nl/assets/planets
+
+## Fairy Tale (Kenney CC0)
+
+Icons in `assets/game/fairy_tale/` (resized / recolored for this project):
+
+- `horse.png`, `owl.png`, `frog.png`
+  - Pack: Animal Pack Remastered
+  - Source: https://kenney.nl/assets/animal-pack-remastered
+- `crown.png` (gold recolor)
+  - Pack: Board Game Icons
+  - Source: https://kenney.nl/assets/board-game-icons
+- `key.png`, `heart.png`
+  - Pack: New Platformer Pack
+  - Source: https://kenney.nl/assets/new-platformer-pack

@@ -10,6 +10,7 @@ import '../components/match_object_component.dart';
 import '../components/shadow_target_component.dart';
 import '../components/stage_backdrop_component.dart';
 import '../data/animals_world.dart';
+import '../data/fairy_tale_world.dart';
 import '../data/fruits_world.dart';
 import '../data/nature_world.dart';
 import '../data/ocean_world.dart';
@@ -77,6 +78,7 @@ class ShadowGame extends FlameGame {
       ...professionItems.map((item) => item.assetPath),
       ...oceanItems.map((item) => item.assetPath),
       ...spaceItems.map((item) => item.assetPath),
+      ...fairyTaleItems.map((item) => item.assetPath),
     }.toList(growable: false);
     await images.loadAll(assetPaths);
 
