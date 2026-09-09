@@ -90,12 +90,12 @@ Shadow Guardian and released under Creative Commons Zero (CC0 1.0):
 
 ## Surprise / Emotions (project original)
 
-Emotion faces in `assets/game/surprise/` were created for Shadow Guardian and
-released under Creative Commons Zero (CC0 1.0):
+Consistent chibi emotion mascots in `assets/game/surprise/` (CC0), each with a
+unique accessory silhouette:
 
-- `happy.png` — Mutlu
-- `sad.png` — Üzgün
-- `angry.png` — Kızgın
-- `surprised.png` — Şaşkın
-- `sleepy.png` — Uykulu
-- `scared.png` — Korkmuş
+- `happy.png` — Mutlu (parti şapkası)
+- `sad.png` — Üzgün (yağmur bulutu)
+- `angry.png` — Kızgın (boynuz + alev)
+- `surprised.png` — Şaşkın (yay saç)
+- `sleepy.png` — Uykulu (uyku şapkası)
+- `scared.png` — Korkmuş (hayalet çarşaf)
