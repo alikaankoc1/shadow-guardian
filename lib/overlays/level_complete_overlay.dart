@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../game/shadow_game.dart';
 import '../theme/app_theme.dart';
+import '../theme/landscape_ui.dart';
 
 class LevelCompleteOverlay extends StatelessWidget {
   const LevelCompleteOverlay({super.key, required this.game});
@@ -17,20 +18,27 @@ class LevelCompleteOverlay extends StatelessWidget {
     }
 
     final worldCompleted = game.isLastStage;
+    final scale = landscapeUiScaleOf(context);
+    final worldTitle = game.currentWorld.title;
 
     return Material(
       color: AppColors.navy.withValues(alpha: 0.28),
       child: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.all(16 * scale),
             child:
                 Container(
-                      constraints: const BoxConstraints(maxWidth: 470),
-                      padding: const EdgeInsets.fromLTRB(34, 26, 34, 30),
+                      constraints: BoxConstraints(maxWidth: 420 * scale),
+                      padding: EdgeInsets.fromLTRB(
+                        24 * scale,
+                        18 * scale,
+                        24 * scale,
+                        20 * scale,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.white,
-                        borderRadius: BorderRadius.circular(34),
+                        borderRadius: BorderRadius.circular(28 * scale),
                         border: Border.all(
                           color: AppColors.sunshine.withValues(alpha: 0.7),
                           width: 3,
@@ -38,8 +46,8 @@ class LevelCompleteOverlay extends StatelessWidget {
                         boxShadow: const [
                           BoxShadow(
                             color: Color(0x38294C60),
-                            blurRadius: 34,
-                            offset: Offset(0, 16),
+                            blurRadius: 28,
+                            offset: Offset(0, 12),
                           ),
                         ],
                       ),
@@ -47,8 +55,8 @@ class LevelCompleteOverlay extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Container(
-                                width: 78,
-                                height: 78,
+                                width: 64 * scale,
+                                height: 64 * scale,
                                 decoration: BoxDecoration(
                                   color: AppColors.sunshine.withValues(
                                     alpha: 0.24,
@@ -60,7 +68,7 @@ class LevelCompleteOverlay extends StatelessWidget {
                                       ? Icons.workspace_premium_rounded
                                       : Icons.celebration_rounded,
                                   color: AppColors.coral,
-                                  size: 42,
+                                  size: 34 * scale,
                                 ),
                               )
                               .animate()
@@ -69,49 +77,64 @@ class LevelCompleteOverlay extends StatelessWidget {
                                 curve: Curves.easeOutBack,
                               )
                               .rotate(begin: -0.05, end: 0),
-                          const SizedBox(height: 12),
+                          SizedBox(height: 8 * scale),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: List.generate(
                               3,
                               (index) =>
-                                  const Icon(
+                                  Icon(
                                         Icons.star_rounded,
                                         color: AppColors.sunshine,
-                                        size: 38,
+                                        size: 30 * scale,
                                       )
                                       .animate(delay: (120 * index).ms)
                                       .scale(curve: Curves.easeOutBack),
                             ),
                           ),
-                          const SizedBox(height: 12),
+                          SizedBox(height: 8 * scale),
                           Text(
                             worldCompleted
-                                ? 'Doğa Dünyası Tamamlandı!'
+                                ? '$worldTitle Tamamlandı!'
                                 : 'Tebrikler!',
                             textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headlineLarge,
+                            style: Theme.of(context).textTheme.headlineLarge
+                                ?.copyWith(fontSize: 26 * scale),
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 6 * scale),
                           Text(
                             worldCompleted
-                                ? 'Doğadaki bütün şekilleri gölgeleriyle '
-                                      'buluşturdun.'
+                                ? 'Bütün şekilleri gölgeleriyle buluşturdun.'
                                 : '${stage.title} tamamlandı. Yeni seviye açıldı!',
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.bodyLarge
                                 ?.copyWith(
                                   decoration: TextDecoration.none,
-                                  height: 1.4,
+                                  height: 1.35,
+                                  fontSize: 14 * scale,
                                 ),
                           ),
-                          const SizedBox(height: 24),
+                          SizedBox(height: 16 * scale),
                           FilledButton.icon(
                             onPressed: game.goToNextLevel,
+                            style: FilledButton.styleFrom(
+                              minimumSize: Size(180 * scale, 48 * scale),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 22 * scale,
+                                vertical: 12 * scale,
+                              ),
+                              textStyle: TextStyle(
+                                decoration: TextDecoration.none,
+                                fontFamily: 'Nunito',
+                                fontSize: 16 * scale,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
                             icon: Icon(
                               worldCompleted
                                   ? Icons.grid_view_rounded
                                   : Icons.arrow_forward_rounded,
+                              size: 22 * scale,
                             ),
                             label: Text(
                               worldCompleted
@@ -123,15 +146,16 @@ class LevelCompleteOverlay extends StatelessWidget {
                             ),
                           ),
                           if (!worldCompleted) ...[
-                            const SizedBox(height: 8),
+                            SizedBox(height: 4 * scale),
                             TextButton(
                               onPressed: game.showStageSelect,
-                              child: const Text(
+                              child: Text(
                                 'Seviyeleri Gör',
                                 style: TextStyle(
                                   decoration: TextDecoration.none,
                                   color: AppColors.slate,
                                   fontWeight: FontWeight.w800,
+                                  fontSize: 13 * scale,
                                 ),
                               ),
                             ),

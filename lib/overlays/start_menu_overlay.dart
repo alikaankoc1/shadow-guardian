@@ -21,7 +21,9 @@ class _StartMenuOverlayState extends State<StartMenuOverlay> {
   void initState() {
     super.initState();
     SoundSettings.instance.addListener(_onSoundChanged);
-    SoundSettings.instance.load();
+    SoundSettings.instance.load().then((_) {
+      return SoundSettings.instance.enterMenus();
+    });
   }
 
   @override
@@ -82,29 +84,40 @@ class _LandscapeStart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final padH = 20.0 * scale;
-    final padV = 10.0 * scale;
-    final gap = 16.0 * scale;
+    final padV = 8.0 * scale;
 
-    return Padding(
-      padding: EdgeInsets.fromLTRB(padH, padV, padH, padV),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(flex: 55, child: _LivingScene(scale: scale)),
-          SizedBox(width: gap),
-          Expanded(
-            flex: 45,
-            child: Align(
-              alignment: Alignment.center,
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: _BrandAndPlay(onPlay: onPlay, scale: scale),
-              ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Keep scene + text as one tight block (not stretched across ultrawide).
+        final maxW = (constraints.maxWidth * 0.92).clamp(560.0, 820.0);
+
+        return Center(
+          child: SizedBox(
+            width: maxW,
+            height: constraints.maxHeight - padV * 2,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  flex: 48,
+                  child: _LivingScene(scale: scale),
+                ),
+                SizedBox(width: 8 * scale),
+                Expanded(
+                  flex: 52,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: _BrandAndPlay(onPlay: onPlay, scale: scale),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -348,7 +361,7 @@ class _LivingScene extends StatelessWidget {
                   ),
             ),
             Positioned(
-              left: 8,
+              left: 4,
               bottom: 4,
               child: Image.asset(
                 'assets/game/nature/tree.png',
@@ -364,9 +377,10 @@ class _LivingScene extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                   ),
             ),
+            // Mascot sits near the brand panel (composition bridge)
             Positioned(
-              right: 16 * scale,
-              bottom: 4,
+              right: -4 * scale,
+              bottom: 2,
               child: _WavingMascot(height: mascotH),
             ),
           ],

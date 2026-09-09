@@ -21,6 +21,7 @@ import '../data/vehicles_world.dart';
 import '../models/game_world.dart';
 import '../models/stage_config.dart';
 import '../services/progress_service.dart';
+import '../services/sound_settings.dart';
 import '../theme/app_theme.dart';
 
 class ShadowGame extends FlameGame {
@@ -88,14 +89,14 @@ class ShadowGame extends FlameGame {
     pauseEngine();
   }
 
-  // TODO(locks): Re-enable progression locks before release.
-  // For now every playable world/stage stays open so testing is easy.
-  bool isWorldUnlocked(GameWorld world) => world.isAvailable;
+  bool isWorldUnlocked(GameWorld world) =>
+      world.isAvailable && progress.isWorldUnlocked(world.id);
 
   bool isWorldCompleted(GameWorld world) =>
       progress.isWorldCompleted(world.id);
 
-  bool isStageUnlocked(int stageNumber) => true;
+  bool isStageUnlocked(int stageNumber) =>
+      stageNumber <= highestUnlockedStage;
 
   bool isStageCompleted(int stageNumber) =>
       isCurrentWorldCompleted || stageNumber < highestUnlockedStage;
@@ -106,12 +107,14 @@ class ShadowGame extends FlameGame {
     _leaveStage();
     overlays.clear();
     overlays.add(startMenuOverlay);
+    unawaited(SoundSettings.instance.enterMenus());
   }
 
   void showWorldSelect() {
     _leaveStage();
     overlays.clear();
     overlays.add(worldSelectOverlay);
+    unawaited(SoundSettings.instance.enterMenus());
   }
 
   void openWorld(GameWorld world) {
@@ -126,12 +129,15 @@ class ShadowGame extends FlameGame {
     _leaveStage();
     overlays.clear();
     overlays.add(stageSelectOverlay);
+    unawaited(SoundSettings.instance.enterMenus());
   }
 
   Future<void> startStage(StageConfig stage) async {
     if (!isStageUnlocked(stage.number)) {
       return;
     }
+
+    await SoundSettings.instance.enterGameplay();
 
     _removeStageComponents();
     currentStage = stage;
@@ -301,6 +307,7 @@ class ShadowGame extends FlameGame {
       totalStages: currentWorld.stages.length,
     );
     overlays.add(levelCompleteOverlay);
+    unawaited(SoundSettings.instance.enterMenus());
   }
 
   void _leaveStage() {

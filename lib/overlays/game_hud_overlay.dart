@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../game/shadow_game.dart';
 import '../theme/app_theme.dart';
+import '../theme/landscape_ui.dart';
 
 class GameHudOverlay extends StatelessWidget {
   const GameHudOverlay({super.key, required this.game});
@@ -15,35 +16,50 @@ class GameHudOverlay extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    final scale = landscapeUiScaleOf(context);
+    final top = 6.0 * scale;
+    final side = 10.0 * scale;
+
     return SafeArea(
       child: Stack(
         children: [
           Positioned(
-            left: 16,
-            top: 12,
+            left: side,
+            top: top,
             child: IconButton.filledTonal(
               onPressed: game.showStageSelect,
               tooltip: 'Seviyelere dön',
+              iconSize: 22 * scale,
+              padding: EdgeInsets.all(8 * scale),
+              constraints: BoxConstraints(
+                minWidth: 40 * scale,
+                minHeight: 40 * scale,
+              ),
               icon: const Icon(Icons.arrow_back_rounded),
             ),
           ),
           Positioned(
-            top: 10,
-            left: 88,
-            right: 88,
+            top: top,
+            left: 72 * scale,
+            right: 72 * scale,
             child: IgnorePointer(
               child: Center(
                 child: Container(
-                  constraints: const BoxConstraints(maxWidth: 440),
-                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 11),
+                  constraints: BoxConstraints(maxWidth: 400 * scale),
+                  padding: EdgeInsets.fromLTRB(
+                    14 * scale,
+                    7 * scale,
+                    14 * scale,
+                    8 * scale,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.white.withValues(alpha: 0.94),
-                    borderRadius: BorderRadius.circular(22),
+                    borderRadius: BorderRadius.circular(18 * scale),
                     boxShadow: const [
                       BoxShadow(
                         color: Color(0x18294C60),
-                        blurRadius: 16,
-                        offset: Offset(0, 6),
+                        blurRadius: 12,
+                        offset: Offset(0, 4),
                       ),
                     ],
                   ),
@@ -53,9 +69,9 @@ class GameHudOverlay extends StatelessWidget {
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 4,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8 * scale,
+                              vertical: 3 * scale,
                             ),
                             decoration: BoxDecoration(
                               color: AppColors.mint.withValues(alpha: 0.2),
@@ -63,44 +79,44 @@ class GameHudOverlay extends StatelessWidget {
                             ),
                             child: Text(
                               'SEVİYE ${stage.number}',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 decoration: TextDecoration.none,
                                 color: AppColors.navy,
-                                fontSize: 11,
+                                fontSize: 10 * scale,
                                 fontWeight: FontWeight.w900,
                               ),
                             ),
                           ),
-                          const SizedBox(width: 10),
+                          SizedBox(width: 8 * scale),
                           Expanded(
                             child: Text(
                               stage.title,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 decoration: TextDecoration.none,
                                 color: AppColors.navy,
-                                fontSize: 16,
+                                fontSize: 14 * scale,
                                 fontWeight: FontWeight.w900,
                               ),
                             ),
                           ),
                           Text(
                             '${game.matchedCount}/${stage.matchCount}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               decoration: TextDecoration.none,
                               color: AppColors.coralDark,
-                              fontSize: 16,
+                              fontSize: 14 * scale,
                               fontWeight: FontWeight.w900,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 5 * scale),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(99),
                         child: LinearProgressIndicator(
                           value: game.matchedCount / stage.matchCount,
-                          minHeight: 7,
+                          minHeight: 5 * scale,
                           backgroundColor: AppColors.skyDeep,
                           color: AppColors.coral,
                         ),

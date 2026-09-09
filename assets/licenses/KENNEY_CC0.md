@@ -99,3 +99,14 @@ unique accessory silhouette:
 - `surprised.png` — Şaşkın (yay saç)
 - `sleepy.png` — Uykulu (uyku şapkası)
 - `scared.png` — Korkmuş (hayalet çarşaf)
+
+## Audio (Pixabay Content License)
+
+- `assets/audio/bgm.mp3` (from `pocketbeats-kids-play-kids-music-338340.mp3`)
+  - Music by Pocketbeats Music from Pixabay
+  - License: Pixabay Content License (commercial app use OK; not redistributed standalone)
+  - Summary: https://pixabay.com/service/license-summary/
+- `assets/audio/sfx_wrong.mp3` (from `universfield-reward-chime-144757.mp3`)
+  - Sound by Universfield from Pixabay — incorrect placements
+- `assets/audio/sfx_correct.mp3` (from `universfield-game-bonus-144751.mp3`)
+  - Sound by Universfield from Pixabay — correct matches

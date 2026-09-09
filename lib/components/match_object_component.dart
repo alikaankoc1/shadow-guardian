@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/animation.dart';
 
 import '../game/shadow_game.dart';
 import '../models/match_item.dart';
+import '../services/sound_settings.dart';
 import 'shadow_target_component.dart';
 
 class MatchObjectComponent extends SpriteComponent
@@ -52,6 +54,7 @@ class MatchObjectComponent extends SpriteComponent
   void onDragEnd(DragEndEvent event) {
     super.onDragEnd(event);
     if (!isLocked && game.isPlaying) {
+      unawaited(SoundSettings.instance.playWrong());
       returnToStart();
     }
   }
@@ -63,6 +66,7 @@ class MatchObjectComponent extends SpriteComponent
 
     isLocked = true;
     position.setFrom(target.position);
+    unawaited(SoundSettings.instance.playCorrect());
     add(
       SequenceEffect([
         ScaleEffect.to(
