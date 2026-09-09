@@ -11,7 +11,6 @@ const natureItems = <MatchItem>[
     id: 'sun',
     name: 'Güneş',
     assetPath: 'nature/sun.png',
-    tintColor: AppColors.sunshine,
   ),
   MatchItem(id: 'tree', name: 'Ağaç', assetPath: 'nature/tree.png'),
   MatchItem(id: 'flower', name: 'Çiçek', assetPath: 'nature/flower.png'),
@@ -58,9 +57,9 @@ final natureWorld = GameWorld(
       number: 3,
       title: 'Doğa Ustası',
       items: natureItems.toList(growable: false),
-      // Warm sunset for the hardest nature stage.
-      skyTop: Color(0xFFF2A45C),
-      skyBottom: Color(0xFFF7D7A2),
+      // Cooler dusk sky so the yellow sun stays readable.
+      skyTop: Color(0xFF5B7FBF),
+      skyBottom: Color(0xFFF0B88A),
       groundColor: Color(0xFF8FBF72),
     ),
   ],
