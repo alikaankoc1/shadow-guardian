@@ -81,16 +81,14 @@ Icons in `assets/game/space/` (cropped/resized for this project):
   - Pack: Planets
   - Source: https://kenney.nl/assets/planets
 
-## Fairy Tale (Kenney CC0)
+## Fairy Tale (project original characters)
 
-Icons in `assets/game/fairy_tale/` (resized / recolored for this project):
+Cartoon fairy-tale characters in `assets/game/fairy_tale/` were created for
+Shadow Guardian and released under Creative Commons Zero (CC0 1.0):
 
-- `horse.png`, `owl.png`, `frog.png`
-  - Pack: Animal Pack Remastered
-  - Source: https://kenney.nl/assets/animal-pack-remastered
-- `crown.png` (gold recolor)
-  - Pack: Board Game Icons
-  - Source: https://kenney.nl/assets/board-game-icons
-- `key.png`, `heart.png`
-  - Pack: New Platformer Pack
-  - Source: https://kenney.nl/assets/new-platformer-pack
+- `red_hood.png` — Kırmızı Başlıklı Kız
+- `pinocchio.png` — Pinokyo
+- `frog_prince.png` — Kurbağa Prens
+- `princess.png` — Rapunzel tarzı prenses
+- `prince.png` — Prens
+- `fairy.png` — Peri

@@ -11,6 +11,17 @@ void main() {
     final allIds = fairyTaleItems.map((item) => item.id).toSet();
     expect(allIds, hasLength(6));
     expect(
+      allIds,
+      containsAll([
+        'red_hood',
+        'pinocchio',
+        'frog_prince',
+        'princess',
+        'prince',
+        'fairy',
+      ]),
+    );
+    expect(
       fairyTaleWorld.stages.last.items.map((item) => item.id).toSet(),
       allIds,
     );

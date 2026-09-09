@@ -4,14 +4,30 @@ import '../models/game_world.dart';
 import '../models/match_item.dart';
 import '../models/stage_config.dart';
 
-/// Kenney CC0: Animal Pack Remastered + Board Game Icons + New Platformer Pack.
+/// Original CC0 fairy-tale characters drawn for Shadow Guardian.
 const fairyTaleItems = <MatchItem>[
-  MatchItem(id: 'horse', name: 'At', assetPath: 'fairy_tale/horse.png'),
-  MatchItem(id: 'owl', name: 'Baykuş', assetPath: 'fairy_tale/owl.png'),
-  MatchItem(id: 'frog', name: 'Kurbağa', assetPath: 'fairy_tale/frog.png'),
-  MatchItem(id: 'crown', name: 'Taç', assetPath: 'fairy_tale/crown.png'),
-  MatchItem(id: 'key', name: 'Anahtar', assetPath: 'fairy_tale/key.png'),
-  MatchItem(id: 'heart', name: 'Kalp', assetPath: 'fairy_tale/heart.png'),
+  MatchItem(
+    id: 'red_hood',
+    name: 'Kırmızı Başlıklı Kız',
+    assetPath: 'fairy_tale/red_hood.png',
+  ),
+  MatchItem(
+    id: 'pinocchio',
+    name: 'Pinokyo',
+    assetPath: 'fairy_tale/pinocchio.png',
+  ),
+  MatchItem(
+    id: 'frog_prince',
+    name: 'Kurbağa Prens',
+    assetPath: 'fairy_tale/frog_prince.png',
+  ),
+  MatchItem(
+    id: 'princess',
+    name: 'Prenses',
+    assetPath: 'fairy_tale/princess.png',
+  ),
+  MatchItem(id: 'prince', name: 'Prens', assetPath: 'fairy_tale/prince.png'),
+  MatchItem(id: 'fairy', name: 'Peri', assetPath: 'fairy_tale/fairy.png'),
 ];
 
 final fairyTaleWorld = GameWorld(
