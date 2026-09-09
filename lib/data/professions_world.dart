@@ -4,29 +4,26 @@ import '../models/game_world.dart';
 import '../models/match_item.dart';
 import '../models/stage_config.dart';
 
+/// Original CC0 profession characters drawn for Shadow Guardian.
 const professionItems = <MatchItem>[
+  MatchItem(id: 'doctor', name: 'Doktor', assetPath: 'professions/doctor.png'),
+  MatchItem(id: 'police', name: 'Polis', assetPath: 'professions/police.png'),
   MatchItem(
     id: 'firefighter',
     name: 'İtfaiyeci',
     assetPath: 'professions/firefighter.png',
   ),
   MatchItem(
-    id: 'doctor',
-    name: 'Doktor',
-    assetPath: 'professions/doctor.png',
-  ),
-  MatchItem(id: 'chef', name: 'Aşçı', assetPath: 'professions/chef.png'),
-  MatchItem(id: 'police', name: 'Polis', assetPath: 'professions/police.png'),
-  MatchItem(
     id: 'teacher',
     name: 'Öğretmen',
     assetPath: 'professions/teacher.png',
   ),
   MatchItem(
-    id: 'builder',
-    name: 'İnşaatçı',
-    assetPath: 'professions/builder.png',
+    id: 'engineer',
+    name: 'Mühendis',
+    assetPath: 'professions/engineer.png',
   ),
+  MatchItem(id: 'chef', name: 'Aşçı', assetPath: 'professions/chef.png'),
 ];
 
 final professionsWorld = GameWorld(

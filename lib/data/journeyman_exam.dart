@@ -13,19 +13,19 @@ import 'vehicles_world.dart';
 /// Mixed pool from the first 6 theme worlds (2 items each = 12).
 ///
 /// Exam stage sizes:
-/// Çıraklık 3/6/9 — Kalfalık 4/8/12 — Ustalık 5/10/15 (later)
+/// Çıraklık 3/6/9 — Kalfalık 4/8/12 — Ustalık 5/10/15
 final journeymanExamItems = <MatchItem>[
   natureItems[0], // Bulut
   vehicleItems[0], // Araba
   fruitItems[0], // Elma
   animalItems[0], // Kedi
-  professionItems[0], // İtfaiyeci
+  professionItems[0], // Doktor
   oceanItems[0], // Balina
   natureItems[1], // Güneş
   vehicleItems[1], // Otobüs
   fruitItems[1], // Muz
   animalItems[1], // Köpek
-  professionItems[1], // Doktor
+  professionItems[1], // Polis
   oceanItems[1], // Penguen
 ];
 

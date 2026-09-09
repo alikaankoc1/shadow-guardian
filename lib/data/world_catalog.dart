@@ -6,6 +6,7 @@ import 'apprentice_exam.dart';
 import 'fairy_tale_world.dart';
 import 'fruits_world.dart';
 import 'journeyman_exam.dart';
+import 'master_exam.dart';
 import 'nature_world.dart';
 import 'ocean_world.dart';
 import 'professions_world.dart';
@@ -45,18 +46,8 @@ List<GameWorld> get playableWorlds => [
   spaceWorld,
   fairyTaleWorld,
   surpriseWorld,
+  masterExam,
 ];
-
-const masterExam = GameWorld(
-  id: 'exam_master',
-  title: 'Ustalık',
-  subtitle: 'Tüm dünyaların dostlarını karışık buluştur.',
-  icon: Icons.workspace_premium_rounded,
-  color: Color(0xFFFFC857),
-  stages: [],
-  kind: WorldKind.exam,
-  lockedHint: 'Tüm dünyaları bitir',
-);
 
 /// Menu order: 3 themes → exam → 3 themes → exam → 3 themes → exam.
 List<GameWorld> get allWorlds => [

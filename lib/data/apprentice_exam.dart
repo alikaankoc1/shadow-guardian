@@ -10,7 +10,7 @@ import 'vehicles_world.dart';
 /// Mixed pool from Doğa + Araçlar + Meyve & Sebze (one from each, repeating).
 ///
 /// Exam stage sizes are intentionally harder than theme worlds:
-/// Çıraklık 3/6/9 — Kalfalık 4/8/12 — Ustalık 5/10/15 (later)
+/// Çıraklık 3/6/9 — Kalfalık 4/8/12 — Ustalık 5/10/15
 final apprenticeExamItems = <MatchItem>[
   natureItems[0], // Bulut
   vehicleItems[0], // Araba

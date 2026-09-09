@@ -178,17 +178,19 @@ class ShadowGame extends FlameGame {
   Future<void> _buildStage(StageConfig stage) async {
     final count = stage.matchCount;
     final horizontalPadding = max(
-      count >= 12
+      count >= 15
+          ? 8.0
+          : count >= 12
           ? 12.0
           : count >= 9
           ? 18.0
           : 34.0,
-      size.x * 0.02,
+      size.x * 0.015,
     );
     final availableWidth = size.x - (horizontalPadding * 2);
     final cellWidth = availableWidth / count;
-    final targetY = max(140.0, size.y * 0.34);
-    final objectY = min(size.y - 80, size.y * 0.74);
+    final targetY = max(count >= 15 ? 130.0 : 140.0, size.y * 0.33);
+    final objectY = min(size.y - (count >= 15 ? 70.0 : 80.0), size.y * 0.74);
 
     final backdrop = StageBackdropComponent(stage: stage)..size = size.clone();
     _stageComponents.add(backdrop);
@@ -241,21 +243,33 @@ class ShadowGame extends FlameGame {
     final count = currentStage?.matchCount ?? 0;
     final dense = count >= 9;
     final veryDense = count >= 12;
+    final ultraDense = count >= 15;
     final maxWidth = min(
-      veryDense
+      ultraDense
+          ? 54.0
+          : veryDense
           ? 68.0
           : dense
           ? 86.0
           : 116.0,
-      cellWidth * 0.78,
+      cellWidth * 0.82,
     );
     final maxHeight = min(
-      veryDense
+      ultraDense
+          ? 54.0
+          : veryDense
           ? 68.0
           : dense
           ? 84.0
           : 112.0,
-      size.y * (veryDense ? 0.16 : dense ? 0.18 : 0.21),
+      size.y *
+          (ultraDense
+              ? 0.13
+              : veryDense
+              ? 0.16
+              : dense
+              ? 0.18
+              : 0.21),
     );
     final scale = min(maxWidth / imageSize.x, maxHeight / imageSize.y);
     return imageSize * scale;

@@ -17,7 +17,7 @@ void main() {
     expect(ids, hasLength(12));
     expect(
       ids,
-      containsAll(['cloud', 'car', 'apple', 'cat', 'firefighter', 'whale']),
+      containsAll(['cloud', 'car', 'apple', 'cat', 'doctor', 'whale']),
     );
   });
 

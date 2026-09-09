@@ -51,12 +51,12 @@ Creative Commons Zero (CC0 1.0) for this project:
 Cartoon profession characters in `assets/game/professions/` were created for
 Shadow Guardian and released under Creative Commons Zero (CC0 1.0):
 
-- `firefighter.png` — itfaiyeci üniforması
 - `doctor.png` — doktor / önlük + stetoskop
+- `police.png` — polis üniforması + kep
+- `firefighter.png` — itfaiyeci / kask + yansıtıcı şerit
+- `teacher.png` — öğretmen / gözlük + kitap
+- `engineer.png` — mühendis / baret + yelek
 - `chef.png` — aşçı / şapka + önlük
-- `police.png` — polis üniforması
-- `teacher.png` — öğretmen / kitap
-- `builder.png` — inşaatçı / baret + yelek
 
 ## Ocean (Kenney CC0)
 
