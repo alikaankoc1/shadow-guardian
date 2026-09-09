@@ -172,20 +172,20 @@ class _WorldCard extends StatelessWidget {
           padding: EdgeInsets.all(14 * scale),
           decoration: BoxDecoration(
             color: enabled
-                ? AppColors.white.withValues(alpha: 0.99)
-                : AppColors.white.withValues(alpha: 0.78),
+                ? AppColors.white.withValues(alpha: 1.0)
+                : AppColors.white.withValues(alpha: 0.88),
             borderRadius: BorderRadius.circular(22 * scale),
             border: Border.all(
               color: enabled
-                  ? world.color.withValues(alpha: world.isExam ? 0.95 : 0.78)
-                  : AppColors.locked.withValues(alpha: 0.48),
-              width: world.isExam ? 2.8 : 2.2,
+                  ? world.color.withValues(alpha: world.isExam ? 1.0 : 0.92)
+                  : AppColors.locked.withValues(alpha: 0.58),
+              width: world.isExam ? 3.1 : 2.4,
             ),
             boxShadow: const [
               BoxShadow(
-                color: Color(0x1F294C60),
-                blurRadius: 18,
-                offset: Offset(0, 8),
+                color: Color(0x26294C60),
+                blurRadius: 22,
+                offset: Offset(0, 10),
               ),
             ],
           ),
@@ -195,12 +195,12 @@ class _WorldCard extends StatelessWidget {
                 width: iconBox,
                 height: iconBox,
                 decoration: BoxDecoration(
-                  color: world.color.withValues(alpha: enabled ? 0.28 : 0.14),
+                  color: world.color.withValues(alpha: enabled ? 0.35 : 0.20),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   world.icon,
-                  size: iconBox * 0.62,
+                  size: iconBox * 0.70,
                   color: enabled ? world.color : AppColors.locked,
                 ),
               ),
@@ -247,7 +247,7 @@ class _WorldCard extends StatelessWidget {
                     SizedBox(height: 4 * scale),
                     Row(
                       children: [
-                        Icon(statusIcon, color: statusColor, size: 18 * scale),
+                        Icon(statusIcon, color: statusColor, size: 20 * scale),
                         SizedBox(width: 4 * scale),
                         Flexible(
                           child: Text(
@@ -257,7 +257,7 @@ class _WorldCard extends StatelessWidget {
                             style: TextStyle(
                               decoration: TextDecoration.none,
                               color: statusColor,
-                              fontSize: 11 * scale,
+                              fontSize: 12 * scale,
                               fontWeight: FontWeight.w900,
                             ),
                           ),
