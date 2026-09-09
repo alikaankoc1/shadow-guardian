@@ -169,23 +169,23 @@ class _WorldCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(22 * scale),
         child: Ink(
-          padding: EdgeInsets.all(12 * scale),
+          padding: EdgeInsets.all(14 * scale),
           decoration: BoxDecoration(
             color: enabled
-                ? AppColors.white.withValues(alpha: 0.94)
-                : AppColors.white.withValues(alpha: 0.68),
+                ? AppColors.white.withValues(alpha: 0.99)
+                : AppColors.white.withValues(alpha: 0.78),
             borderRadius: BorderRadius.circular(22 * scale),
             border: Border.all(
               color: enabled
-                  ? world.color.withValues(alpha: world.isExam ? 0.75 : 0.55)
-                  : AppColors.locked.withValues(alpha: 0.35),
-              width: world.isExam ? 2.5 : 2,
+                  ? world.color.withValues(alpha: world.isExam ? 0.95 : 0.78)
+                  : AppColors.locked.withValues(alpha: 0.48),
+              width: world.isExam ? 2.8 : 2.2,
             ),
             boxShadow: const [
               BoxShadow(
-                color: Color(0x17294C60),
-                blurRadius: 14,
-                offset: Offset(0, 6),
+                color: Color(0x1F294C60),
+                blurRadius: 18,
+                offset: Offset(0, 8),
               ),
             ],
           ),
@@ -195,16 +195,16 @@ class _WorldCard extends StatelessWidget {
                 width: iconBox,
                 height: iconBox,
                 decoration: BoxDecoration(
-                  color: world.color.withValues(alpha: enabled ? 0.2 : 0.09),
+                  color: world.color.withValues(alpha: enabled ? 0.28 : 0.14),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   world.icon,
-                  size: iconBox * 0.52,
+                  size: iconBox * 0.62,
                   color: enabled ? world.color : AppColors.locked,
                 ),
               ),
-              SizedBox(width: 12 * scale),
+              SizedBox(width: 10 * scale),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

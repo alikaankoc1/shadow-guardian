@@ -217,7 +217,7 @@ class _StageCard extends StatelessWidget {
           onTap: unlocked ? onTap : null,
           borderRadius: BorderRadius.circular(28 * scale),
           child: Ink(
-            padding: EdgeInsets.all(14 * scale),
+            padding: EdgeInsets.all(16 * scale),
             decoration: BoxDecoration(
               color: AppColors.white.withValues(alpha: unlocked ? 0.95 : 0.68),
               borderRadius: BorderRadius.circular(28 * scale),
@@ -229,9 +229,9 @@ class _StageCard extends StatelessWidget {
               ),
               boxShadow: const [
                 BoxShadow(
-                  color: Color(0x18294C60),
-                  blurRadius: 18,
-                  offset: Offset(0, 8),
+                  color: Color(0x1F294C60),
+                  blurRadius: 22,
+                  offset: Offset(0, 10),
                 ),
               ],
             ),
