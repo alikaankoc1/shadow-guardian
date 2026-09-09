@@ -16,7 +16,7 @@ from PIL import Image, ImageFilter
 
 ROOT = Path(__file__).resolve().parents[1]
 GAME = ROOT / "assets" / "game"
-BACKUP = GAME / "_outline_backup"
+BACKUP = Path.home() / ".cache" / "shadow_guardian_outline_backup"
 OUTLINE = (41, 56, 69, 255)  # AppColors.navy-ish
 TARGET_DIRS = [
     "nature",

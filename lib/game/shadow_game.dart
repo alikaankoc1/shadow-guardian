@@ -10,15 +10,7 @@ import '../components/match_object_component.dart';
 import '../components/shadow_target_component.dart';
 import '../components/stage_ambience_component.dart';
 import '../components/stage_backdrop_component.dart';
-import '../data/animals_world.dart';
-import '../data/fairy_tale_world.dart';
-import '../data/fruits_world.dart';
 import '../data/nature_world.dart';
-import '../data/ocean_world.dart';
-import '../data/professions_world.dart';
-import '../data/space_world.dart';
-import '../data/surprise_world.dart';
-import '../data/vehicles_world.dart';
 import '../data/world_catalog.dart';
 import '../models/game_world.dart';
 import '../models/stage_config.dart';
@@ -48,6 +40,7 @@ class ShadowGame extends FlameGame {
   final ProgressService _progressService;
   final Random _random = Random();
   final List<Component> _stageComponents = [];
+  final Set<String> _loadedAssets = {};
 
   GameProgress progress = const GameProgress(byWorldId: {});
   GameWorld currentWorld = natureWorld;
@@ -88,43 +81,26 @@ class ShadowGame extends FlameGame {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-
     images.prefix = 'assets/game/';
-    final assetPaths = <String>{
-      ...natureItems.map((item) => item.assetPath),
-      ...vehicleItems.map((item) => item.assetPath),
-      ...fruitItems.map((item) => item.assetPath),
-      ...animalItems.map((item) => item.assetPath),
-      ...professionItems.map((item) => item.assetPath),
-      ...oceanItems.map((item) => item.assetPath),
-      ...spaceItems.map((item) => item.assetPath),
-      ...fairyTaleItems.map((item) => item.assetPath),
-      ...surpriseItems.map((item) => item.assetPath),
-    }.toList(growable: false);
-    await images.loadAll(assetPaths);
-
+    // Prefs only — sprites load per stage so the start menu opens immediately.
     progress = await _progressService.load();
     pauseEngine();
   }
 
-  bool isWorldUnlocked(GameWorld world) =>
-      world.isAvailable && progress.isWorldUnlocked(world.id);
-
-  bool isWorldCompleted(GameWorld world) =>
-      progress.isWorldCompleted(world.id);
-
-  bool isStageUnlocked(int stageNumber) =>
-      stageNumber <= highestUnlockedStage;
-
-  bool isStageCompleted(int stageNumber) =>
-      isCurrentWorldCompleted || stageNumber < highestUnlockedStage;
+  Future<void> _ensureAssets(Iterable<String> paths) async {
+    final missing = <String>[];
+    for (final path in paths) {
+      if (_loadedAssets.add(path)) {
+        missing.add(path);
+      }
+    }
+    if (missing.isEmpty) {
+      return;
+    }
+    await images.loadAll(missing);
+  }
 
   void startGame() => showWorldSelect();
-
-  /// Opens the world map (page 2). Progress is already saved locally.
-  Future<void> resumeLastProgress() async {
-    showWorldSelect();
-  }
 
   void showStartMenu() {
     _leaveStage();
@@ -146,10 +122,12 @@ class ShadowGame extends FlameGame {
     }
     currentWorld = world;
     unawaited(
-      _progressService.saveResume(
-        worldId: world.id,
-        stageNumber: highestUnlockedStage.clamp(1, world.stages.length),
-      ).then((value) => progress = value),
+      _progressService
+          .saveResume(
+            worldId: world.id,
+            stageNumber: highestUnlockedStage.clamp(1, world.stages.length),
+          )
+          .then((value) => progress = value),
     );
     showStageSelect();
   }
@@ -169,6 +147,8 @@ class ShadowGame extends FlameGame {
     _musicTransitionToken++;
     await SoundSettings.instance.enterGameplay();
 
+    await _ensureAssets(stage.items.map((item) => item.assetPath));
+
     _removeStageComponents();
     currentStage = stage;
     matchedCount = 0;
@@ -185,6 +165,18 @@ class ShadowGame extends FlameGame {
     await _buildStage(stage);
     resumeEngine();
   }
+
+  bool isWorldUnlocked(GameWorld world) =>
+      world.isAvailable && progress.isWorldUnlocked(world.id);
+
+  bool isWorldCompleted(GameWorld world) =>
+      progress.isWorldCompleted(world.id);
+
+  bool isStageUnlocked(int stageNumber) =>
+      stageNumber <= highestUnlockedStage;
+
+  bool isStageCompleted(int stageNumber) =>
+      isCurrentWorldCompleted || stageNumber < highestUnlockedStage;
 
   void matchObject(MatchObjectComponent object) {
     if (!isPlaying || object.isLocked) {
@@ -243,7 +235,6 @@ class ShadowGame extends FlameGame {
       _stageComponents.add(target);
     }
 
-    // Shuffle start slots so objects don't sit under their own shadows.
     final startSlots = List<int>.generate(count, (i) => i);
     for (var i = startSlots.length - 1; i > 0; i--) {
       final j = _random.nextInt(i + 1);
@@ -251,7 +242,6 @@ class ShadowGame extends FlameGame {
       startSlots[i] = startSlots[j];
       startSlots[j] = tmp;
     }
-    // Avoid accidental identity mapping for small counts.
     var identity = true;
     for (var i = 0; i < count; i++) {
       if (startSlots[i] != i) {
@@ -298,7 +288,6 @@ class ShadowGame extends FlameGame {
       totalStages: currentWorld.stages.length,
     );
     overlays.add(levelCompleteOverlay);
-    // Ensure BGM is not still playing; then resume after a short delay.
     unawaited(SoundSettings.instance.enterGameplay());
     final token = ++_musicTransitionToken;
     await Future<void>.delayed(const Duration(milliseconds: 2500));

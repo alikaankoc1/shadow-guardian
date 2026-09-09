@@ -31,22 +31,6 @@ const masterWorldIds = [
   'surprise',
 ];
 
-/// Playable content so far.
-List<GameWorld> get playableWorlds => [
-  natureWorld,
-  vehiclesWorld,
-  fruitsWorld,
-  apprenticeExam,
-  animalsWorld,
-  professionsWorld,
-  oceanWorld,
-  journeymanExam,
-  spaceWorld,
-  fairyTaleWorld,
-  surpriseWorld,
-  masterExam,
-];
-
 /// Menu order: 3 themes → exam → 3 themes → exam → 3 themes → exam.
 List<GameWorld> get allWorlds => [
   natureWorld,

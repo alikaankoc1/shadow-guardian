@@ -21,26 +21,38 @@ class SoundSettings {
 
   /// True after audio is allowed to play (always on Android; web may need 1 gesture).
   bool _audioReady = !kIsWeb;
+  bool _prefsLoaded = false;
 
   final List<VoidCallback> _listeners = [];
   final AudioEngine _engine = createAudioEngine();
 
-  Future<void> load() async {
+  /// Fast prefs-only load — does not block on BGM decode.
+  Future<void> loadPrefs() async {
+    if (_prefsLoaded) {
+      return;
+    }
     final prefs = await SharedPreferences.getInstance();
     enabled = prefs.getBool(_key) ?? true;
     menusAllowMusic = true;
-    // Try immediately — works on phone/tablet; Chrome may block until a gesture.
-    await syncMusic(forceAttempt: true);
+    _prefsLoaded = true;
     _notify();
+  }
+
+  /// Prefs + best-effort music start (non-blocking caller should unawait).
+  Future<void> load() async {
+    await loadPrefs();
+    await syncMusic(forceAttempt: true);
   }
 
   /// Call from the first tap / button press (required on some browsers).
   Future<void> unlockAudio() async {
+    await loadPrefs();
     _audioReady = true;
     await syncMusic(forceAttempt: true);
   }
 
   Future<void> setEnabled(bool value) async {
+    await loadPrefs();
     if (enabled == value) {
       return;
     }
@@ -81,7 +93,6 @@ class SoundSettings {
       }
     } catch (error, stack) {
       debugPrint('BGM failed: $error\n$stack');
-      // Browser autoplay block — next user gesture will unlock.
       if (kIsWeb) {
         _audioReady = false;
       }

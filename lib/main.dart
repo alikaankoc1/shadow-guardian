@@ -22,7 +22,10 @@ Future<void> main() async {
     DeviceOrientation.landscapeRight,
   ]);
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-  await SoundSettings.instance.load();
+
+  // Prefs only — BGM starts in background so the UI is not blocked.
+  await SoundSettings.instance.loadPrefs();
+  unawaited(SoundSettings.instance.syncMusic(forceAttempt: true));
 
   runApp(const ShadowGuardianApp());
 }
@@ -37,7 +40,6 @@ class ShadowGuardianApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       builder: (context, child) {
-        // Any first pointer/key unlocks browser audio if autoplay was blocked.
         return Listener(
           behavior: HitTestBehavior.translucent,
           onPointerDown: (_) {

@@ -11,7 +11,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.8
   flame: ^1.38.2
   flutter_animate: ^4.5.2
   shared_preferences: ^2.5.5
@@ -46,7 +45,9 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/audio/
+    - assets/audio/bgm.mp3
+    - assets/audio/sfx_correct.mp3
+    - assets/audio/sfx_wrong.mp3
     - assets/branding/
     - assets/game/nature/
     - assets/game/vehicles/

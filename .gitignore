@@ -46,3 +46,7 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Local scratch / outline script backups
+assets/game/_outline_backup/
+.tmp_*.png

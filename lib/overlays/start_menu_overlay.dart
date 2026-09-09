@@ -25,7 +25,6 @@ class _StartMenuOverlayState extends State<StartMenuOverlay> {
   void initState() {
     super.initState();
     SoundSettings.instance.addListener(_onSoundChanged);
-    SoundSettings.instance.load();
     unawaited(() async {
       await widget.game.loaded;
       if (mounted) {
@@ -55,15 +54,6 @@ class _StartMenuOverlayState extends State<StartMenuOverlay> {
     }());
   }
 
-  void _continue() {
-    unawaited(() async {
-      await SoundSettings.instance.unlockAudio();
-      SoundSettings.instance.playTap();
-      await SoundSettings.instance.enterMenus();
-      await widget.game.resumeLastProgress();
-    }());
-  }
-
   @override
   Widget build(BuildContext context) {
     final canResume = widget.game.canResume;
@@ -79,7 +69,7 @@ class _StartMenuOverlayState extends State<StartMenuOverlay> {
             children: [
               _LandscapeStart(
                 onPlay: _start,
-                onContinue: canResume ? _continue : null,
+                canResume: canResume,
                 resumeLabel: resumeLabel,
                 scale: scale,
               ),
@@ -104,12 +94,12 @@ class _LandscapeStart extends StatelessWidget {
   const _LandscapeStart({
     required this.onPlay,
     required this.scale,
-    this.onContinue,
+    required this.canResume,
     this.resumeLabel,
   });
 
   final VoidCallback onPlay;
-  final VoidCallback? onContinue;
+  final bool canResume;
   final String? resumeLabel;
   final double scale;
 
@@ -141,7 +131,7 @@ class _LandscapeStart extends StatelessWidget {
                       fit: BoxFit.scaleDown,
                       child: _BrandAndPlay(
                         onPlay: onPlay,
-                        onContinue: onContinue,
+                        canResume: canResume,
                         resumeLabel: resumeLabel,
                         scale: scale,
                       ),
@@ -161,12 +151,12 @@ class _BrandAndPlay extends StatelessWidget {
   const _BrandAndPlay({
     required this.onPlay,
     required this.scale,
-    this.onContinue,
+    required this.canResume,
     this.resumeLabel,
   });
 
   final VoidCallback onPlay;
-  final VoidCallback? onContinue;
+  final bool canResume;
   final String? resumeLabel;
   final double scale;
 
@@ -177,7 +167,6 @@ class _BrandAndPlay extends StatelessWidget {
     final gapSm = 6.0 * scale;
     final gapMd = 12.0 * scale;
     final gapLg = 16.0 * scale;
-    final canResume = onContinue != null;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -208,53 +197,21 @@ class _BrandAndPlay extends StatelessWidget {
             .animate()
             .fadeIn(delay: 140.ms, duration: 450.ms),
         SizedBox(height: gapLg),
-        if (canResume) ...[
-          PlayButton(
-            label: 'Devam Et',
-            onPressed: onContinue!,
-            scale: scale,
-            pulse: true,
-            icon: Icons.play_arrow_rounded,
-          ),
-          if (resumeLabel != null) ...[
-            SizedBox(height: 4 * scale),
-            Text(
-              resumeLabel!,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                decoration: TextDecoration.none,
-                fontSize: 12 * scale,
-                color: AppColors.slate.withValues(alpha: 0.85),
-              ),
-            ),
-          ],
-          SizedBox(height: gapSm),
-          TextButton(
-            onPressed: onPlay,
-            child: Text(
-              'Dünyaları Seç',
-              style: TextStyle(
-                decoration: TextDecoration.none,
-                color: AppColors.navy,
-                fontWeight: FontWeight.w800,
-                fontSize: 14 * scale,
-              ),
-            ),
-          ),
-        ] else ...[
-          PlayButton(
-            label: 'Oyuna Başla',
-            onPressed: onPlay,
-            scale: scale,
-            pulse: true,
-          ),
+        PlayButton(
+          label: canResume ? 'Devam Et' : 'Oyuna Başla',
+          onPressed: onPlay,
+          scale: scale,
+          pulse: true,
+        ),
+        if (canResume && resumeLabel != null) ...[
           SizedBox(height: gapSm),
           Text(
-            'veya dünyaları seç',
+            resumeLabel!,
+            textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               decoration: TextDecoration.none,
               fontSize: 12 * scale,
-              color: AppColors.slate.withValues(alpha: 0.75),
+              color: AppColors.slate.withValues(alpha: 0.85),
             ),
           ),
         ],
