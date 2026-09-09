@@ -92,3 +92,15 @@ Shadow Guardian and released under Creative Commons Zero (CC0 1.0):
 - `princess.png` — Rapunzel tarzı prenses
 - `prince.png` — Prens
 - `fairy.png` — Peri
+
+## Surprise / Emotions (project original)
+
+Emotion faces in `assets/game/surprise/` were created for Shadow Guardian and
+released under Creative Commons Zero (CC0 1.0):
+
+- `happy.png` — Mutlu
+- `sad.png` — Üzgün
+- `angry.png` — Kızgın
+- `surprised.png` — Şaşkın
+- `sleepy.png` — Uykulu
+- `scared.png` — Korkmuş

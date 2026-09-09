@@ -82,6 +82,13 @@ void main() {
     expect(find.text('Masal Dünyası'), findsOneWidget);
 
     await tester.scrollUntilVisible(
+      find.text('Sürpriz Dünya'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('Sürpriz Dünya'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
       find.text('Ustalık'),
       200,
       scrollable: find.byType(Scrollable).first,

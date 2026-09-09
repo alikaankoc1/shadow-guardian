@@ -43,6 +43,7 @@ flutter:
     - assets/game/ocean/
     - assets/game/space/
     - assets/game/fairy_tale/
+    - assets/game/surprise/
 
   fonts:
     - family: Nunito

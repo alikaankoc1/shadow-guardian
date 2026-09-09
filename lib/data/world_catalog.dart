@@ -10,6 +10,7 @@ import 'nature_world.dart';
 import 'ocean_world.dart';
 import 'professions_world.dart';
 import 'space_world.dart';
+import 'surprise_world.dart';
 import 'vehicles_world.dart';
 
 /// Theme worlds that must be finished before Çıraklık.
@@ -43,17 +44,8 @@ List<GameWorld> get playableWorlds => [
   journeymanExam,
   spaceWorld,
   fairyTaleWorld,
+  surpriseWorld,
 ];
-
-const surpriseWorldPreview = GameWorld(
-  id: 'surprise',
-  title: 'Sürpriz Dünya',
-  subtitle: 'Gizemli dostları gölgeleriyle buluştur.',
-  icon: Icons.auto_awesome_rounded,
-  color: Color(0xFF90A4AE),
-  stages: [],
-  lockedHint: 'Önceki dünyaları bitir',
-);
 
 const masterExam = GameWorld(
   id: 'exam_master',
@@ -78,7 +70,7 @@ List<GameWorld> get allWorlds => [
   journeymanExam,
   spaceWorld,
   fairyTaleWorld,
-  surpriseWorldPreview,
+  surpriseWorld,
   masterExam,
 ];
 
