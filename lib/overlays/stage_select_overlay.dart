@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../game/shadow_game.dart';
 import '../models/stage_config.dart';
 import '../theme/app_theme.dart';
+import '../theme/landscape_ui.dart';
 import '../widgets/playful_background.dart';
 
 class StageSelectOverlay extends StatelessWidget {
@@ -14,10 +15,14 @@ class StageSelectOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final world = game.currentWorld;
+    final h = MediaQuery.sizeOf(context).height;
+    final scale = landscapeUiScale(h);
+    final padV = 8.0 * scale;
+    final padH = 16.0 * scale;
 
     return PlayfulBackground(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(22, 12, 22, 18),
+        padding: EdgeInsets.fromLTRB(padH, padV, padH, padV + 4),
         child: Column(
           children: [
             _StageHeader(
@@ -26,31 +31,51 @@ class StageSelectOverlay extends StatelessWidget {
               icon: world.icon,
               accent: world.color,
               completed: game.isCurrentWorldCompleted,
+              scale: scale,
             ),
-            const SizedBox(height: 18),
+            SizedBox(height: 10 * scale),
             Expanded(
-              child: Center(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 20,
-                    runSpacing: 20,
-                    children: [
-                      for (final stage in world.stages)
-                        _StageCard(
-                              stage: stage,
-                              accent: world.color,
-                              unlocked: game.isStageUnlocked(stage.number),
-                              completed: game.isStageCompleted(stage.number),
-                              onTap: () => game.startStage(stage),
-                            )
-                            .animate(delay: (stage.number * 90).ms)
-                            .fadeIn(duration: 400.ms)
-                            .slideY(begin: 0.1, curve: Curves.easeOutCubic),
-                    ],
-                  ),
-                ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final cardH = (constraints.maxHeight * 0.92).clamp(
+                    160.0,
+                    300.0,
+                  );
+                  final cardW = (cardH * 0.78).clamp(150.0, 250.0);
+
+                  return Center(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      padding: EdgeInsets.symmetric(vertical: 4 * scale),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          for (final stage in world.stages) ...[
+                            if (stage.number > 1) SizedBox(width: 14 * scale),
+                            _StageCard(
+                                  stage: stage,
+                                  accent: world.color,
+                                  unlocked: game.isStageUnlocked(stage.number),
+                                  completed: game.isStageCompleted(
+                                    stage.number,
+                                  ),
+                                  onTap: () => game.startStage(stage),
+                                  width: cardW,
+                                  height: cardH,
+                                  scale: scale,
+                                )
+                                .animate(delay: (stage.number * 90).ms)
+                                .fadeIn(duration: 400.ms)
+                                .slideY(
+                                  begin: 0.08,
+                                  curve: Curves.easeOutCubic,
+                                ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ],
@@ -67,6 +92,7 @@ class _StageHeader extends StatelessWidget {
     required this.icon,
     required this.accent,
     required this.completed,
+    required this.scale,
   });
 
   final VoidCallback onBack;
@@ -74,37 +100,47 @@ class _StageHeader extends StatelessWidget {
   final IconData icon;
   final Color accent;
   final bool completed;
+  final double scale;
 
   @override
   Widget build(BuildContext context) {
+    final iconBox = 46.0 * scale;
+
     return Row(
       children: [
         IconButton.filledTonal(
           onPressed: onBack,
           tooltip: 'Dünyalara dön',
-          icon: const Icon(Icons.arrow_back_rounded),
+          icon: Icon(Icons.arrow_back_rounded, size: 22 * scale),
         ),
-        const SizedBox(width: 14),
+        SizedBox(width: 10 * scale),
         Container(
-          width: 54,
-          height: 54,
+          width: iconBox,
+          height: iconBox,
           decoration: BoxDecoration(
             color: accent.withValues(alpha: 0.22),
             shape: BoxShape.circle,
           ),
-          child: Icon(icon, color: accent, size: 30),
+          child: Icon(icon, color: accent, size: 26 * scale),
         ),
-        const SizedBox(width: 13),
+        SizedBox(width: 10 * scale),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: Theme.of(context).textTheme.headlineLarge),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  fontSize: 24 * scale,
+                ),
+              ),
               Text(
                 completed
                     ? 'Harika! Bu dünyayı tamamladın.'
                     : 'Sıradaki seviyeyi tamamla ve yenisini aç.',
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontSize: 14 * scale,
+                ),
               ),
             ],
           ),
@@ -122,24 +158,23 @@ class _CompletionBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
-        color: AppColors.sunshine.withValues(alpha: 0.24),
+        color: AppColors.mint.withValues(alpha: 0.22),
         borderRadius: BorderRadius.circular(99),
       ),
       child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.workspace_premium_rounded, color: AppColors.coralDark),
+          Icon(Icons.emoji_events_rounded, color: AppColors.mint, size: 18),
           SizedBox(width: 6),
           Text(
-            'TAMAMLANDI',
+            'Bitti',
             style: TextStyle(
               decoration: TextDecoration.none,
-              color: AppColors.coralDark,
-              fontSize: 12,
+              color: AppColors.navy,
               fontWeight: FontWeight.w900,
-              letterSpacing: 0.8,
+              fontSize: 13,
             ),
           ),
         ],
@@ -155,6 +190,9 @@ class _StageCard extends StatelessWidget {
     required this.unlocked,
     required this.completed,
     required this.onTap,
+    required this.width,
+    required this.height,
+    required this.scale,
   });
 
   final StageConfig stage;
@@ -162,22 +200,27 @@ class _StageCard extends StatelessWidget {
   final bool unlocked;
   final bool completed;
   final VoidCallback onTap;
+  final double width;
+  final double height;
+  final double scale;
 
   @override
   Widget build(BuildContext context) {
+    final circle = (height * 0.28).clamp(56.0, 92.0);
+
     return SizedBox(
-      width: 270,
-      height: 325,
+      width: width,
+      height: height,
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: unlocked ? onTap : null,
-          borderRadius: BorderRadius.circular(32),
+          borderRadius: BorderRadius.circular(28 * scale),
           child: Ink(
-            padding: const EdgeInsets.all(22),
+            padding: EdgeInsets.all(14 * scale),
             decoration: BoxDecoration(
               color: AppColors.white.withValues(alpha: unlocked ? 0.95 : 0.68),
-              borderRadius: BorderRadius.circular(32),
+              borderRadius: BorderRadius.circular(28 * scale),
               border: Border.all(
                 color: unlocked
                     ? accent.withValues(alpha: 0.6)
@@ -187,8 +230,8 @@ class _StageCard extends StatelessWidget {
               boxShadow: const [
                 BoxShadow(
                   color: Color(0x18294C60),
-                  blurRadius: 22,
-                  offset: Offset(0, 10),
+                  blurRadius: 18,
+                  offset: Offset(0, 8),
                 ),
               ],
             ),
@@ -198,9 +241,9 @@ class _StageCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 13,
-                        vertical: 7,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10 * scale,
+                        vertical: 5 * scale,
                       ),
                       decoration: BoxDecoration(
                         color: (unlocked ? accent : AppColors.locked)
@@ -212,9 +255,8 @@ class _StageCard extends StatelessWidget {
                         style: TextStyle(
                           decoration: TextDecoration.none,
                           color: unlocked ? AppColors.navy : AppColors.slate,
-                          fontSize: 12,
+                          fontSize: 11 * scale,
                           fontWeight: FontWeight.w900,
-                          letterSpacing: 0.7,
                         ),
                       ),
                     ),
@@ -229,14 +271,14 @@ class _StageCard extends StatelessWidget {
                           : unlocked
                           ? AppColors.coral
                           : AppColors.locked,
-                      size: 29,
+                      size: 24 * scale,
                     ),
                   ],
                 ),
                 const Spacer(),
                 Container(
-                  width: 92,
-                  height: 92,
+                  width: circle,
+                  height: circle,
                   decoration: BoxDecoration(
                     color: (unlocked ? AppColors.sunshine : AppColors.locked)
                         .withValues(alpha: 0.2),
@@ -250,28 +292,30 @@ class _StageCard extends StatelessWidget {
                         color: unlocked
                             ? AppColors.coralDark
                             : AppColors.locked,
-                        fontSize: 44,
+                        fontSize: circle * 0.45,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 18),
+                SizedBox(height: 10 * scale),
                 Text(
                   stage.title,
                   textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     decoration: TextDecoration.none,
                     color: unlocked ? AppColors.navy : AppColors.slate,
+                    fontSize: 17 * scale,
                   ),
                 ),
-                const SizedBox(height: 5),
                 Text(
-                  '${stage.matchCount} gölgeyi eşleştir',
-                  style: const TextStyle(
+                  '${stage.matchCount} gölge',
+                  style: TextStyle(
                     decoration: TextDecoration.none,
                     color: AppColors.slate,
-                    fontSize: 14,
+                    fontSize: 12 * scale,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -285,7 +329,7 @@ class _StageCard extends StatelessWidget {
                           ? Icons.star_rounded
                           : Icons.star_outline_rounded,
                       color: completed ? AppColors.sunshine : AppColors.locked,
-                      size: 25,
+                      size: 20 * scale,
                     ),
                   ),
                 ),

@@ -5,6 +5,7 @@ import '../data/world_catalog.dart';
 import '../game/shadow_game.dart';
 import '../models/game_world.dart';
 import '../theme/app_theme.dart';
+import '../theme/landscape_ui.dart';
 import '../widgets/playful_background.dart';
 
 class WorldSelectOverlay extends StatelessWidget {
@@ -15,14 +16,16 @@ class WorldSelectOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final worlds = allWorlds;
+    final h = MediaQuery.sizeOf(context).height;
+    final scale = landscapeUiScale(h);
 
     return PlayfulBackground(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(22, 12, 22, 18),
+        padding: EdgeInsets.fromLTRB(16 * scale, 8 * scale, 16 * scale, 12 * scale),
         child: Column(
           children: [
-            _Header(onBack: game.showStartMenu),
-            const SizedBox(height: 12),
+            _Header(onBack: game.showStartMenu, scale: scale),
+            SizedBox(height: 8 * scale),
             Expanded(
               child: Center(
                 child: ConstrainedBox(
@@ -34,22 +37,26 @@ class WorldSelectOverlay extends StatelessWidget {
                           : constraints.maxWidth >= 560
                           ? 2
                           : 1;
+                      final extent = constraints.maxHeight < 340
+                          ? 118.0
+                          : constraints.maxHeight < 380
+                          ? 132.0
+                          : constraints.maxHeight < 460
+                          ? 156.0
+                          : 200.0;
 
                       return GridView.builder(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 8,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 6 * scale,
+                          vertical: 4 * scale,
                         ),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: columnCount,
-                          // Short landscape phones need shorter cards
-                          mainAxisExtent: constraints.maxHeight < 380
-                              ? 168
-                              : constraints.maxHeight < 480
-                              ? 196
-                              : 236,
-                          mainAxisSpacing: constraints.maxHeight < 420 ? 12 : 18,
-                          crossAxisSpacing: 18,
+                          mainAxisExtent: extent,
+                          mainAxisSpacing: constraints.maxHeight < 420
+                              ? 10
+                              : 14,
+                          crossAxisSpacing: 12,
                         ),
                         itemCount: worlds.length,
                         itemBuilder: (context, index) {
@@ -62,6 +69,7 @@ class WorldSelectOverlay extends StatelessWidget {
                                 onTap: unlocked
                                     ? () => game.openWorld(world)
                                     : null,
+                                scale: scale,
                               )
                               .animate(delay: (70 * index).ms)
                               .fadeIn(duration: 360.ms)
@@ -81,9 +89,10 @@ class WorldSelectOverlay extends StatelessWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({required this.onBack});
+  const _Header({required this.onBack, required this.scale});
 
   final VoidCallback onBack;
+  final double scale;
 
   @override
   Widget build(BuildContext context) {
@@ -92,20 +101,24 @@ class _Header extends StatelessWidget {
         IconButton.filledTonal(
           onPressed: onBack,
           tooltip: 'Geri',
-          icon: const Icon(Icons.arrow_back_rounded),
+          icon: Icon(Icons.arrow_back_rounded, size: 22 * scale),
         ),
-        const SizedBox(width: 14),
+        SizedBox(width: 10 * scale),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'Bir dünya seç',
-                style: Theme.of(context).textTheme.headlineLarge,
+                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  fontSize: 24 * scale,
+                ),
               ),
               Text(
                 'Maceran hangi dünyada başlasın?',
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontSize: 14 * scale,
+                ),
               ),
             ],
           ),
@@ -121,12 +134,14 @@ class _WorldCard extends StatelessWidget {
     required this.unlocked,
     required this.completed,
     required this.onTap,
+    required this.scale,
   });
 
   final GameWorld world;
   final bool unlocked;
   final bool completed;
   final VoidCallback? onTap;
+  final double scale;
 
   @override
   Widget build(BuildContext context) {
@@ -146,49 +161,50 @@ class _WorldCard extends StatelessWidget {
         : enabled
         ? AppColors.coral
         : AppColors.locked;
+    final iconBox = 56.0 * scale;
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(22 * scale),
         child: Ink(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(12 * scale),
           decoration: BoxDecoration(
             color: enabled
                 ? AppColors.white.withValues(alpha: 0.94)
                 : AppColors.white.withValues(alpha: 0.68),
-            borderRadius: BorderRadius.circular(28),
+            borderRadius: BorderRadius.circular(22 * scale),
             border: Border.all(
               color: enabled
                   ? world.color.withValues(alpha: world.isExam ? 0.75 : 0.55)
                   : AppColors.locked.withValues(alpha: 0.35),
-              width: world.isExam ? 3 : 2,
+              width: world.isExam ? 2.5 : 2,
             ),
             boxShadow: const [
               BoxShadow(
                 color: Color(0x17294C60),
-                blurRadius: 18,
-                offset: Offset(0, 8),
+                blurRadius: 14,
+                offset: Offset(0, 6),
               ),
             ],
           ),
           child: Row(
             children: [
               Container(
-                width: 74,
-                height: 74,
+                width: iconBox,
+                height: iconBox,
                 decoration: BoxDecoration(
                   color: world.color.withValues(alpha: enabled ? 0.2 : 0.09),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   world.icon,
-                  size: 39,
+                  size: iconBox * 0.52,
                   color: enabled ? world.color : AppColors.locked,
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 12 * scale),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -200,38 +216,39 @@ class _WorldCard extends StatelessWidget {
                         style: TextStyle(
                           decoration: TextDecoration.none,
                           color: enabled ? world.color : AppColors.locked,
-                          fontSize: 11,
+                          fontSize: 10 * scale,
                           fontWeight: FontWeight.w900,
-                          letterSpacing: 1.1,
+                          letterSpacing: 1,
                         ),
                       ),
-                      const SizedBox(height: 1),
                     ],
                     Text(
                       world.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         decoration: TextDecoration.none,
                         color: enabled ? AppColors.navy : AppColors.slate,
-                        fontSize: 20,
+                        fontSize: 17 * scale,
                       ),
                     ),
-                    const SizedBox(height: 5),
                     Text(
                       world.subtitle,
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         decoration: TextDecoration.none,
                         color: AppColors.slate,
                         fontWeight: FontWeight.w700,
-                        height: 1.25,
+                        fontSize: 12 * scale,
+                        height: 1.2,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 4 * scale),
                     Row(
                       children: [
-                        Icon(statusIcon, color: statusColor, size: 22),
-                        const SizedBox(width: 6),
+                        Icon(statusIcon, color: statusColor, size: 18 * scale),
+                        SizedBox(width: 4 * scale),
                         Flexible(
                           child: Text(
                             statusLabel,
@@ -240,7 +257,7 @@ class _WorldCard extends StatelessWidget {
                             style: TextStyle(
                               decoration: TextDecoration.none,
                               color: statusColor,
-                              fontSize: 12,
+                              fontSize: 11 * scale,
                               fontWeight: FontWeight.w900,
                             ),
                           ),

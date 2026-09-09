@@ -4,17 +4,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../game/shadow_game.dart';
 import '../services/sound_settings.dart';
 import '../theme/app_theme.dart';
+import '../theme/landscape_ui.dart';
 import '../widgets/playful_background.dart';
-
-/// Landscape phone (~360–420h) → tablet (~600–800h) scale.
-double _landscapeUiScale(BoxConstraints c) {
-  final h = c.maxHeight;
-  if (h <= 360) return 0.72;
-  if (h <= 420) return 0.82;
-  if (h <= 520) return 0.92;
-  if (h >= 700) return 1.08;
-  return 1.0;
-}
 
 class StartMenuOverlay extends StatefulWidget {
   const StartMenuOverlay({super.key, required this.game});
@@ -55,7 +46,7 @@ class _StartMenuOverlayState extends State<StartMenuOverlay> {
     return PlayfulBackground(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final scale = _landscapeUiScale(constraints);
+          final scale = landscapeUiScale(constraints.maxHeight);
 
           return GestureDetector(
             behavior: HitTestBehavior.opaque,

@@ -189,8 +189,16 @@ class ShadowGame extends FlameGame {
     );
     final availableWidth = size.x - (horizontalPadding * 2);
     final cellWidth = availableWidth / count;
-    final targetY = max(count >= 15 ? 130.0 : 140.0, size.y * 0.33);
-    final objectY = min(size.y - (count >= 15 ? 70.0 : 80.0), size.y * 0.74);
+
+    // Phone landscape (~360–400h): use fractions so HUD + rows fit.
+    // Tablet / tall: keep comfortable fixed floors.
+    final shortPhone = size.y < 420;
+    final targetY = shortPhone
+        ? size.y * (count >= 12 ? 0.30 : 0.32)
+        : max(count >= 15 ? 130.0 : 140.0, size.y * 0.33);
+    final objectY = shortPhone
+        ? size.y * (count >= 12 ? 0.78 : 0.76)
+        : min(size.y - (count >= 15 ? 70.0 : 80.0), size.y * 0.74);
 
     final backdrop = StageBackdropComponent(stage: stage)..size = size.clone();
     _stageComponents.add(backdrop);
@@ -244,31 +252,34 @@ class ShadowGame extends FlameGame {
     final dense = count >= 9;
     final veryDense = count >= 12;
     final ultraDense = count >= 15;
+    final shortPhone = size.y < 420;
     final maxWidth = min(
       ultraDense
-          ? 64.0
+          ? (shortPhone ? 48.0 : 64.0)
           : veryDense
-          ? 80.0
+          ? (shortPhone ? 60.0 : 80.0)
           : dense
-          ? 100.0
-          : 138.0,
+          ? (shortPhone ? 78.0 : 100.0)
+          : (shortPhone ? 100.0 : 138.0),
       cellWidth * 0.90,
     );
     final maxHeight = min(
       ultraDense
-          ? 64.0
+          ? (shortPhone ? 48.0 : 64.0)
           : veryDense
-          ? 80.0
+          ? (shortPhone ? 60.0 : 80.0)
           : dense
-          ? 98.0
-          : 132.0,
+          ? (shortPhone ? 74.0 : 98.0)
+          : (shortPhone ? 96.0 : 132.0),
       size.y *
           (ultraDense
-              ? 0.15
+              ? 0.14
               : veryDense
-              ? 0.18
+              ? 0.16
               : dense
-              ? 0.21
+              ? 0.19
+              : shortPhone
+              ? 0.22
               : 0.26),
     );
     final scale = min(maxWidth / imageSize.x, maxHeight / imageSize.y);
