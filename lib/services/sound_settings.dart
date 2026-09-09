@@ -19,14 +19,29 @@ class SoundSettings {
   /// False while placing shadows in a stage (HUD active).
   bool menusAllowMusic = true;
 
+  /// Web browsers block audio until a user gesture.
+  bool _audioUnlocked = !kIsWeb;
+
   final List<VoidCallback> _listeners = [];
   final AudioEngine _engine = createAudioEngine();
 
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
     enabled = prefs.getBool(_key) ?? true;
-    await syncMusic();
+    menusAllowMusic = true;
+    if (_audioUnlocked) {
+      await syncMusic();
+    }
     _notify();
+  }
+
+  /// Call from the first tap / button press (required on web).
+  Future<void> unlockAudio() async {
+    if (_audioUnlocked) {
+      return;
+    }
+    _audioUnlocked = true;
+    await syncMusic();
   }
 
   Future<void> setEnabled(bool value) async {
@@ -37,6 +52,7 @@ class SoundSettings {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_key, value);
     _notify();
+    await unlockAudio();
     if (value) {
       playTap();
     }
@@ -56,6 +72,9 @@ class SoundSettings {
   }
 
   Future<void> syncMusic() async {
+    if (!_audioUnlocked) {
+      return;
+    }
     final shouldPlay = enabled && menusAllowMusic;
     try {
       if (shouldPlay) {

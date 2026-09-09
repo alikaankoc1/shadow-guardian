@@ -53,6 +53,7 @@ class ShadowGame extends FlameGame {
 
   bool _isCompleting = false;
   bool _isStageActive = false;
+  int _musicTransitionToken = 0;
 
   bool get isPlaying => _isStageActive && !_isCompleting;
   bool get isLastStage =>
@@ -137,6 +138,7 @@ class ShadowGame extends FlameGame {
       return;
     }
 
+    _musicTransitionToken++;
     await SoundSettings.instance.enterGameplay();
 
     _removeStageComponents();
@@ -307,10 +309,21 @@ class ShadowGame extends FlameGame {
       totalStages: currentWorld.stages.length,
     );
     overlays.add(levelCompleteOverlay);
-    unawaited(SoundSettings.instance.enterMenus());
+    // Ensure BGM is not still playing; then resume after a short delay.
+    unawaited(SoundSettings.instance.enterGameplay());
+    final token = ++_musicTransitionToken;
+    await Future<void>.delayed(const Duration(milliseconds: 2500));
+    if (token != _musicTransitionToken) {
+      return;
+    }
+    if (currentStage != stage || !_isCompleting) {
+      return;
+    }
+    await SoundSettings.instance.enterMenus();
   }
 
   void _leaveStage() {
+    _musicTransitionToken++;
     pauseEngine();
     _isStageActive = false;
     _isCompleting = false;

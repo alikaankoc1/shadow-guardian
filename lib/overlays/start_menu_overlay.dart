@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -21,9 +23,7 @@ class _StartMenuOverlayState extends State<StartMenuOverlay> {
   void initState() {
     super.initState();
     SoundSettings.instance.addListener(_onSoundChanged);
-    SoundSettings.instance.load().then((_) {
-      return SoundSettings.instance.enterMenus();
-    });
+    SoundSettings.instance.load();
   }
 
   @override
@@ -39,8 +39,12 @@ class _StartMenuOverlayState extends State<StartMenuOverlay> {
   }
 
   void _start() {
-    SoundSettings.instance.playTap();
-    widget.game.startGame();
+    unawaited(() async {
+      await SoundSettings.instance.unlockAudio();
+      SoundSettings.instance.playTap();
+      await SoundSettings.instance.enterMenus();
+      widget.game.startGame();
+    }());
   }
 
   @override
