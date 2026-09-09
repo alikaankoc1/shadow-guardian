@@ -9,16 +9,8 @@ const oceanItems = <MatchItem>[
   MatchItem(id: 'penguin', name: 'Penguen', assetPath: 'ocean/penguin.png'),
   MatchItem(id: 'narwhal', name: 'Narval', assetPath: 'ocean/narwhal.png'),
   MatchItem(id: 'fish', name: 'Balık', assetPath: 'ocean/fish.png'),
-  MatchItem(
-    id: 'blue_fish',
-    name: 'Mavi Balık',
-    assetPath: 'ocean/blue_fish.png',
-  ),
-  MatchItem(
-    id: 'pink_fish',
-    name: 'Pembe Balık',
-    assetPath: 'ocean/pink_fish.png',
-  ),
+  MatchItem(id: 'octopus', name: 'Ahtapot', assetPath: 'ocean/octopus.png'),
+  MatchItem(id: 'crab', name: 'Yengeç', assetPath: 'ocean/crab.png'),
 ];
 
 final oceanWorld = GameWorld(

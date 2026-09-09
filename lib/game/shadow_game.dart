@@ -246,30 +246,30 @@ class ShadowGame extends FlameGame {
     final ultraDense = count >= 15;
     final maxWidth = min(
       ultraDense
-          ? 54.0
+          ? 64.0
           : veryDense
-          ? 68.0
+          ? 80.0
           : dense
-          ? 86.0
-          : 116.0,
-      cellWidth * 0.82,
+          ? 100.0
+          : 138.0,
+      cellWidth * 0.90,
     );
     final maxHeight = min(
       ultraDense
-          ? 54.0
+          ? 64.0
           : veryDense
-          ? 68.0
+          ? 80.0
           : dense
-          ? 84.0
-          : 112.0,
+          ? 98.0
+          : 132.0,
       size.y *
           (ultraDense
-              ? 0.13
+              ? 0.15
               : veryDense
-              ? 0.16
-              : dense
               ? 0.18
-              : 0.21),
+              : dense
+              ? 0.21
+              : 0.26),
     );
     final scale = min(maxWidth / imageSize.x, maxHeight / imageSize.y);
     return imageSize * scale;

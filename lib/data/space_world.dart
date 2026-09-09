@@ -4,7 +4,7 @@ import '../models/game_world.dart';
 import '../models/match_item.dart';
 import '../models/stage_config.dart';
 
-/// Kenney CC0: Space Kit (characters/crafts) + Planets pack.
+/// Project-original cute chibi space icons (CC0).
 const spaceItems = <MatchItem>[
   MatchItem(id: 'rocket', name: 'Roket', assetPath: 'space/rocket.png'),
   MatchItem(id: 'astronaut', name: 'Astronot', assetPath: 'space/astronaut.png'),
@@ -27,25 +27,26 @@ final spaceWorld = GameWorld(
       number: 1,
       title: 'İlk Fırlatış',
       items: spaceItems.take(2).toList(growable: false),
-      skyTop: Color(0xFF2A1B5E),
-      skyBottom: Color(0xFF6B5B95),
-      groundColor: Color(0xFF4A3F6B),
+      // Deep navy → soft violet so bright sprites stay readable
+      skyTop: Color(0xFF1A1045),
+      skyBottom: Color(0xFF5C4A9E),
+      groundColor: Color(0xFF3D3568),
     ),
     StageConfig(
       number: 2,
       title: 'Yörünge',
       items: spaceItems.take(4).toList(growable: false),
-      skyTop: Color(0xFF1E1448),
-      skyBottom: Color(0xFF5A4A88),
-      groundColor: Color(0xFF3F355C),
+      skyTop: Color(0xFF120A38),
+      skyBottom: Color(0xFF4A3C8A),
+      groundColor: Color(0xFF342C5C),
     ),
     StageConfig(
       number: 3,
       title: 'Galaksi Kaşifi',
       items: spaceItems.toList(growable: false),
-      skyTop: Color(0xFF140E36),
-      skyBottom: Color(0xFF4A3C78),
-      groundColor: Color(0xFF342C50),
+      skyTop: Color(0xFF0C0728),
+      skyBottom: Color(0xFF3A2F72),
+      groundColor: Color(0xFF2A2448),
     ),
   ],
 );

@@ -58,28 +58,23 @@ Shadow Guardian and released under Creative Commons Zero (CC0 1.0):
 - `engineer.png` — mühendis / baret + yelek
 - `chef.png` — aşçı / şapka + önlük
 
-## Ocean (Kenney CC0)
+## Ocean (project original characters)
 
-Icons in `assets/game/ocean/` (resized for this project):
+Cute chibi icons in `assets/game/ocean/` drawn for this project (CC0):
 
-- `whale.png`, `penguin.png`, `narwhal.png`
-  - Pack: Animal Pack Remastered
-  - Source: https://kenney.nl/assets/animal-pack-remastered
-- `fish.png`, `blue_fish.png`, `pink_fish.png`
-  - Pack: Fish Pack
-  - Source: https://kenney.nl/assets/fish-pack
+- `whale.png` — balina
+- `penguin.png` — penguen
+- `narwhal.png` — narval
+- `fish.png` — balık (tek balık)
+- `octopus.png` — ahtapot
+- `crab.png` — yengeç
 
-## Space (Kenney CC0)
+## Space (project original characters)
 
-Icons in `assets/game/space/` (cropped/resized for this project):
+Cute chibi icons in `assets/game/space/` drawn for this project (CC0):
 
-- `rocket.png` (craft_racer), `astronaut.png`, `alien.png`,
-  `meteor.png`, `satellite.png` (satellite dish)
-  - Pack: Space Kit
-  - Source: https://kenney.nl/assets/space-kit
-- `planet.png`
-  - Pack: Planets
-  - Source: https://kenney.nl/assets/planets
+- `rocket.png`, `astronaut.png`, `alien.png`,
+  `planet.png`, `meteor.png`, `satellite.png`
 
 ## Fairy Tale (project original characters)
 
