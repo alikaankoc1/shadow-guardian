@@ -25,13 +25,22 @@ class _WebAudioEngine implements AudioEngine {
     return url;
   }
 
+  Future<void> _tryPlay(web.HTMLAudioElement audio) async {
+    try {
+      await audio.play().toDart;
+    } catch (_) {
+      // Autoplay blocked — caller may retry after a user gesture.
+      rethrow;
+    }
+  }
+
   @override
   Future<void> playBgm(String assetPath, {double volume = 0.4}) async {
     final url = await _blobUrl(assetPath);
     if (_bgm != null && _bgmUrl == url) {
       _bgm!.volume = volume;
       if (_bgm!.paused) {
-        await _bgm!.play().toDart;
+        await _tryPlay(_bgm!);
       }
       return;
     }
@@ -39,9 +48,10 @@ class _WebAudioEngine implements AudioEngine {
     _bgm = web.HTMLAudioElement()
       ..src = url
       ..loop = true
+      ..autoplay = true
       ..volume = volume;
     _bgmUrl = url;
-    await _bgm!.play().toDart;
+    await _tryPlay(_bgm!);
   }
 
   @override
@@ -55,7 +65,7 @@ class _WebAudioEngine implements AudioEngine {
     final sfx = web.HTMLAudioElement()
       ..src = url
       ..volume = volume;
-    await sfx.play().toDart;
+    await _tryPlay(sfx);
   }
 }
 

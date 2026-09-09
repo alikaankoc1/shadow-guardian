@@ -36,9 +36,10 @@ class StageSelectOverlay extends StatelessWidget {
                   : 'Sıradaki seviyeyi tamamla ve yenisini aç.',
               scale: scale,
               leading: WorldThumbnail(
-                assetPaths: world.previewAssets,
-                size: 46 * scale,
+                assetPaths: world.isExam ? const [] : world.previewAssets,
+                size: 52 * scale,
                 accent: world.color,
+                fallbackIcon: world.icon,
               ),
               trailing: game.isCurrentWorldCompleted
                   ? const _CompletionBadge()

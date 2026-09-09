@@ -19,8 +19,8 @@ class SoundSettings {
   /// False while placing shadows in a stage (HUD active).
   bool menusAllowMusic = true;
 
-  /// Web browsers block audio until a user gesture.
-  bool _audioUnlocked = !kIsWeb;
+  /// True after audio is allowed to play (always on Android; web may need 1 gesture).
+  bool _audioReady = !kIsWeb;
 
   final List<VoidCallback> _listeners = [];
   final AudioEngine _engine = createAudioEngine();
@@ -29,19 +29,15 @@ class SoundSettings {
     final prefs = await SharedPreferences.getInstance();
     enabled = prefs.getBool(_key) ?? true;
     menusAllowMusic = true;
-    if (_audioUnlocked) {
-      await syncMusic();
-    }
+    // Try immediately — works on phone/tablet; Chrome may block until a gesture.
+    await syncMusic(forceAttempt: true);
     _notify();
   }
 
-  /// Call from the first tap / button press (required on web).
+  /// Call from the first tap / button press (required on some browsers).
   Future<void> unlockAudio() async {
-    if (_audioUnlocked) {
-      return;
-    }
-    _audioUnlocked = true;
-    await syncMusic();
+    _audioReady = true;
+    await syncMusic(forceAttempt: true);
   }
 
   Future<void> setEnabled(bool value) async {
@@ -56,34 +52,39 @@ class SoundSettings {
     if (value) {
       playTap();
     }
-    await syncMusic();
+    await syncMusic(forceAttempt: true);
   }
 
   Future<void> toggle() => setEnabled(!enabled);
 
   Future<void> enterMenus() async {
     menusAllowMusic = true;
-    await syncMusic();
+    await syncMusic(forceAttempt: true);
   }
 
   Future<void> enterGameplay() async {
     menusAllowMusic = false;
-    await syncMusic();
+    await syncMusic(forceAttempt: true);
   }
 
-  Future<void> syncMusic() async {
-    if (!_audioUnlocked) {
+  Future<void> syncMusic({bool forceAttempt = false}) async {
+    if (!_audioReady && !forceAttempt) {
       return;
     }
     final shouldPlay = enabled && menusAllowMusic;
     try {
       if (shouldPlay) {
         await _engine.playBgm(bgmAsset, volume: 0.42);
+        _audioReady = true;
       } else {
         await _engine.pauseBgm();
       }
     } catch (error, stack) {
       debugPrint('BGM failed: $error\n$stack');
+      // Browser autoplay block — next user gesture will unlock.
+      if (kIsWeb) {
+        _audioReady = false;
+      }
     }
   }
 

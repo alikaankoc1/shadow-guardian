@@ -129,7 +129,7 @@ class _WorldCard extends StatelessWidget {
         : enabled
         ? AppColors.coral
         : AppColors.locked;
-    final iconBox = 56.0 * scale;
+    final iconBox = 68.0 * scale;
 
     return PlayCard(
       scale: scale,
@@ -140,13 +140,14 @@ class _WorldCard extends StatelessWidget {
       child: Row(
         children: [
           WorldThumbnail(
-            assetPaths: world.previewAssets,
+            assetPaths: world.isExam ? const [] : world.previewAssets,
             size: iconBox,
             accent: world.color,
             enabled: enabled,
+            fallbackIcon: world.icon,
           ),
-              SizedBox(width: 10 * scale),
-              Expanded(
+          SizedBox(width: 12 * scale),
+          Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,

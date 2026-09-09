@@ -17,9 +17,16 @@ class GameHudOverlay extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final scale = landscapeUiScaleOf(context);
-    final top = 6.0 * scale;
-    final side = 10.0 * scale;
+    final size = MediaQuery.sizeOf(context);
+    final scale = landscapeUiScale(size.height);
+    final dense = stage.matchCount >= 12;
+    final shortPhone = size.height < 400;
+    final compact = dense || shortPhone;
+
+    final top = (compact ? 4.0 : 6.0) * scale;
+    final side = (compact ? 8.0 : 10.0) * scale;
+    final backSize = (compact ? 36.0 : 40.0) * scale;
+    final titleLeft = backSize + side + 8 * scale;
 
     return SafeArea(
       child: Stack(
@@ -30,28 +37,31 @@ class GameHudOverlay extends StatelessWidget {
             child: IconButton.filledTonal(
               onPressed: game.showStageSelect,
               tooltip: 'Seviyelere dön',
-              iconSize: 22 * scale,
-              padding: EdgeInsets.all(8 * scale),
+              iconSize: (compact ? 20.0 : 22.0) * scale,
+              padding: EdgeInsets.all((compact ? 6.0 : 8.0) * scale),
               constraints: BoxConstraints(
-                minWidth: 40 * scale,
-                minHeight: 40 * scale,
+                minWidth: backSize,
+                minHeight: backSize,
               ),
               icon: const Icon(Icons.arrow_back_rounded),
             ),
           ),
           Positioned(
             top: top,
-            left: 72 * scale,
-            right: 72 * scale,
+            left: titleLeft,
+            right: side,
             child: IgnorePointer(
-              child: Center(
+              child: Align(
+                alignment: Alignment.topCenter,
                 child: Container(
-                  constraints: BoxConstraints(maxWidth: 400 * scale),
+                  constraints: BoxConstraints(
+                    maxWidth: compact ? 360 * scale : 420 * scale,
+                  ),
                   padding: EdgeInsets.fromLTRB(
-                    14 * scale,
-                    7 * scale,
-                    14 * scale,
-                    8 * scale,
+                    (compact ? 10.0 : 14.0) * scale,
+                    (compact ? 5.0 : 7.0) * scale,
+                    (compact ? 10.0 : 14.0) * scale,
+                    (compact ? 6.0 : 8.0) * scale,
                   ),
                   decoration: BoxDecoration(
                     color: AppColors.white.withValues(alpha: 0.96),
@@ -69,8 +79,8 @@ class GameHudOverlay extends StatelessWidget {
                         children: [
                           Container(
                             padding: EdgeInsets.symmetric(
-                              horizontal: 8 * scale,
-                              vertical: 3 * scale,
+                              horizontal: (compact ? 6.0 : 8.0) * scale,
+                              vertical: (compact ? 2.0 : 3.0) * scale,
                             ),
                             decoration: BoxDecoration(
                               color: AppColors.mint.withValues(alpha: 0.2),
@@ -81,7 +91,7 @@ class GameHudOverlay extends StatelessWidget {
                               style: TextStyle(
                                 decoration: TextDecoration.none,
                                 color: AppColors.navy,
-                                fontSize: 10 * scale,
+                                fontSize: (compact ? 9.0 : 10.0) * scale,
                                 fontWeight: FontWeight.w900,
                               ),
                             ),
@@ -94,7 +104,7 @@ class GameHudOverlay extends StatelessWidget {
                               style: TextStyle(
                                 decoration: TextDecoration.none,
                                 color: AppColors.navy,
-                                fontSize: 14 * scale,
+                                fontSize: (compact ? 12.0 : 14.0) * scale,
                                 fontWeight: FontWeight.w900,
                               ),
                             ),
@@ -104,18 +114,18 @@ class GameHudOverlay extends StatelessWidget {
                             style: TextStyle(
                               decoration: TextDecoration.none,
                               color: AppColors.coralDark,
-                              fontSize: 14 * scale,
+                              fontSize: (compact ? 12.0 : 14.0) * scale,
                               fontWeight: FontWeight.w900,
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 5 * scale),
+                      SizedBox(height: (compact ? 4.0 : 5.0) * scale),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(99),
                         child: LinearProgressIndicator(
                           value: game.matchedCount / stage.matchCount,
-                          minHeight: 5 * scale,
+                          minHeight: (compact ? 4.0 : 5.0) * scale,
                           backgroundColor: AppColors.skyDeep,
                           color: AppColors.coral,
                         ),

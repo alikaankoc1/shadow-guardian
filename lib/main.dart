@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,6 +36,16 @@ class ShadowGuardianApp extends StatelessWidget {
       title: 'Sevimli Gölgeler',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
+      builder: (context, child) {
+        // Any first pointer/key unlocks browser audio if autoplay was blocked.
+        return Listener(
+          behavior: HitTestBehavior.translucent,
+          onPointerDown: (_) {
+            unawaited(SoundSettings.instance.unlockAudio());
+          },
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
       home: GameWidget.controlled(
         gameFactory: ShadowGame.new,
         loadingBuilder: (context) => const PlayfulBackground(

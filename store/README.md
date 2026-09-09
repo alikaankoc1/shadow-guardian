@@ -1,33 +1,22 @@
 # Play Store görselleri
 
-Bu klasör ücretsiz mağaza materyallerini tutar.
+Bu klasör **telefon / tablet** mağaza materyallerini tutar (oyun web için değil).
 
 ## Hazır dosyalar
 
-| Dosya | Boyut / kullanım |
-|-------|------------------|
-| `feature_graphic.png` | Play Store özellik grafiği (yatay banner) |
-| `../assets/branding/app_icon.png` | Uygulama ikonu kaynağı |
-| `../assets/branding/splash.png` | Açılış ekranı kaynağı |
+| Dosya | Kullanım |
+|-------|----------|
+| `feature_graphic.png` | Play Store özellik grafiği |
+| `../assets/branding/app_icon.png` | Uygulama ikonu |
+| `../assets/branding/splash.png` | Açılış ekranı |
 
-## Ekran görüntüsü nasıl alınır (ücretsiz)
+## Ekran görüntüsü (telefon / tablet)
 
-1. Oyunu yatay telefonda veya Chrome’da çalıştır:
+1. Gerçek cihaz veya emülatörde yatay çalıştır:
    ```powershell
-   flutter run -d chrome --web-browser-flag "--window-size=960,540"
+   flutter run
    ```
-2. Şu ekranlardan screenshot al (en az 4 önerilir):
-   - Açılış menüsü
-   - Dünya seçimi
-   - Bir seviye (gölge eşleştirme)
-   - Tebrikler / seviye tamamlandı
-3. Dosyaları buraya koy:
-   - `store/screenshots/01_start.png`
-   - `store/screenshots/02_worlds.png`
-   - `store/screenshots/03_play.png`
-   - `store/screenshots/04_complete.png`
-4. Play Console’da telefon için **16:9** veya cihaz çözünürlüğüne uygun yükle.
+2. En az 4 ekran al: açılış, dünya seçimi, oyun (gölgeler), tebrikler
+3. Kaydet: `store/screenshots/01_start.png` …
 
-## Not
-
-İlerleme **cihazda** saklanır (`SharedPreferences`). Hesap / sunucu (backend) yok — çocuk oyunu için yeterli ve ücretsiz.
+İlerleme telefonda yerel kaydedilir (`SharedPreferences`) — backend yok.

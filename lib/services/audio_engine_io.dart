@@ -1,70 +1,50 @@
-import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/services.dart';
 
 import 'audio_engine.dart';
 
-/// Android / iOS / desktop audio via audioplayers.
+/// Android / iOS / desktop audio via a tiny platform channel (no audioplayers).
+///
+/// Avoids native-assets / objective_c build breaks on Windows paths with spaces,
+/// so Chrome preview and Android builds both work.
 class _IoAudioEngine implements AudioEngine {
-  _IoAudioEngine() {
-    // Prefer media/game stream so volume keys and silent-switch behave correctly.
-    AudioPlayer.global.setAudioContext(
-      AudioContext(
-        android: const AudioContextAndroid(
-          contentType: AndroidContentType.music,
-          usageType: AndroidUsageType.game,
-          audioFocus: AndroidAudioFocus.gain,
-        ),
-        iOS: AudioContextIOS(
-          category: AVAudioSessionCategory.ambient,
-          options: const {AVAudioSessionOptions.mixWithOthers},
-        ),
-      ),
-    );
-  }
+  static const _channel = MethodChannel('sevimli_golgeler/audio');
 
-  final AudioPlayer _bgm = AudioPlayer();
-  final AudioPlayer _sfx = AudioPlayer();
   String? _bgmAsset;
-  bool _bgmReady = false;
-
-  String _sourcePath(String assetPath) {
-    // AssetSource paths are relative to the assets/ folder.
-    const prefix = 'assets/';
-    if (assetPath.startsWith(prefix)) {
-      return assetPath.substring(prefix.length);
-    }
-    return assetPath;
-  }
 
   @override
   Future<void> playBgm(String assetPath, {double volume = 0.4}) async {
-    final path = _sourcePath(assetPath);
-    await _bgm.setReleaseMode(ReleaseMode.loop);
-    await _bgm.setVolume(volume);
-    if (_bgmReady && _bgmAsset == path) {
-      final state = _bgm.state;
-      if (state == PlayerState.paused || state == PlayerState.completed) {
-        await _bgm.resume();
-      }
-      return;
+    try {
+      await _channel.invokeMethod<void>('playBgm', {
+        'asset': assetPath,
+        'volume': volume,
+        'loop': true,
+        'reuse': _bgmAsset == assetPath,
+      });
+      _bgmAsset = assetPath;
+    } on MissingPluginException {
+      // Desktop / platforms without the channel — silent no-op.
     }
-    _bgmAsset = path;
-    _bgmReady = true;
-    await _bgm.play(AssetSource(path));
   }
 
   @override
   Future<void> pauseBgm() async {
-    if (_bgm.state == PlayerState.playing) {
-      await _bgm.pause();
+    try {
+      await _channel.invokeMethod<void>('pauseBgm');
+    } on MissingPluginException {
+      // ignore
     }
   }
 
   @override
   Future<void> playSfx(String assetPath, {double volume = 0.85}) async {
-    final path = _sourcePath(assetPath);
-    await _sfx.stop();
-    await _sfx.setVolume(volume);
-    await _sfx.play(AssetSource(path));
+    try {
+      await _channel.invokeMethod<void>('playSfx', {
+        'asset': assetPath,
+        'volume': volume,
+      });
+    } on MissingPluginException {
+      // ignore
+    }
   }
 }
 

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
@@ -31,9 +32,6 @@ class MatchObjectComponent extends SpriteComponent
       paint.colorFilter = ColorFilter.mode(tintColor, BlendMode.srcIn);
     }
   }
-
-  static const double baseSnapDistance = 25;
-  static const double baseProximityRadius = 72;
 
   final MatchItem item;
   final Vector2 startPosition;

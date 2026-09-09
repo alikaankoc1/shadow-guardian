@@ -312,7 +312,7 @@ class _LivingScene extends StatelessWidget {
         final h = constraints.maxHeight;
         final treeH = (h * 0.72).clamp(120.0, 240.0);
         final mascotH = (h * 0.42).clamp(72.0, 140.0);
-        final sun = (56.0 * scale).clamp(44.0, 92.0);
+        final sun = (92.0 * scale).clamp(78.0, 150.0);
         final cloudBig = (120.0 * scale).clamp(80.0, 160.0);
         final cloudSm = (88.0 * scale).clamp(60.0, 120.0);
 
@@ -474,17 +474,17 @@ class _HowToPlayDemoState extends State<_HowToPlayDemo>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2200),
+      duration: const Duration(milliseconds: 3800),
     )..repeat();
     _slide = TweenSequence<double>([
-      TweenSequenceItem(tween: ConstantTween<double>(0), weight: 28),
+      TweenSequenceItem(tween: ConstantTween<double>(0), weight: 26),
       TweenSequenceItem(
         tween: Tween(begin: 0.0, end: 1.0).chain(
           CurveTween(curve: Curves.easeInOutCubic),
         ),
-        weight: 44,
+        weight: 52,
       ),
-      TweenSequenceItem(tween: ConstantTween<double>(1), weight: 28),
+      TweenSequenceItem(tween: ConstantTween<double>(1), weight: 22),
     ]).animate(_controller);
   }
 

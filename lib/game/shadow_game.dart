@@ -121,28 +121,9 @@ class ShadowGame extends FlameGame {
 
   void startGame() => showWorldSelect();
 
-  /// Jump back to the last played world/stage (local SharedPreferences).
+  /// Opens the world map (page 2). Progress is already saved locally.
   Future<void> resumeLastProgress() async {
-    final pointer = progress.resume;
-    if (pointer == null || !progress.hasResume) {
-      showWorldSelect();
-      return;
-    }
-
-    final world = worldById(pointer.worldId);
-    if (world == null || !isWorldUnlocked(world)) {
-      showWorldSelect();
-      return;
-    }
-
-    currentWorld = world;
-    final stageIndex = (pointer.stageNumber - 1).clamp(0, world.stages.length - 1);
-    final stage = world.stages[stageIndex];
-    if (!isStageUnlocked(stage.number)) {
-      showStageSelect();
-      return;
-    }
-    await startStage(stage);
+    showWorldSelect();
   }
 
   void showStartMenu() {
