@@ -1,12 +1,12 @@
 {
-    "name": "shadow_guardian",
-    "short_name": "shadow_guardian",
+    "name": "Sevimli Gölgeler",
+    "short_name": "Gölgeler",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
+    "background_color": "#E3F2FD",
+    "theme_color": "#FF7A68",
+    "description": "Çocuklar için gölge eşleştirme oyunu. Doğru gölgeyi bul, dünyaları tamamla!",
+    "orientation": "landscape-primary",
     "prefer_related_applications": false,
     "icons": [
         {

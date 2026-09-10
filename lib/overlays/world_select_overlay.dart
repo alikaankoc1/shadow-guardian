@@ -137,6 +137,9 @@ class _WorldCard extends StatelessWidget {
       enabled: enabled,
       accentColor: world.color,
       borderWidth: world.isExam ? 3.1 : 2.4,
+      semanticLabel: enabled
+          ? '${world.title}. $statusLabel'
+          : '${world.title}. Kilitli',
       child: Row(
         children: [
           WorldThumbnail(

@@ -43,20 +43,25 @@ class _SoundToggleButtonState extends State<SoundToggleButton> {
     final icon = 26.0 * scale;
     final enabled = SoundSettings.instance.enabled;
 
-    return Material(
-      color: AppColors.white.withValues(alpha: 0.92),
-      shape: const CircleBorder(),
-      elevation: 2,
-      shadowColor: AppColors.navy.withValues(alpha: 0.12),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: () => SoundSettings.instance.toggle(),
-        child: Padding(
-          padding: EdgeInsets.all(pad),
-          child: Icon(
-            enabled ? Icons.volume_up_rounded : Icons.volume_off_rounded,
-            size: icon,
-            color: enabled ? AppColors.coral : AppColors.locked,
+    return Semantics(
+      button: true,
+      label: enabled ? 'Sesi kapat' : 'Sesi aç',
+      toggled: enabled,
+      child: Material(
+        color: AppColors.white.withValues(alpha: 0.92),
+        shape: const CircleBorder(),
+        elevation: 2,
+        shadowColor: AppColors.navy.withValues(alpha: 0.12),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: () => SoundSettings.instance.toggle(),
+          child: Padding(
+            padding: EdgeInsets.all(pad),
+            child: Icon(
+              enabled ? Icons.volume_up_rounded : Icons.volume_off_rounded,
+              size: icon,
+              color: enabled ? AppColors.coral : AppColors.locked,
+            ),
           ),
         ),
       ),

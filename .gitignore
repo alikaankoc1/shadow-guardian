@@ -50,3 +50,7 @@ app.*.map.json
 # Local scratch / outline script backups
 assets/game/_outline_backup/
 .tmp_*.png
+
+# Scratch asset dumps
+.tmp_food_check/
+

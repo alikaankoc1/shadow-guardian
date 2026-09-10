@@ -27,39 +27,43 @@ class PlayButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final radius = 26.0 * scale;
-    final button = DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(radius),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.coral.withValues(alpha: 0.38),
-            blurRadius: PlayUi.buttonGlow.blurRadius * scale,
-            offset: Offset(0, 7 * scale),
-          ),
-        ],
-      ),
-      child: FilledButton.icon(
-        onPressed: onPressed,
-        style: FilledButton.styleFrom(
-          minimumSize: Size(minimumWidth * scale, minimumHeight * scale),
-          padding: EdgeInsets.symmetric(
-            horizontal: 28 * scale,
-            vertical: 14 * scale,
-          ),
-          textStyle: TextStyle(
-            decoration: TextDecoration.none,
-            fontFamily: 'Nunito',
-            fontSize: 20 * scale,
-            fontWeight: FontWeight.w900,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radius),
-          ),
+    final button = Semantics(
+      button: true,
+      label: label,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(radius),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.coral.withValues(alpha: 0.38),
+              blurRadius: PlayUi.buttonGlow.blurRadius * scale,
+              offset: Offset(0, 7 * scale),
+            ),
+          ],
         ),
-        icon: Icon(icon, size: 30 * scale),
-        label: Text(
-          label,
-          style: const TextStyle(decoration: TextDecoration.none),
+        child: FilledButton.icon(
+          onPressed: onPressed,
+          style: FilledButton.styleFrom(
+            minimumSize: Size(minimumWidth * scale, minimumHeight * scale),
+            padding: EdgeInsets.symmetric(
+              horizontal: 28 * scale,
+              vertical: 14 * scale,
+            ),
+            textStyle: TextStyle(
+              decoration: TextDecoration.none,
+              fontFamily: 'Nunito',
+              fontSize: 20 * scale,
+              fontWeight: FontWeight.w900,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(radius),
+            ),
+          ),
+          icon: Icon(icon, size: 30 * scale),
+          label: Text(
+            label,
+            style: const TextStyle(decoration: TextDecoration.none),
+          ),
         ),
       ),
     );

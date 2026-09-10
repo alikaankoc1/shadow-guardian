@@ -31,6 +31,7 @@ class LevelCompleteOverlay extends StatelessWidget {
     final IconData primaryIcon;
     final VoidCallback onPrimary;
     final VoidCallback? onSecondary;
+    final String? secondaryLabel;
 
     if (journeyComplete) {
       title = 'Gölge Ustası oldun!';
@@ -40,13 +41,25 @@ class LevelCompleteOverlay extends StatelessWidget {
       primaryIcon = Icons.public_rounded;
       onPrimary = game.showWorldSelect;
       onSecondary = null;
+      secondaryLabel = null;
     } else if (worldCompleted) {
+      final next = game.nextUnlockedWorld;
       title = '$worldTitle Tamamlandı!';
-      subtitle = 'Bütün şekilleri gölgeleriyle buluşturdun.';
-      primaryLabel = 'Seviyelere Dön';
-      primaryIcon = Icons.grid_view_rounded;
-      onPrimary = game.goToNextLevel;
-      onSecondary = null;
+      if (next != null) {
+        subtitle = 'Harika! Sırada: ${next.title}';
+        primaryLabel = 'Sonraki: ${next.title}';
+        primaryIcon = Icons.arrow_forward_rounded;
+        onPrimary = game.openNextWorld;
+        onSecondary = game.showStageSelect;
+        secondaryLabel = 'Seviyelere Dön';
+      } else {
+        subtitle = 'Bütün şekilleri gölgeleriyle buluşturdun.';
+        primaryLabel = 'Dünyalara Dön';
+        primaryIcon = Icons.public_rounded;
+        onPrimary = game.showWorldSelect;
+        onSecondary = game.showStageSelect;
+        secondaryLabel = 'Seviyelere Dön';
+      }
     } else {
       title = 'Tebrikler!';
       subtitle = '${stage.title} tamamlandı. Yeni seviye açıldı!';
@@ -54,6 +67,7 @@ class LevelCompleteOverlay extends StatelessWidget {
       primaryIcon = Icons.arrow_forward_rounded;
       onPrimary = game.goToNextLevel;
       onSecondary = game.showStageSelect;
+      secondaryLabel = 'Seviyeleri Gör';
     }
 
     return Material(
@@ -93,6 +107,7 @@ class LevelCompleteOverlay extends StatelessWidget {
                   primaryIcon: primaryIcon,
                   onPrimary: onPrimary,
                   onSecondary: onSecondary,
+                  secondaryLabel: secondaryLabel,
                 )
                     .animate()
                     .fadeIn(duration: 280.ms)
@@ -121,6 +136,7 @@ class _CelebrateCard extends StatelessWidget {
     required this.primaryIcon,
     required this.onPrimary,
     this.onSecondary,
+    this.secondaryLabel,
   });
 
   final double scale;
@@ -133,6 +149,7 @@ class _CelebrateCard extends StatelessWidget {
   final IconData primaryIcon;
   final VoidCallback onPrimary;
   final VoidCallback? onSecondary;
+  final String? secondaryLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -323,7 +340,7 @@ class _CelebrateCard extends StatelessWidget {
             TextButton(
               onPressed: onSecondary,
               child: Text(
-                'Seviyeleri Gör',
+                secondaryLabel ?? 'Seviyeleri Gör',
                 style: TextStyle(
                   decoration: TextDecoration.none,
                   color: AppColors.slate,

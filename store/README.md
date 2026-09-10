@@ -4,7 +4,9 @@ Bu klasör **telefon / tablet** mağaza materyallerini tutar (oyun web için de�
 
 İmza / keystore: [SIGNING.md](SIGNING.md)  
 Gizlilik / Data safety / Families: [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md)  
-Ekran görüntüleri: [SCREENSHOTS.md](SCREENSHOTS.md)
+Ekran görüntüleri: [SCREENSHOTS.md](SCREENSHOTS.md)  
+Mağaza metinleri: [LISTING.md](LISTING.md)  
+Duman testi: [SMOKE_TEST.md](SMOKE_TEST.md)
 
 ## Hazır dosyalar
 

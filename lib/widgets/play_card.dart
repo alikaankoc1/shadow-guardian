@@ -13,6 +13,7 @@ class PlayCard extends StatelessWidget {
     this.accentColor,
     this.borderWidth,
     this.padding,
+    this.semanticLabel,
   });
 
   final Widget child;
@@ -22,33 +23,39 @@ class PlayCard extends StatelessWidget {
   final Color? accentColor;
   final double? borderWidth;
   final EdgeInsetsGeometry? padding;
+  final String? semanticLabel;
 
   @override
   Widget build(BuildContext context) {
     final border = accentColor ?? AppColors.coral;
     final radius = PlayUi.cardRadius(scale);
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: enabled ? onTap : null,
-        borderRadius: radius,
-        child: Ink(
-          padding: padding ?? EdgeInsets.all(14 * scale),
-          decoration: BoxDecoration(
-            color: enabled
-                ? AppColors.white
-                : AppColors.white.withValues(alpha: 0.88),
-            borderRadius: radius,
-            border: Border.all(
+    return Semantics(
+      button: onTap != null,
+      enabled: enabled,
+      label: semanticLabel,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: enabled ? onTap : null,
+          borderRadius: radius,
+          child: Ink(
+            padding: padding ?? EdgeInsets.all(14 * scale),
+            decoration: BoxDecoration(
               color: enabled
-                  ? border.withValues(alpha: 0.92)
-                  : AppColors.locked.withValues(alpha: 0.58),
-              width: borderWidth ?? 2.4,
+                  ? AppColors.white
+                  : AppColors.white.withValues(alpha: 0.88),
+              borderRadius: radius,
+              border: Border.all(
+                color: enabled
+                    ? border.withValues(alpha: 0.92)
+                    : AppColors.locked.withValues(alpha: 0.58),
+                width: borderWidth ?? 2.4,
+              ),
+              boxShadow: PlayUi.cardShadows(tint: enabled ? border : null),
             ),
-            boxShadow: PlayUi.cardShadows(tint: enabled ? border : null),
+            child: child,
           ),
-          child: child,
         ),
       ),
     );

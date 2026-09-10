@@ -82,37 +82,41 @@ class _HudBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onPressed,
-        customBorder: const CircleBorder(),
-        child: Ink(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xFFFFF7F0), AppColors.white],
-            ),
-            border: Border.all(
-              color: AppColors.coral.withValues(alpha: 0.45),
-              width: 2,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.navy.withValues(alpha: 0.12),
-                blurRadius: 10 * scale,
-                offset: Offset(0, 4 * scale),
+    return Semantics(
+      button: true,
+      label: 'Seviye seçimine dön',
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          customBorder: const CircleBorder(),
+          child: Ink(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFFFFF7F0), AppColors.white],
               ),
-            ],
-          ),
-          child: Icon(
-            Icons.arrow_back_rounded,
-            size: size * 0.48,
-            color: AppColors.navy,
+              border: Border.all(
+                color: AppColors.coral.withValues(alpha: 0.45),
+                width: 2,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.navy.withValues(alpha: 0.12),
+                  blurRadius: 10 * scale,
+                  offset: Offset(0, 4 * scale),
+                ),
+              ],
+            ),
+            child: Icon(
+              Icons.arrow_back_rounded,
+              size: size * 0.48,
+              color: AppColors.navy,
+            ),
           ),
         ),
       ),

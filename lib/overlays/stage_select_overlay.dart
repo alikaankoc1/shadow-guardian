@@ -270,6 +270,9 @@ class _StageCard extends StatelessWidget {
         enabled: unlocked,
         accentColor: accent,
         padding: EdgeInsets.all(16 * scale),
+        semanticLabel: unlocked
+            ? 'Seviye ${stage.number}, ${stage.title}'
+            : 'Seviye ${stage.number} kilitli',
         child: Column(
               children: [
                 Row(
