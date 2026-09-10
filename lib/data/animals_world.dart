@@ -18,7 +18,7 @@ final animalsWorld = GameWorld(
   title: 'Sevimli Dostlar',
   subtitle: 'Sevimli dostları gölgeleriyle buluştur.',
   icon: Icons.pets_rounded,
-  color: Color(0xFFFFB74D),
+  color: Color(0xFFE77EB4), // pembe
   previewAssets: ['animals/cat.png', 'animals/dog.png', 'animals/lion.png'],
   isAvailable: true,
   lockedHint: 'Çıraklığı bitir',

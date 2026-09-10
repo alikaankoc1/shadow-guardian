@@ -19,7 +19,7 @@ final spaceWorld = GameWorld(
   title: 'Uzay',
   subtitle: 'Roketler ve gezegenleri gölgeleriyle buluştur.',
   icon: Icons.rocket_launch_rounded,
-  color: Color(0xFF8D7BE8),
+  color: Color(0xFF8D7BE8), // mor
   previewAssets: ['space/rocket.png', 'space/planet.png', 'space/alien.png'],
   isAvailable: true,
   lockedHint: 'Kalfalığı bitir',

@@ -35,7 +35,7 @@ final fairyTaleWorld = GameWorld(
   title: 'Masal Dünyası',
   subtitle: 'Masal kahramanlarını gölgeleriyle buluştur.',
   icon: Icons.castle_rounded,
-  color: Color(0xFFE77EB4),
+  color: Color(0xFFE77EB4), // pembe
   previewAssets: [
     'fairy_tale/princess.png',
     'fairy_tale/fairy.png',

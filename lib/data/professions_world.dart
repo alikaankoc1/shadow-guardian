@@ -31,7 +31,7 @@ final professionsWorld = GameWorld(
   title: 'Meslekler',
   subtitle: 'Meslek kahramanlarını gölgeleriyle buluştur.',
   icon: Icons.work_rounded,
-  color: Color(0xFF64B5F6),
+  color: Color(0xFF45A9E6), // mavi
   previewAssets: [
     'professions/chef.png',
     'professions/firefighter.png',

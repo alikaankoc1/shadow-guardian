@@ -40,7 +40,7 @@ final masterExam = GameWorld(
   title: 'Ustalık',
   subtitle: 'Tüm dünyaların dostlarını karışık buluştur.',
   icon: Icons.workspace_premium_rounded,
-  color: Color(0xFFFFC857),
+  color: Color(0xFFFFC857), // sarı
   previewAssets: ['space/rocket.png', 'fairy_tale/princess.png', 'surprise/happy.png'],
   isAvailable: true,
   kind: WorldKind.exam,

@@ -22,7 +22,7 @@ final fruitsWorld = GameWorld(
   title: 'Meyve & Sebze',
   subtitle: 'Lezzetli meyve ve sebzeleri gölgeleriyle buluştur.',
   icon: Icons.eco_rounded,
-  color: Color(0xFF7BC67E),
+  color: Color(0xFF66CDAA), // yeşil
   previewAssets: ['fruits/apple.png', 'fruits/strawberry.png', 'fruits/carrot.png'],
   isAvailable: true,
   lockedHint: 'Araçları bitir',

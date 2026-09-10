@@ -34,7 +34,7 @@ final journeymanExam = GameWorld(
   title: 'Kalfalık',
   subtitle: 'Altı dünyanın dostlarını karışık buluştur.',
   icon: Icons.military_tech_rounded,
-  color: Color(0xFFFFB74D),
+  color: Color(0xFFFFC857), // sarı
   previewAssets: ['animals/cat.png', 'professions/doctor.png', 'ocean/whale.png'],
   isAvailable: true,
   kind: WorldKind.exam,

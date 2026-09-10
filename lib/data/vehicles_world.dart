@@ -18,7 +18,7 @@ final vehiclesWorld = GameWorld(
   title: 'Araçlar',
   subtitle: 'En sevilen araçları gölgeleriyle buluştur.',
   icon: Icons.directions_car_filled_rounded,
-  color: Color(0xFFFFA45B),
+  color: Color(0xFF45A9E6), // mavi
   previewAssets: ['vehicles/car.png', 'vehicles/plane.png', 'vehicles/train.png'],
   isAvailable: true,
   lockedHint: 'Doğayı bitir',

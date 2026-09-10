@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../models/game_world.dart';
 import '../models/match_item.dart';
 import '../models/stage_config.dart';
-import '../theme/app_theme.dart';
 
 const natureItems = <MatchItem>[
   MatchItem(id: 'cloud', name: 'Bulut', assetPath: 'nature/cloud.png'),
@@ -32,7 +31,7 @@ final natureWorld = GameWorld(
   title: 'Doğa Dünyası',
   subtitle: 'Doğadaki dostları gölgeleriyle buluştur.',
   icon: Icons.park_rounded,
-  color: AppColors.mint,
+  color: Color(0xFF66CDAA), // yeşil
   previewAssets: ['nature/cloud.png', 'nature/tree.png', 'nature/sun.png'],
   isAvailable: true,
   stages: [

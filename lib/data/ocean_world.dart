@@ -18,7 +18,7 @@ final oceanWorld = GameWorld(
   title: 'Deniz Dünyası',
   subtitle: 'Denizin neşeli sakinlerini gölgeleriyle buluştur.',
   icon: Icons.water_rounded,
-  color: Color(0xFF4DB6E8),
+  color: Color(0xFF45A9E6), // mavi
   previewAssets: ['ocean/fish.png', 'ocean/octopus.png', 'ocean/penguin.png'],
   isAvailable: true,
   lockedHint: 'Meslekleri bitir',

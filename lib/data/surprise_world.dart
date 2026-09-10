@@ -23,7 +23,7 @@ final surpriseWorld = GameWorld(
   title: 'Sürpriz Dünya',
   subtitle: 'Duyguları gölgeleriyle buluştur.',
   icon: Icons.emoji_emotions_rounded,
-  color: Color(0xFFFFB74D),
+  color: Color(0xFF8D7BE8), // mor
   previewAssets: [
     'surprise/happy.png',
     'surprise/surprised.png',

@@ -28,7 +28,7 @@ final apprenticeExam = GameWorld(
   title: 'Çıraklık Sınavı',
   subtitle: 'İlk üç dünyanın dostlarını karışık buluştur.',
   icon: Icons.school_rounded,
-  color: Color(0xFF81C784),
+  color: Color(0xFFFFC857), // sarı
   previewAssets: ['nature/cloud.png', 'vehicles/car.png', 'fruits/apple.png'],
   isAvailable: true,
   kind: WorldKind.exam,
