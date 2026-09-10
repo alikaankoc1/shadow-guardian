@@ -410,9 +410,9 @@ class _WavingMascot extends StatelessWidget {
     )
         .animate(onPlay: (c) => c.repeat(reverse: true))
         .rotate(
-          begin: -0.08,
-          end: 0.1,
-          duration: 700.ms,
+          begin: -0.05,
+          end: 0.06,
+          duration: 1600.ms,
           curve: Curves.easeInOut,
           alignment: const Alignment(0, 0.6),
         )
