@@ -62,7 +62,13 @@ class _StartMenuOverlayState extends State<StartMenuOverlay> {
     return PlayfulBackground(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final scale = landscapeUiScale(constraints.maxHeight);
+          final scale = startMenuScale(
+            constraints.maxHeight,
+            constraints.maxWidth,
+          );
+          final tablet = isTabletLandscape(
+            Size(constraints.maxWidth, constraints.maxHeight),
+          );
 
           return Stack(
             fit: StackFit.expand,
@@ -72,6 +78,7 @@ class _StartMenuOverlayState extends State<StartMenuOverlay> {
                 canResume: canResume,
                 resumeLabel: resumeLabel,
                 scale: scale,
+                isTablet: tablet,
               ),
               Positioned(
                 top: 6 * scale,
@@ -95,6 +102,7 @@ class _LandscapeStart extends StatelessWidget {
     required this.onPlay,
     required this.scale,
     required this.canResume,
+    required this.isTablet,
     this.resumeLabel,
   });
 
@@ -102,14 +110,18 @@ class _LandscapeStart extends StatelessWidget {
   final bool canResume;
   final String? resumeLabel;
   final double scale;
+  final bool isTablet;
 
   @override
   Widget build(BuildContext context) {
-    final padV = 8.0 * scale;
+    final padV = (isTablet ? 10.0 : 8.0) * scale;
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final maxW = (constraints.maxWidth * 0.92).clamp(560.0, 820.0);
+        // Tablet: tighter centered band so scene + UI sit as one composition.
+        final maxW = isTablet
+            ? (constraints.maxWidth * 0.82).clamp(760.0, 1040.0)
+            : (constraints.maxWidth * 0.92).clamp(560.0, 820.0);
 
         return Center(
           child: SizedBox(
@@ -120,7 +132,7 @@ class _LandscapeStart extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 48,
-                  child: _LivingScene(scale: scale),
+                  child: _LivingScene(scale: scale, isTablet: isTablet),
                 ),
                 SizedBox(width: 8 * scale),
                 Expanded(
@@ -134,6 +146,7 @@ class _LandscapeStart extends StatelessWidget {
                         canResume: canResume,
                         resumeLabel: resumeLabel,
                         scale: scale,
+                        isTablet: isTablet,
                       ),
                     ),
                   ),
@@ -152,6 +165,7 @@ class _BrandAndPlay extends StatelessWidget {
     required this.onPlay,
     required this.scale,
     required this.canResume,
+    required this.isTablet,
     this.resumeLabel,
   });
 
@@ -159,14 +173,15 @@ class _BrandAndPlay extends StatelessWidget {
   final bool canResume;
   final String? resumeLabel;
   final double scale;
+  final bool isTablet;
 
   @override
   Widget build(BuildContext context) {
-    final titleSize = 36.0 * scale;
-    final bodySize = 14.5 * scale;
-    final gapSm = 6.0 * scale;
-    final gapMd = 12.0 * scale;
-    final gapLg = 16.0 * scale;
+    final titleSize = (isTablet ? 52.0 : 36.0) * scale;
+    final bodySize = (isTablet ? 19.0 : 14.5) * scale;
+    final gapSm = (isTablet ? 10.0 : 6.0) * scale;
+    final gapMd = (isTablet ? 20.0 : 12.0) * scale;
+    final gapLg = (isTablet ? 26.0 : 16.0) * scale;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -193,7 +208,7 @@ class _BrandAndPlay extends StatelessWidget {
           ),
         ).animate().fadeIn(delay: 80.ms, duration: 400.ms),
         SizedBox(height: gapMd),
-        _HowToPlayDemo(scale: scale)
+        _HowToPlayDemo(scale: scale, isTablet: isTablet)
             .animate()
             .fadeIn(delay: 140.ms, duration: 450.ms),
         SizedBox(height: gapLg),
@@ -202,6 +217,8 @@ class _BrandAndPlay extends StatelessWidget {
           onPressed: onPlay,
           scale: scale,
           pulse: true,
+          minimumWidth: isTablet ? 320 : 240,
+          minimumHeight: isTablet ? 78 : 62,
         ),
         if (canResume && resumeLabel != null) ...[
           SizedBox(height: gapSm),
@@ -210,7 +227,7 @@ class _BrandAndPlay extends StatelessWidget {
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               decoration: TextDecoration.none,
-              fontSize: 12 * scale,
+              fontSize: (isTablet ? 15.5 : 12.0) * scale,
               color: AppColors.slate.withValues(alpha: 0.85),
             ),
           ),
@@ -258,9 +275,10 @@ class _SoundToggle extends StatelessWidget {
 }
 
 class _LivingScene extends StatelessWidget {
-  const _LivingScene({required this.scale});
+  const _LivingScene({required this.scale, required this.isTablet});
 
   final double scale;
+  final bool isTablet;
 
   @override
   Widget build(BuildContext context) {
@@ -268,17 +286,35 @@ class _LivingScene extends StatelessWidget {
       builder: (context, constraints) {
         final h = constraints.maxHeight;
         final w = constraints.maxWidth;
-        final isPhone = scale < 0.92 || w < 400;
-        final treeH = (h * 0.72).clamp(120.0, 240.0);
-        final mascotH = (h * 0.42).clamp(72.0, 140.0);
-        final sun = (92.0 * scale).clamp(78.0, 150.0);
-        final cloudBig = (120.0 * scale).clamp(80.0, 160.0);
-        final cloudSm = (88.0 * scale).clamp(60.0, 120.0);
+        final isPhone = !isTablet && (scale < 0.92 || w < 400);
+        final treeH = isTablet
+            ? (h * 0.92).clamp(260.0, 420.0)
+            : (h * 0.72).clamp(120.0, 240.0);
+        final mascotH = isTablet
+            ? (h * 0.62).clamp(180.0, 280.0)
+            : (h * 0.42).clamp(72.0, 140.0);
+        final sun = isTablet
+            ? (128.0 * scale).clamp(140.0, 230.0)
+            : (92.0 * scale).clamp(78.0, 150.0);
+        final cloudBig = isTablet
+            ? (170.0 * scale).clamp(160.0, 260.0)
+            : (120.0 * scale).clamp(80.0, 160.0);
+        final cloudSm = isTablet
+            ? (128.0 * scale).clamp(120.0, 190.0)
+            : (88.0 * scale).clamp(60.0, 120.0);
         // Phone: push flower away from wide canopy toward the mascot gap.
+        // Tablet: pack flora + mascot toward the brand panel (screen center).
         final flowerLeft = isPhone
             ? (w * 0.36).clamp(100.0, 150.0)
+            : isTablet
+            ? (w * 0.38).clamp(160.0, 260.0)
             : (treeH * 0.62).clamp(110.0, 170.0);
-        final flowerH = treeH * (isPhone ? 0.18 : 0.22);
+        final flowerH = treeH * (isPhone ? 0.18 : isTablet ? 0.26 : 0.22);
+        final treeLeft = isTablet ? (w * 0.02).clamp(0.0, 12.0) : 4.0;
+        final mascotRight = isTablet ? -12.0 * scale : -4.0 * scale;
+        final groundH = isTablet
+            ? (h * 0.22).clamp(48.0, 96.0)
+            : (h * 0.2).clamp(36.0, 72.0);
 
         return Stack(
           clipBehavior: Clip.none,
@@ -287,7 +323,7 @@ class _LivingScene extends StatelessWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                height: (h * 0.2).clamp(36.0, 72.0),
+                height: groundH,
                 margin: const EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
                   color: AppColors.mint.withValues(alpha: 0.35),
@@ -298,8 +334,8 @@ class _LivingScene extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: 4,
-              right: 24 * scale,
+              top: isTablet ? 8 : 4,
+              right: isTablet ? w * 0.08 : 24 * scale,
               child: Image.asset(
                 'assets/game/nature/sun.png',
                 width: sun,
@@ -316,8 +352,8 @@ class _LivingScene extends StatelessWidget {
                   ),
             ),
             Positioned(
-              top: h * 0.18,
-              left: 12,
+              top: h * (isTablet ? 0.14 : 0.18),
+              left: isTablet ? w * 0.06 : 12,
               child: Image.asset(
                 'assets/game/nature/cloud.png',
                 width: cloudBig,
@@ -332,8 +368,8 @@ class _LivingScene extends StatelessWidget {
                   ),
             ),
             Positioned(
-              top: h * 0.28,
-              right: 4,
+              top: h * (isTablet ? 0.26 : 0.28),
+              right: isTablet ? w * 0.02 : 4,
               child: Image.asset(
                 'assets/game/nature/cloud.png',
                 width: cloudSm,
@@ -348,7 +384,7 @@ class _LivingScene extends StatelessWidget {
                   ),
             ),
             Positioned(
-              left: 4,
+              left: treeLeft,
               bottom: 4,
               child: Image.asset(
                 'assets/game/nature/tree.png',
@@ -366,7 +402,7 @@ class _LivingScene extends StatelessWidget {
             ),
             Positioned(
               left: flowerLeft,
-              bottom: h * 0.08,
+              bottom: h * (isTablet ? 0.1 : 0.08),
               child: Image.asset(
                 'assets/game/nature/flower.png',
                 height: flowerH,
@@ -382,7 +418,7 @@ class _LivingScene extends StatelessWidget {
             ),
             // Mascot sits near the brand panel (composition bridge)
             Positioned(
-              right: -4 * scale,
+              right: mascotRight,
               bottom: 2,
               child: _WavingMascot(height: mascotH),
             ),
@@ -420,9 +456,10 @@ class _WavingMascot extends StatelessWidget {
 }
 
 class _HowToPlayDemo extends StatefulWidget {
-  const _HowToPlayDemo({required this.scale});
+  const _HowToPlayDemo({required this.scale, this.isTablet = false});
 
   final double scale;
+  final bool isTablet;
 
   @override
   State<_HowToPlayDemo> createState() => _HowToPlayDemoState();
@@ -461,8 +498,11 @@ class _HowToPlayDemoState extends State<_HowToPlayDemo>
   @override
   Widget build(BuildContext context) {
     final s = widget.scale;
-    final size = 48.0 * s;
-    final boxW = 170.0 * s;
+    final size = (widget.isTablet ? 72.0 : 48.0) * s;
+    final boxW = (widget.isTablet ? 260.0 : 170.0) * s;
+    final padH = (widget.isTablet ? 22.0 : 14.0) * s;
+    final padV = (widget.isTablet ? 18.0 : 10.0) * s;
+    final labelSize = (widget.isTablet ? 17.0 : 12.5) * s;
 
     return AnimatedBuilder(
       animation: _slide,
@@ -470,8 +510,8 @@ class _HowToPlayDemoState extends State<_HowToPlayDemo>
         final t = _slide.value;
         return Container(
           padding: EdgeInsets.symmetric(
-            horizontal: 14 * s,
-            vertical: 10 * s,
+            horizontal: padH,
+            vertical: padV,
           ),
           decoration: BoxDecoration(
             color: AppColors.white.withValues(alpha: 0.88),
@@ -538,7 +578,7 @@ class _HowToPlayDemoState extends State<_HowToPlayDemo>
                 style: TextStyle(
                   decoration: TextDecoration.none,
                   color: AppColors.navy,
-                  fontSize: 12.5 * s,
+                  fontSize: labelSize,
                   fontWeight: FontWeight.w800,
                 ),
               ),

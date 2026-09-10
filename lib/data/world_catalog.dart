@@ -55,3 +55,13 @@ GameWorld? worldById(String id) {
   }
   return null;
 }
+
+/// Next entry in the menu catalog after [worldId], or null if last.
+GameWorld? nextWorldAfter(String worldId) {
+  final worlds = allWorlds;
+  final index = worlds.indexWhere((world) => world.id == worldId);
+  if (index < 0 || index >= worlds.length - 1) {
+    return null;
+  }
+  return worlds[index + 1];
+}

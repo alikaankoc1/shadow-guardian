@@ -21,7 +21,8 @@ double startMenuScale(double height, double width) {
   if (!isTablet) {
     return base;
   }
-  return (base * 1.18).clamp(1.15, 1.42);
+  // Fill the larger canvas so title / demo / play stay readable.
+  return (base * 1.32).clamp(1.28, 1.58);
 }
 
 double landscapeUiScaleOf(BuildContext context) {

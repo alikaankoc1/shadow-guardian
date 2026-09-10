@@ -3,8 +3,10 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../game/shadow_game.dart';
 import '../models/stage_config.dart';
+import '../services/sound_settings.dart';
 import '../theme/app_theme.dart';
 import '../theme/landscape_ui.dart';
+import '../widgets/play_button.dart';
 import '../widgets/play_card.dart';
 import '../widgets/play_screen_header.dart';
 import '../widgets/playful_background.dart';
@@ -18,6 +20,7 @@ class StageSelectOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final world = game.currentWorld;
+    final nextWorld = game.nextUnlockedWorld;
     final h = MediaQuery.sizeOf(context).height;
     final scale = landscapeUiScale(h);
     final padV = 8.0 * scale;
@@ -92,6 +95,24 @@ class StageSelectOverlay extends StatelessWidget {
                 },
               ),
             ),
+            if (nextWorld != null) ...[
+              SizedBox(height: 8 * scale),
+              PlayButton(
+                label: 'Sonraki: ${nextWorld.title}',
+                icon: Icons.arrow_forward_rounded,
+                onPressed: () {
+                  SoundSettings.instance.playTap();
+                  game.openNextWorld();
+                },
+                scale: scale,
+                pulse: true,
+                minimumWidth: 260,
+                minimumHeight: 56,
+              )
+                  .animate()
+                  .fadeIn(delay: 200.ms, duration: 400.ms)
+                  .slideY(begin: 0.15, curve: Curves.easeOutCubic),
+            ],
           ],
         ),
       ),

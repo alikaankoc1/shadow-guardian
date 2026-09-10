@@ -61,6 +61,21 @@ class ShadowGame extends FlameGame {
   bool get isCurrentWorldCompleted =>
       progress.isWorldCompleted(currentWorld.id);
 
+  /// Next catalog world after the current one (may still be locked).
+  GameWorld? get nextWorld => nextWorldAfter(currentWorld.id);
+
+  /// Unlocked next world when the current world is finished.
+  GameWorld? get nextUnlockedWorld {
+    if (!isCurrentWorldCompleted) {
+      return null;
+    }
+    final next = nextWorld;
+    if (next == null || !isWorldUnlocked(next)) {
+      return null;
+    }
+    return next;
+  }
+
   bool get canResume => progress.hasResume;
 
   String? get resumeLabel {
@@ -130,6 +145,14 @@ class ShadowGame extends FlameGame {
           .then((value) => progress = value),
     );
     showStageSelect();
+  }
+
+  void openNextWorld() {
+    final next = nextUnlockedWorld;
+    if (next == null) {
+      return;
+    }
+    openWorld(next);
   }
 
   void showStageSelect() {
