@@ -16,7 +16,7 @@ class ShadowTargetComponent extends SpriteComponent {
   double _fillProgress = 0;
   bool _filled = false;
 
-  static const _shadowColor = Color(0x9E344955);
+  static const _shadowColor = Color(0xFF24313C);
   static const _glowColor = Color(0x66FFC857);
 
   void setProximity(double value) {
@@ -51,7 +51,7 @@ class ShadowTargetComponent extends SpriteComponent {
         height: size.y * 0.14,
       ),
       Paint()
-        ..color = const Color(0x22344955)
+        ..color = const Color(0x4024313C)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
     );
 
