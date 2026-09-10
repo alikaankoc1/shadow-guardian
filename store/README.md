@@ -2,7 +2,8 @@
 
 Bu klasör **telefon / tablet** mağaza materyallerini tutar (oyun web için değil).
 
-İmza / keystore: [SIGNING.md](SIGNING.md)
+İmza / keystore: [SIGNING.md](SIGNING.md)  
+Gizlilik / Data safety / Families: [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md)
 
 ## Hazır dosyalar
 

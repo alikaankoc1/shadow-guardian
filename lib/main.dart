@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'game/shadow_game.dart';
 import 'overlays/game_hud_overlay.dart';
 import 'overlays/level_complete_overlay.dart';
+import 'overlays/privacy_policy_overlay.dart';
 import 'overlays/stage_select_overlay.dart';
 import 'overlays/start_menu_overlay.dart';
 import 'overlays/world_select_overlay.dart';
@@ -74,6 +75,9 @@ class ShadowGuardianApp extends StatelessWidget {
               },
               ShadowGame.levelCompleteOverlay: (context, game) {
                 return LevelCompleteOverlay(game: game as ShadowGame);
+              },
+              ShadowGame.privacyOverlay: (context, game) {
+                return PrivacyPolicyOverlay(game: game as ShadowGame);
               },
             },
             initialActiveOverlays: const [ShadowGame.startMenuOverlay],

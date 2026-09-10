@@ -28,6 +28,7 @@ class ShadowGame extends FlameGame {
   static const stageSelectOverlay = 'stageSelect';
   static const gameHudOverlay = 'gameHud';
   static const levelCompleteOverlay = 'levelComplete';
+  static const privacyOverlay = 'privacy';
 
   static const List<Color> _confettiColors = [
     Color(0xFFFF7A68),
@@ -126,6 +127,14 @@ class ShadowGame extends FlameGame {
     overlays.clear();
     overlays.add(startMenuOverlay);
     unawaited(SoundSettings.instance.enterMenus());
+  }
+
+  void showPrivacy() {
+    overlays.add(privacyOverlay);
+  }
+
+  void hidePrivacy() {
+    overlays.remove(privacyOverlay);
   }
 
   void showWorldSelect() {

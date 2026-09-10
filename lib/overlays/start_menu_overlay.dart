@@ -67,6 +67,25 @@ class _StartMenuOverlayState extends State<StartMenuOverlay> {
                 scale: scale,
                 isTablet: tablet,
               ),
+              Positioned(
+                left: 10 * scale,
+                bottom: 8 * scale,
+                child: TextButton(
+                  onPressed: () {
+                    SoundSettings.instance.playTap();
+                    widget.game.showPrivacy();
+                  },
+                  child: Text(
+                    'Gizlilik',
+                    style: TextStyle(
+                      decoration: TextDecoration.none,
+                      color: AppColors.slate.withValues(alpha: 0.9),
+                      fontWeight: FontWeight.w800,
+                      fontSize: 13 * scale,
+                    ),
+                  ),
+                ),
+              ),
             ],
           );
         },
@@ -251,6 +270,7 @@ class _LivingScene extends StatelessWidget {
             : isTablet
             ? (w * 0.32).clamp(108.0, 180.0)
             : (treeH * 0.55).clamp(92.0, 145.0);
+
         final flowerH = treeH * (isPhone ? 0.17 : isTablet ? 0.22 : 0.20);
         // Nudge left a little; keep canopy on-screen (asset has soft left padding).
         final treeLeft = isTablet ? -8.0 : -4.0;
