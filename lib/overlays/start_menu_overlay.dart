@@ -267,11 +267,18 @@ class _LivingScene extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final h = constraints.maxHeight;
+        final w = constraints.maxWidth;
+        final isPhone = scale < 0.92 || w < 400;
         final treeH = (h * 0.72).clamp(120.0, 240.0);
         final mascotH = (h * 0.42).clamp(72.0, 140.0);
         final sun = (92.0 * scale).clamp(78.0, 150.0);
         final cloudBig = (120.0 * scale).clamp(80.0, 160.0);
         final cloudSm = (88.0 * scale).clamp(60.0, 120.0);
+        // Phone: push flower away from wide canopy toward the mascot gap.
+        final flowerLeft = isPhone
+            ? (w * 0.36).clamp(100.0, 150.0)
+            : (treeH * 0.62).clamp(110.0, 170.0);
+        final flowerH = treeH * (isPhone ? 0.18 : 0.22);
 
         return Stack(
           clipBehavior: Clip.none,
@@ -358,11 +365,11 @@ class _LivingScene extends StatelessWidget {
                   ),
             ),
             Positioned(
-              left: treeH * 0.55,
+              left: flowerLeft,
               bottom: h * 0.08,
               child: Image.asset(
                 'assets/game/nature/flower.png',
-                height: treeH * 0.22,
+                height: flowerH,
                 filterQuality: FilterQuality.high,
               )
                   .animate(onPlay: (c) => c.repeat(reverse: true))
