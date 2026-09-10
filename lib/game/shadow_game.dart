@@ -122,6 +122,31 @@ class ShadowGame extends FlameGame {
 
   void startGame() => showWorldSelect();
 
+  /// Continue at the saved world + stage (label under Devam Et).
+  Future<void> resumeGame() async {
+    final pointer = progress.resume;
+    if (pointer == null || !progress.hasResume) {
+      showWorldSelect();
+      return;
+    }
+
+    final world = worldById(pointer.worldId);
+    if (world == null || !isWorldUnlocked(world)) {
+      showWorldSelect();
+      return;
+    }
+
+    currentWorld = world;
+    final stageNumber = pointer.stageNumber.clamp(1, world.stages.length);
+    if (!isStageUnlocked(stageNumber)) {
+      showStageSelect();
+      return;
+    }
+
+    final stage = world.stages.firstWhere((s) => s.number == stageNumber);
+    await startStage(stage);
+  }
+
   void showStartMenu() {
     _leaveStage();
     overlays.clear();

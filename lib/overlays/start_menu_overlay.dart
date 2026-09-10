@@ -37,7 +37,11 @@ class _StartMenuOverlayState extends State<StartMenuOverlay> {
       await SoundSettings.instance.unlockAudio();
       SoundSettings.instance.playTap();
       await SoundSettings.instance.enterMenus();
-      widget.game.startGame();
+      if (widget.game.canResume) {
+        await widget.game.resumeGame();
+      } else {
+        widget.game.startGame();
+      }
     }());
   }
 
