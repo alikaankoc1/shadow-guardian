@@ -42,7 +42,7 @@ void main() {
       ),
     );
     await _pumpFrames(tester);
-    expect(find.text('Bir dünya seç'), findsOneWidget);
+    expect(find.text('Dünyalar'), findsOneWidget);
     expect(find.text('Doğa Dünyası'), findsOneWidget);
     expect(find.text('Araçlar'), findsOneWidget);
     expect(find.text('Meyve & Sebze'), findsOneWidget);

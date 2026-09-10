@@ -30,8 +30,8 @@ class WorldSelectOverlay extends StatelessWidget {
             PlayScreenHeader(
               onBack: game.showStartMenu,
               scale: scale,
-              title: 'Bir dünya seç',
-              subtitle: 'Maceran hangi dünyada başlasın?',
+              title: 'Dünyalar',
+              subtitle: 'Bir dünyayı bitir, yenisini aç!',
             ),
             SizedBox(height: 8 * scale),
             Expanded(
