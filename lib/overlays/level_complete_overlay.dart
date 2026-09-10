@@ -19,17 +19,49 @@ class LevelCompleteOverlay extends StatelessWidget {
     }
 
     final worldCompleted = game.isLastStage;
+    final journeyComplete = worldCompleted && game.nextWorld == null;
     final size = MediaQuery.sizeOf(context);
     final scale = landscapeUiScale(size.height);
     final compact = size.height < 420;
     final worldTitle = game.currentWorld.title;
+
+    final String title;
+    final String subtitle;
+    final String primaryLabel;
+    final IconData primaryIcon;
+    final VoidCallback onPrimary;
+    final VoidCallback? onSecondary;
+
+    if (journeyComplete) {
+      title = 'Gölge Ustası oldun!';
+      subtitle =
+          'Tüm dünyaları tamamladın. Yeni seviyeler yakında geliyor!';
+      primaryLabel = 'Dünyalara Dön';
+      primaryIcon = Icons.public_rounded;
+      onPrimary = game.showWorldSelect;
+      onSecondary = null;
+    } else if (worldCompleted) {
+      title = '$worldTitle Tamamlandı!';
+      subtitle = 'Bütün şekilleri gölgeleriyle buluşturdun.';
+      primaryLabel = 'Seviyelere Dön';
+      primaryIcon = Icons.grid_view_rounded;
+      onPrimary = game.goToNextLevel;
+      onSecondary = null;
+    } else {
+      title = 'Tebrikler!';
+      subtitle = '${stage.title} tamamlandı. Yeni seviye açıldı!';
+      primaryLabel = 'Sonraki Seviye';
+      primaryIcon = Icons.arrow_forward_rounded;
+      onPrimary = game.goToNextLevel;
+      onSecondary = game.showStageSelect;
+    }
 
     return Material(
       color: AppColors.navy.withValues(alpha: 0.34),
       child: Stack(
         fit: StackFit.expand,
         children: [
-          const ConfettiOverlay(pieceCount: 42),
+          ConfettiOverlay(pieceCount: journeyComplete ? 64 : 42),
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
@@ -41,20 +73,13 @@ class LevelCompleteOverlay extends StatelessWidget {
                   scale: scale,
                   compact: compact,
                   worldCompleted: worldCompleted,
-                  title: worldCompleted
-                      ? '$worldTitle Tamamlandı!'
-                      : 'Tebrikler!',
-                  subtitle: worldCompleted
-                      ? 'Bütün şekilleri gölgeleriyle buluşturdun.'
-                      : '${stage.title} tamamlandı. Yeni seviye açıldı!',
-                  primaryLabel: worldCompleted
-                      ? 'Seviyelere Dön'
-                      : 'Sonraki Seviye',
-                  primaryIcon: worldCompleted
-                      ? Icons.grid_view_rounded
-                      : Icons.arrow_forward_rounded,
-                  onPrimary: game.goToNextLevel,
-                  onSecondary: worldCompleted ? null : game.showStageSelect,
+                  journeyComplete: journeyComplete,
+                  title: title,
+                  subtitle: subtitle,
+                  primaryLabel: primaryLabel,
+                  primaryIcon: primaryIcon,
+                  onPrimary: onPrimary,
+                  onSecondary: onSecondary,
                 )
                     .animate()
                     .fadeIn(duration: 280.ms)
@@ -76,6 +101,7 @@ class _CelebrateCard extends StatelessWidget {
     required this.scale,
     required this.compact,
     required this.worldCompleted,
+    required this.journeyComplete,
     required this.title,
     required this.subtitle,
     required this.primaryLabel,
@@ -87,6 +113,7 @@ class _CelebrateCard extends StatelessWidget {
   final double scale;
   final bool compact;
   final bool worldCompleted;
+  final bool journeyComplete;
   final String title;
   final String subtitle;
   final String primaryLabel;
@@ -152,7 +179,9 @@ class _CelebrateCard extends StatelessWidget {
                   ),
                 ),
                 child: Icon(
-                  worldCompleted
+                  journeyComplete
+                      ? Icons.auto_awesome_rounded
+                      : worldCompleted
                       ? Icons.workspace_premium_rounded
                       : Icons.celebration_rounded,
                   color: AppColors.coral,

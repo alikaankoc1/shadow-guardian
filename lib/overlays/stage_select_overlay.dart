@@ -21,10 +21,20 @@ class StageSelectOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     final world = game.currentWorld;
     final nextWorld = game.nextUnlockedWorld;
+    final journeyComplete = game.isJourneyComplete;
     final h = MediaQuery.sizeOf(context).height;
     final scale = landscapeUiScale(h);
     final padV = 8.0 * scale;
     final padH = 16.0 * scale;
+
+    final String subtitle;
+    if (journeyComplete) {
+      subtitle = 'Tüm macerayı tamamladın. Yeni dünyalar yakında!';
+    } else if (game.isCurrentWorldCompleted) {
+      subtitle = 'Harika! Bu dünyayı tamamladın.';
+    } else {
+      subtitle = 'Sıradaki seviyeyi tamamla ve yenisini aç.';
+    }
 
     return PlayfulBackground(
       child: Padding(
@@ -34,9 +44,7 @@ class StageSelectOverlay extends StatelessWidget {
             PlayScreenHeader(
               onBack: game.showWorldSelect,
               title: world.title,
-              subtitle: game.isCurrentWorldCompleted
-                  ? 'Harika! Bu dünyayı tamamladın.'
-                  : 'Sıradaki seviyeyi tamamla ve yenisini aç.',
+              subtitle: subtitle,
               scale: scale,
               leading: WorldThumbnail(
                 assetPaths: world.isExam ? const [] : world.previewAssets,
@@ -112,9 +120,86 @@ class StageSelectOverlay extends StatelessWidget {
                   .animate()
                   .fadeIn(delay: 200.ms, duration: 400.ms)
                   .slideY(begin: 0.15, curve: Curves.easeOutCubic),
+            ] else if (journeyComplete) ...[
+              SizedBox(height: 8 * scale),
+              _ComingSoonBanner(scale: scale)
+                  .animate()
+                  .fadeIn(delay: 200.ms, duration: 400.ms)
+                  .slideY(begin: 0.12, curve: Curves.easeOutCubic),
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ComingSoonBanner extends StatelessWidget {
+  const _ComingSoonBanner({required this.scale});
+
+  final double scale;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      constraints: BoxConstraints(maxWidth: 520 * scale),
+      padding: EdgeInsets.symmetric(
+        horizontal: 18 * scale,
+        vertical: 12 * scale,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.white.withValues(alpha: 0.92),
+        borderRadius: BorderRadius.circular(22 * scale),
+        border: Border.all(
+          color: AppColors.sunshine.withValues(alpha: 0.55),
+          width: 2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.navy.withValues(alpha: 0.08),
+            blurRadius: 12 * scale,
+            offset: Offset(0, 4 * scale),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.auto_awesome_rounded,
+            color: AppColors.coral,
+            size: 26 * scale,
+          ),
+          SizedBox(width: 12 * scale),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Yeni seviyeler yakında!',
+                  style: TextStyle(
+                    decoration: TextDecoration.none,
+                    fontFamily: 'Nunito',
+                    color: AppColors.navy,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 15 * scale,
+                  ),
+                ),
+                Text(
+                  'Şimdilik sevdiğin dünyaları yeniden oyna.',
+                  style: TextStyle(
+                    decoration: TextDecoration.none,
+                    fontFamily: 'Nunito',
+                    color: AppColors.slate,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 12.5 * scale,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

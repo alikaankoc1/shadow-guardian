@@ -228,34 +228,35 @@ class _LivingScene extends StatelessWidget {
         final h = constraints.maxHeight;
         final w = constraints.maxWidth;
         final isPhone = !isTablet && (scale < 0.92 || w < 400);
+        // Scenery sizes from panel height only — ignore startMenuScale boost.
         final treeH = isTablet
-            ? (h * 0.92).clamp(260.0, 420.0)
-            : (h * 0.72).clamp(120.0, 240.0);
+            ? (h * 0.68).clamp(170.0, 280.0)
+            : (h * 0.64).clamp(110.0, 200.0);
         final mascotH = isTablet
-            ? (h * 0.62).clamp(180.0, 280.0)
-            : (h * 0.42).clamp(72.0, 140.0);
+            ? (h * 0.40).clamp(110.0, 175.0)
+            : (h * 0.36).clamp(64.0, 120.0);
         final sun = isTablet
-            ? (128.0 * scale).clamp(140.0, 230.0)
-            : (92.0 * scale).clamp(78.0, 150.0);
+            ? (h * 0.20).clamp(88.0, 130.0)
+            : (h * 0.22).clamp(70.0, 110.0);
         final cloudBig = isTablet
-            ? (170.0 * scale).clamp(160.0, 260.0)
-            : (120.0 * scale).clamp(80.0, 160.0);
+            ? (h * 0.26).clamp(100.0, 155.0)
+            : (h * 0.28).clamp(72.0, 130.0);
         final cloudSm = isTablet
-            ? (128.0 * scale).clamp(120.0, 190.0)
-            : (88.0 * scale).clamp(60.0, 120.0);
+            ? (h * 0.19).clamp(78.0, 115.0)
+            : (h * 0.20).clamp(55.0, 95.0);
         // Phone: push flower away from wide canopy toward the mascot gap.
         // Tablet: pack flora + mascot toward the brand panel (screen center).
         final flowerLeft = isPhone
-            ? (w * 0.36).clamp(100.0, 150.0)
+            ? (w * 0.34).clamp(90.0, 140.0)
             : isTablet
-            ? (w * 0.38).clamp(160.0, 260.0)
-            : (treeH * 0.62).clamp(110.0, 170.0);
-        final flowerH = treeH * (isPhone ? 0.18 : isTablet ? 0.26 : 0.22);
-        final treeLeft = isTablet ? (w * 0.02).clamp(0.0, 12.0) : 4.0;
-        final mascotRight = isTablet ? -12.0 * scale : -4.0 * scale;
+            ? (w * 0.36).clamp(120.0, 200.0)
+            : (treeH * 0.58).clamp(100.0, 155.0);
+        final flowerH = treeH * (isPhone ? 0.17 : isTablet ? 0.22 : 0.20);
+        final treeLeft = isTablet ? (w * 0.04).clamp(4.0, 16.0) : 4.0;
+        final mascotRight = isTablet ? 4.0 : -4.0 * scale;
         final groundH = isTablet
-            ? (h * 0.22).clamp(48.0, 96.0)
-            : (h * 0.2).clamp(36.0, 72.0);
+            ? (h * 0.16).clamp(40.0, 72.0)
+            : (h * 0.18).clamp(32.0, 60.0);
 
         return Stack(
           clipBehavior: Clip.none,

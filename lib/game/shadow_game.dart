@@ -76,6 +76,10 @@ class ShadowGame extends FlameGame {
     return next;
   }
 
+  /// True when Ustalık (last catalog world) is fully finished.
+  bool get isJourneyComplete =>
+      isCurrentWorldCompleted && nextWorld == null;
+
   bool get canResume => progress.hasResume;
 
   String? get resumeLabel {

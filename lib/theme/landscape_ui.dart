@@ -14,15 +14,14 @@ double landscapeUiScale(double height) {
   return 1.0;
 }
 
-/// Extra boost for the start menu composition on tablets.
+/// Extra boost for start-menu text / buttons on tablets (not scenery).
 double startMenuScale(double height, double width) {
   final base = landscapeUiScale(height);
   final isTablet = height >= 560 || width >= 900;
   if (!isTablet) {
     return base;
   }
-  // Fill the larger canvas so title / demo / play stay readable.
-  return (base * 1.32).clamp(1.28, 1.58);
+  return (base * 1.18).clamp(1.12, 1.36);
 }
 
 double landscapeUiScaleOf(BuildContext context) {
