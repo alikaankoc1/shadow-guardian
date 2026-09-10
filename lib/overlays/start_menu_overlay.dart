@@ -24,25 +24,12 @@ class _StartMenuOverlayState extends State<StartMenuOverlay> {
   @override
   void initState() {
     super.initState();
-    SoundSettings.instance.addListener(_onSoundChanged);
     unawaited(() async {
       await widget.game.loaded;
       if (mounted) {
         setState(() {});
       }
     }());
-  }
-
-  @override
-  void dispose() {
-    SoundSettings.instance.removeListener(_onSoundChanged);
-    super.dispose();
-  }
-
-  void _onSoundChanged() {
-    if (mounted) {
-      setState(() {});
-    }
   }
 
   void _start() {
@@ -79,15 +66,6 @@ class _StartMenuOverlayState extends State<StartMenuOverlay> {
                 resumeLabel: resumeLabel,
                 scale: scale,
                 isTablet: tablet,
-              ),
-              Positioned(
-                top: 6 * scale,
-                right: 10 * scale,
-                child: _SoundToggle(
-                  enabled: SoundSettings.instance.enabled,
-                  onToggle: () => SoundSettings.instance.toggle(),
-                  scale: scale,
-                ),
               ),
             ],
           );
@@ -233,43 +211,6 @@ class _BrandAndPlay extends StatelessWidget {
           ),
         ],
       ],
-    );
-  }
-}
-
-class _SoundToggle extends StatelessWidget {
-  const _SoundToggle({
-    required this.enabled,
-    required this.onToggle,
-    required this.scale,
-  });
-
-  final bool enabled;
-  final VoidCallback onToggle;
-  final double scale;
-
-  @override
-  Widget build(BuildContext context) {
-    final pad = 10.0 * scale;
-    final icon = 26.0 * scale;
-
-    return Material(
-      color: AppColors.white.withValues(alpha: 0.92),
-      shape: const CircleBorder(),
-      elevation: 2,
-      shadowColor: AppColors.navy.withValues(alpha: 0.12),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: onToggle,
-        child: Padding(
-          padding: EdgeInsets.all(pad),
-          child: Icon(
-            enabled ? Icons.volume_up_rounded : Icons.volume_off_rounded,
-            size: icon,
-            color: enabled ? AppColors.coral : AppColors.locked,
-          ),
-        ),
-      ),
     );
   }
 }

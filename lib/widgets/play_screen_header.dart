@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'sound_toggle_button.dart';
+
 class PlayScreenHeader extends StatelessWidget {
   const PlayScreenHeader({
     super.key,
@@ -52,6 +54,8 @@ class PlayScreenHeader extends StatelessWidget {
           ),
         ),
         ?trailing,
+        // Room for the global top-right sound toggle.
+        SizedBox(width: SoundToggleButton.reservedWidth(scale)),
       ],
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../game/shadow_game.dart';
 import '../theme/app_theme.dart';
 import '../theme/landscape_ui.dart';
+import '../widgets/sound_toggle_button.dart';
 
 class GameHudOverlay extends StatelessWidget {
   const GameHudOverlay({super.key, required this.game});
@@ -26,6 +27,7 @@ class GameHudOverlay extends StatelessWidget {
     final side = (compact ? 8.0 : 10.0) * scale;
     final backSize = (compact ? 38.0 : 44.0) * scale;
     final titleLeft = backSize + side + 6 * scale;
+    final titleRight = side + SoundToggleButton.reservedWidth(scale);
     final progress = stage.matchCount == 0
         ? 0.0
         : game.matchedCount / stage.matchCount;
@@ -45,7 +47,7 @@ class GameHudOverlay extends StatelessWidget {
           Positioned(
             top: top,
             left: titleLeft,
-            right: side,
+            right: titleRight,
             child: IgnorePointer(
               child: Align(
                 alignment: Alignment.topCenter,

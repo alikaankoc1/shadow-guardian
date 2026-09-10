@@ -13,6 +13,7 @@ import 'overlays/world_select_overlay.dart';
 import 'services/sound_settings.dart';
 import 'theme/app_theme.dart';
 import 'widgets/playful_background.dart';
+import 'widgets/sound_toggle_button.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,31 +49,37 @@ class ShadowGuardianApp extends StatelessWidget {
           child: child ?? const SizedBox.shrink(),
         );
       },
-      home: GameWidget.controlled(
-        gameFactory: ShadowGame.new,
-        loadingBuilder: (context) => const PlayfulBackground(
-          child: Center(
-            child: CircularProgressIndicator(color: AppColors.coral),
+      home: Stack(
+        fit: StackFit.expand,
+        children: [
+          GameWidget.controlled(
+            gameFactory: ShadowGame.new,
+            loadingBuilder: (context) => const PlayfulBackground(
+              child: Center(
+                child: CircularProgressIndicator(color: AppColors.coral),
+              ),
+            ),
+            overlayBuilderMap: {
+              ShadowGame.startMenuOverlay: (context, game) {
+                return StartMenuOverlay(game: game as ShadowGame);
+              },
+              ShadowGame.worldSelectOverlay: (context, game) {
+                return WorldSelectOverlay(game: game as ShadowGame);
+              },
+              ShadowGame.stageSelectOverlay: (context, game) {
+                return StageSelectOverlay(game: game as ShadowGame);
+              },
+              ShadowGame.gameHudOverlay: (context, game) {
+                return GameHudOverlay(game: game as ShadowGame);
+              },
+              ShadowGame.levelCompleteOverlay: (context, game) {
+                return LevelCompleteOverlay(game: game as ShadowGame);
+              },
+            },
+            initialActiveOverlays: const [ShadowGame.startMenuOverlay],
           ),
-        ),
-        overlayBuilderMap: {
-          ShadowGame.startMenuOverlay: (context, game) {
-            return StartMenuOverlay(game: game as ShadowGame);
-          },
-          ShadowGame.worldSelectOverlay: (context, game) {
-            return WorldSelectOverlay(game: game as ShadowGame);
-          },
-          ShadowGame.stageSelectOverlay: (context, game) {
-            return StageSelectOverlay(game: game as ShadowGame);
-          },
-          ShadowGame.gameHudOverlay: (context, game) {
-            return GameHudOverlay(game: game as ShadowGame);
-          },
-          ShadowGame.levelCompleteOverlay: (context, game) {
-            return LevelCompleteOverlay(game: game as ShadowGame);
-          },
-        },
-        initialActiveOverlays: const [ShadowGame.startMenuOverlay],
+          const SoundToggleLayer(),
+        ],
       ),
     );
   }
