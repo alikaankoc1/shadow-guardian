@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'audio_engine.dart';
@@ -18,6 +19,9 @@ class SoundSettings {
 
   /// False while placing shadows in a stage (HUD active).
   bool menusAllowMusic = true;
+
+  /// False when the app is backgrounded / inactive.
+  bool _appInForeground = true;
 
   /// True after audio is allowed to play (always on Android; web may need 1 gesture).
   bool _audioReady = !kIsWeb;
@@ -79,11 +83,30 @@ class SoundSettings {
     await syncMusic(forceAttempt: true);
   }
 
+  /// Pause BGM when leaving the app; restore when returning.
+  Future<void> handleAppLifecycle(AppLifecycleState state) async {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        _appInForeground = true;
+        await syncMusic(forceAttempt: true);
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.hidden:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.detached:
+        _appInForeground = false;
+        try {
+          await _engine.pauseBgm();
+        } catch (error, stack) {
+          debugPrint('BGM pause failed: $error\n$stack');
+        }
+    }
+  }
+
   Future<void> syncMusic({bool forceAttempt = false}) async {
     if (!_audioReady && !forceAttempt) {
       return;
     }
-    final shouldPlay = enabled && menusAllowMusic;
+    final shouldPlay = enabled && menusAllowMusic && _appInForeground;
     try {
       if (shouldPlay) {
         await _engine.playBgm(bgmAsset, volume: 0.42);

@@ -32,8 +32,31 @@ Future<void> main() async {
   runApp(const ShadowGuardianApp());
 }
 
-class ShadowGuardianApp extends StatelessWidget {
+class ShadowGuardianApp extends StatefulWidget {
   const ShadowGuardianApp({super.key});
+
+  @override
+  State<ShadowGuardianApp> createState() => _ShadowGuardianAppState();
+}
+
+class _ShadowGuardianAppState extends State<ShadowGuardianApp>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    unawaited(SoundSettings.instance.handleAppLifecycle(state));
+  }
 
   @override
   Widget build(BuildContext context) {

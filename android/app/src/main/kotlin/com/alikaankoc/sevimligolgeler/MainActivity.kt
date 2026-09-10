@@ -85,6 +85,12 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    override fun onPause() {
+        // Belt-and-suspenders: stop music if the process is backgrounded.
+        pauseBgm()
+        super.onPause()
+    }
+
     private fun playSfx(asset: String, volume: Float) {
         try {
             sfxPlayer?.stop()
