@@ -247,12 +247,13 @@ class _LivingScene extends StatelessWidget {
         // Phone: push flower away from wide canopy toward the mascot gap.
         // Tablet: pack flora + mascot toward the brand panel (screen center).
         final flowerLeft = isPhone
-            ? (w * 0.34).clamp(90.0, 140.0)
+            ? (w * 0.32).clamp(84.0, 132.0)
             : isTablet
-            ? (w * 0.36).clamp(120.0, 200.0)
-            : (treeH * 0.58).clamp(100.0, 155.0);
+            ? (w * 0.32).clamp(108.0, 180.0)
+            : (treeH * 0.55).clamp(92.0, 145.0);
         final flowerH = treeH * (isPhone ? 0.17 : isTablet ? 0.22 : 0.20);
-        final treeLeft = isTablet ? (w * 0.04).clamp(4.0, 16.0) : 4.0;
+        // Nudge left a little; keep canopy on-screen (asset has soft left padding).
+        final treeLeft = isTablet ? -8.0 : -4.0;
         final mascotRight = isTablet ? 4.0 : -4.0 * scale;
         final groundH = isTablet
             ? (h * 0.16).clamp(40.0, 72.0)

@@ -57,11 +57,24 @@ class LevelCompleteOverlay extends StatelessWidget {
     }
 
     return Material(
-      color: AppColors.navy.withValues(alpha: 0.34),
+      color: AppColors.navy.withValues(alpha: journeyComplete ? 0.42 : 0.34),
       child: Stack(
         fit: StackFit.expand,
         children: [
-          ConfettiOverlay(pieceCount: journeyComplete ? 64 : 42),
+          if (journeyComplete) ...[
+            ConfettiOverlay(
+              pieceCount: 110,
+              duration: const Duration(milliseconds: 3800),
+              repeat: true,
+              intensity: 1.45,
+            ),
+            ConfettiOverlay(
+              pieceCount: 48,
+              duration: const Duration(milliseconds: 2600),
+              intensity: 1.2,
+            ),
+          ] else
+            const ConfettiOverlay(pieceCount: 42),
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
@@ -84,7 +97,7 @@ class LevelCompleteOverlay extends StatelessWidget {
                     .animate()
                     .fadeIn(duration: 280.ms)
                     .scale(
-                      begin: const Offset(0.9, 0.9),
+                      begin: const Offset(0.86, 0.86),
                       curve: Curves.easeOutBack,
                     ),
               ),
@@ -160,6 +173,40 @@ class _CelebrateCard extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          if (journeyComplete) ...[
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 14 * scale,
+                vertical: 6 * scale,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.coral.withValues(alpha: 0.14),
+                borderRadius: BorderRadius.circular(99),
+                border: Border.all(
+                  color: AppColors.coral.withValues(alpha: 0.45),
+                  width: 1.5,
+                ),
+              ),
+              child: Text(
+                'OYUN BİTTİ',
+                style: TextStyle(
+                  decoration: TextDecoration.none,
+                  fontFamily: 'Nunito',
+                  color: AppColors.coralDark,
+                  fontSize: (compact ? 12.0 : 13.5) * scale,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1.2,
+                ),
+              ),
+            )
+                .animate(onPlay: (c) => c.repeat(reverse: true))
+                .scale(
+                  begin: const Offset(1, 1),
+                  end: const Offset(1.05, 1.05),
+                  duration: 900.ms,
+                ),
+            SizedBox(height: 10 * scale),
+          ],
           Container(
                 width: (compact ? 56.0 : 64.0) * scale,
                 height: (compact ? 56.0 : 64.0) * scale,
@@ -188,26 +235,52 @@ class _CelebrateCard extends StatelessWidget {
                   size: (compact ? 30.0 : 34.0) * scale,
                 ),
               )
-              .animate()
+              .animate(
+                onPlay: journeyComplete
+                    ? (c) => c.repeat(reverse: true)
+                    : null,
+              )
               .scale(
                 begin: const Offset(0.5, 0.5),
                 curve: Curves.easeOutBack,
               )
-              .rotate(begin: -0.05, end: 0),
+              .then()
+              .scale(
+                begin: const Offset(1, 1),
+                end: journeyComplete
+                    ? const Offset(1.08, 1.08)
+                    : const Offset(1, 1),
+                duration: 800.ms,
+              ),
           SizedBox(height: 8 * scale),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
-              3,
+              journeyComplete ? 5 : 3,
               (index) => Padding(
                 padding: EdgeInsets.symmetric(horizontal: 2 * scale),
                 child: Icon(
                       Icons.star_rounded,
                       color: AppColors.sunshine,
-                      size: (compact ? 28.0 : 32.0) * scale,
+                      size: (compact ? 26.0 : 30.0) *
+                          scale *
+                          (journeyComplete && index == 2 ? 1.2 : 1),
                     )
-                    .animate(delay: (110 * index).ms)
-                    .scale(curve: Curves.easeOutBack),
+                    .animate(delay: (90 * index).ms)
+                    .scale(curve: Curves.easeOutBack)
+                    .animate(
+                      onPlay: journeyComplete
+                          ? (c) => c.repeat(reverse: true)
+                          : null,
+                      delay: (120 * index).ms,
+                    )
+                    .scale(
+                      begin: const Offset(1, 1),
+                      end: journeyComplete
+                          ? const Offset(1.12, 1.12)
+                          : const Offset(1, 1),
+                      duration: 700.ms,
+                    ),
               ),
             ),
           ),
