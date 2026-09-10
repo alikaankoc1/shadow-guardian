@@ -3,7 +3,8 @@
 Bu klasör **telefon / tablet** mağaza materyallerini tutar (oyun web için değil).
 
 İmza / keystore: [SIGNING.md](SIGNING.md)  
-Gizlilik / Data safety / Families: [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md)
+Gizlilik / Data safety / Families: [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md)  
+Ekran görüntüleri: [SCREENSHOTS.md](SCREENSHOTS.md)
 
 ## Hazır dosyalar
 
@@ -13,13 +14,18 @@ Gizlilik / Data safety / Families: [PLAY_DATA_SAFETY.md](PLAY_DATA_SAFETY.md)
 | `../assets/branding/app_icon.png` | Uygulama ikonu |
 | `../assets/branding/splash.png` | Açılış ekranı |
 
-## Ekran görüntüsü (telefon / tablet)
+## Ekran görüntüsü
 
-1. Gerçek cihaz veya emülatörde yatay çalıştır:
-   ```powershell
-   flutter run
-   ```
-2. En az 4 ekran al: açılış, dünya seçimi, oyun (gölgeler), tebrikler
-3. Kaydet: `store/screenshots/01_start.png` …
+- Telefon: `screenshots/phone/` → **1920×1080** landscape (en az 4)
+- Tablet: `screenshots/tablet/` → **1920×1200** landscape (en az 4)
+
+Hızlı önizleme:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File store/capture_preview.ps1 phone
+powershell -ExecutionPolicy Bypass -File store/capture_preview.ps1 tablet
+```
+
+Detay: [SCREENSHOTS.md](SCREENSHOTS.md)
 
 İlerleme telefonda yerel kaydedilir (`SharedPreferences`) — backend yok.

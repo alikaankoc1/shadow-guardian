@@ -14,7 +14,8 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.shadowguardian.shadow_guardian"
+    // Locked for Play Store — do not change after first publish.
+    namespace = "com.alikaankoc.sevimligolgeler"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -24,7 +25,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.shadowguardian.shadow_guardian"
+        applicationId = "com.alikaankoc.sevimligolgeler"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

@@ -2,6 +2,15 @@
 
 Bu adımlar **ücretsiz**. Google Play Developer hesabı ($25) ayrı ve senin tarafında.
 
+## Kilitli kimlik (Play’de değişmez)
+
+| Alan | Değer |
+|------|--------|
+| applicationId | `com.alikaankoc.sevimligolgeler` |
+| version (pubspec) | `1.0.0+2` → isim `1.0.0`, kod `2` |
+
+İlk yayın sonrası **applicationId değiştirilmez**.
+
 ## Bu projede hazır olanlar
 
 | Dosya | Durum | Git |

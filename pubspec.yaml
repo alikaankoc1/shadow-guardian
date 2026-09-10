@@ -1,8 +1,9 @@
 name: shadow_guardian
-description: "Shadow Guardian — a gentle 2D children's game built with Flutter and Flame."
+description: "Sevimli Gölgeler — çocuklar için gölge eşleştirme oyunu (Flutter + Flame)."
 publish_to: 'none'
 
-version: 1.0.0+1
+# versionName+versionCode — bump versionCode for every Play upload.
+version: 1.0.0+2
 
 environment:
   sdk: ^3.13.2
